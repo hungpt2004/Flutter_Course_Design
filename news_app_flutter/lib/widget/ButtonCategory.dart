@@ -27,13 +27,13 @@ class _ButtonCategoryState extends State<ButtonCategory> {
   ];
 
 
-  String selectType = "";
+  String selectType = "Healthy";
 
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 80,
+      height: 50,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: category.length,
@@ -41,20 +41,25 @@ class _ButtonCategoryState extends State<ButtonCategory> {
           final type = category[index];
           final isSelected = type == selectType;
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 5.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+
+                //BUTTON
                 TextButton(
                     style: ButtonStyle(
                         padding: MaterialStateProperty.all(const EdgeInsets.only(right: 5, left: 5, top: 5, bottom: 5)),
                         backgroundColor: MaterialStateProperty.all(
-                            primaryColors
+                            selectType == type ? primaryColors : Colors.transparent
                         ),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
-                                side: BorderSide(color: primaryColors, width: 2)
+                                side: BorderSide(
+                                  color: selectType == type ? primaryColors : Colors.black12,
+                                  width: 1
+                                )
                             )
                         )
                     ),
@@ -62,7 +67,7 @@ class _ButtonCategoryState extends State<ButtonCategory> {
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
                         type,
-                        style: const TextStyle(fontSize: 12, color: Colors.white),
+                        style: TextStyle(fontSize: 15, color:  selectType == type ? Colors.white : Colors.black),
                       ),
                     ),
                     onPressed: () {
@@ -72,6 +77,7 @@ class _ButtonCategoryState extends State<ButtonCategory> {
                       // widget.onSelected(type);
                     }
                 ),
+
               ],
             ),
           );

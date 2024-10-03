@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:news_app_flutter/constant/Constant.dart';
+import 'package:news_app_flutter/screen/NewsDetailScreen.dart';
+import 'package:news_app_flutter/widget/SlidePageRoute.dart';
 // IMPORT
 import '../model/Article.dart';
 
@@ -24,48 +26,59 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
       children: [
 
         //IMAGE
-        GestureDetector(
-          onTap: () {
-            setState(() {
-
-            });
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10), // Thêm góc bo cho Container
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withOpacity(0.2),
-                  spreadRadius: 2,
-                  blurRadius: 15,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                article.urlToImage ??
-                    'https://cdn.pixabay.com/photo/2016/02/01/00/56/news-1172463_640.jpg',
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
+        Container(
+          decoration: BoxDecoration(
+            borderRadius:
+                BorderRadius.circular(10), // Thêm góc bo cho Container
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 15,
+                offset: const Offset(0, 4),
               ),
+            ],
+          ),
+
+          //IMAGE
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.network(
+              article.urlToImage ??
+                  'https://cdn.pixabay.com/photo/2016/02/01/00/56/news-1172463_640.jpg',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
             ),
           ),
         ),
 
         // OVERLAY
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.black.withOpacity(0.5), // Độ trong suốt của màu đen
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              Navigator.push(
+                  context,
+                  SlidePageRoute(
+                      page: NewsDetails(
+                        articleIndex: article,
+                      ),
+                      beginOffset: const Offset(1, 0),
+                      endOffset: Offset.zero,
+                      duration: const Duration(milliseconds: 1000)));
+            });
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.black.withOpacity(0.5), // Độ trong suốt của màu đen
+            ),
           ),
         ),
 
         // AUTHOR
         Positioned(
-          top: 60,
+          top: 75,
           left: 20,
           child: Column(
             children: [
@@ -84,16 +97,16 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
 
         //TITLE
         Positioned(
-          top: 75,
+          top: 93,
           left: 20,
           child: Container(
-            width: 270,
+            width: 280,
             child: Text(
               article.title,
               style: TextStyle(
                 fontFamily: textFontContent,
                 fontWeight: FontWeight.w600,
-                fontSize: 12,
+                fontSize: 13,
                 color: Colors.white,
               ),
             ),
@@ -111,12 +124,13 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
               style: TextStyle(
                 fontFamily: textFontContent,
                 fontWeight: FontWeight.w300,
-                fontSize: 8,
+                fontSize: 9,
                 color: Colors.white,
               ),
             ),
           ),
         )
+
       ],
     );
   }

@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ListView(
               children: [
 
+                //SEARCH & NOTIFICATION
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Row(
@@ -61,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 shape: BoxShape.circle, color: primaryColors),
                             child: IconButton(
                               onPressed: () {},
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.notifications_none_outlined,
                                 color: Colors.white,
                                 size: 30,
@@ -72,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
 
-                SizedBox(height: 15,),
+                const SizedBox(height: 15,),
 
                 //BUTTON LATEST
                 Padding(
@@ -102,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontSize: 16
                               ),
                             ),
-                            SizedBox(width: 5,),
+                            const SizedBox(width: 5,),
                             Icon(
                               Icons.arrow_forward,
                               size: 16,
@@ -115,16 +116,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 
-                SizedBox(height: 15,),
+                const SizedBox(height: 15,),
                 
                 //SLIDE
-                Padding(
+                const Padding(
                   padding: EdgeInsets.all(12.0),
                   child: LatestNewsSlideWidget(),
                 ),
 
                 //BUTTON CATEGORY
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(left: 12),
                   child: ButtonCategory(),
                 ),

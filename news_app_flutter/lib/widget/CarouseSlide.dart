@@ -46,6 +46,8 @@ class _LatestNewsSlideWidgetState extends State<LatestNewsSlideWidget> {
         //WIDGET
         final List<Article> articleList = snapshot.data!;
         return Column(children: [
+
+          //SLIDE BUILDER
           CarouselSlider.builder(
             itemCount: articleList.length,
             itemBuilder: (context, index, realIndex) {
@@ -80,7 +82,6 @@ class _LatestNewsSlideWidgetState extends State<LatestNewsSlideWidget> {
                   activeDotColor: primaryColors, dotHeight: 8, dotWidth: 12),
             ),
           ),
-
 
         ]);
       },
