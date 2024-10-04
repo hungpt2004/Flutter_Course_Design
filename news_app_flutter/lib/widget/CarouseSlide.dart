@@ -45,45 +45,48 @@ class _LatestNewsSlideWidgetState extends State<LatestNewsSlideWidget> {
 
         //WIDGET
         final List<Article> articleList = snapshot.data!;
-        return Column(children: [
-
-          //SLIDE BUILDER
-          CarouselSlider.builder(
-            itemCount: articleList.length,
-            itemBuilder: (context, index, realIndex) {
-              final articleIndex = articleList[index];
-              return ArticleCardWidget(articleIndex: articleIndex);
-            },
-            options: CarouselOptions(
-              onPageChanged: (index, reason) {
-                setState(() {
-                  activeIndex = index;
-                });
+        return Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+              children: [
+            //SLIDE BUILDER
+            CarouselSlider.builder(
+              itemCount: articleList.length,
+              itemBuilder: (context, index, realIndex) {
+                final articleIndex = articleList[index];
+                return ArticleCardWidget(articleIndex: articleIndex);
               },
-              autoPlay: true,
-              aspectRatio: 16 / 9,
-              viewportFraction:
-                  0.9, // Điều chỉnh này có thể thay đổi để phù hợp với thiết kế của bạn
-              enlargeCenterPage: true, // Tắt phóng to trang ở giữa
+              options: CarouselOptions(
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    activeIndex = index;
+                  });
+                },
+                autoPlay: true,
+                aspectRatio: 16 / 9,
+                viewportFraction:
+                    1, // Điều chỉnh này có thể thay đổi để phù hợp với thiết kế của bạn
+                enlargeCenterPage: true, // Tắt phóng to trang ở giữa
+              ),
             ),
-          ),
 
-          SizedBox(
-            height: 10,
-          ),
-
-          //DOT
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: AnimatedSmoothIndicator(
-              activeIndex: activeIndex,
-              count: articleList.length,
-              effect: WormEffect(
-                  activeDotColor: primaryColors, dotHeight: 8, dotWidth: 12),
+            SizedBox(
+              height: 10,
             ),
-          ),
 
-        ]);
+            //DOT
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: AnimatedSmoothIndicator(
+                activeIndex: activeIndex,
+                count: articleList.length,
+                effect: WormEffect(
+                    activeDotColor: primaryColors, dotHeight: 8, dotWidth: 12),
+              ),
+            ),
+
+          ]),
+        );
       },
     );
   }

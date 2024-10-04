@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:news_app_flutter/constant/Constant.dart';
 
 class ButtonCategory extends StatefulWidget {
-  // const ButtonCategory({super.key, required this.onSelected});
-  const ButtonCategory({super.key});
 
-  //Required get a function when HomeScreen call this Widget
-  // final Function(String) onSelected;
+  const ButtonCategory({super.key, required this.onSelected});
+
+  final Function(String) onSelected;
 
   @override
   State<ButtonCategory> createState() => _ButtonCategoryState();
@@ -17,17 +16,18 @@ class _ButtonCategoryState extends State<ButtonCategory> {
 
   //List category
   final List<String> category = [
-    "Healthy",
+    "Health",
     "Technology",
-    "Finance",
-    "Arts",
-    "Sport",
-    "Travel",
+    "Business",
+    "Science",
+    "Sports",
+    "General",
     "Entertainment",
   ];
 
 
-  String selectType = "Healthy";
+
+  String selectType = "Health";
 
 
   @override
@@ -46,7 +46,7 @@ class _ButtonCategoryState extends State<ButtonCategory> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
 
-                //BUTTON
+                //BUTTON CHOOSE TYPE
                 TextButton(
                     style: ButtonStyle(
                         padding: MaterialStateProperty.all(const EdgeInsets.only(right: 5, left: 5, top: 5, bottom: 5)),
@@ -74,7 +74,7 @@ class _ButtonCategoryState extends State<ButtonCategory> {
                       setState(() {
                         selectType = type;
                       });
-                      // widget.onSelected(type);
+                      widget.onSelected(type);
                     }
                 ),
 

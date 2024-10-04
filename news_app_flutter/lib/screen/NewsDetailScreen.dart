@@ -228,13 +228,10 @@ class _NewsDetailsState extends State<NewsDetails> {
     );
   }
 
+  //CONVERT FOMART DATE
   String _formatDate(String date) {
     DateTime parsedDate = DateTime.parse(date);
     return DateFormat('EEEE, dd MMMM yyyy').format(parsedDate);
   }
 
-  String _formatTime(String date, String time) {
-    DateTime parsedTime = DateTime.parse('$date $time');
-    return DateFormat('hh:mm a').format(parsedTime);
-  }
 }

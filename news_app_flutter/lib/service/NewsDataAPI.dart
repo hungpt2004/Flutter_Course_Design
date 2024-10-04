@@ -11,7 +11,7 @@ class APIService {
   //Method fetch data top-headlines, latest
   Future<List<Article>> getLatestNews() async {
     // URL
-    final String url = "$baseUrl/top-headlines?country=us&apiKey=$apiKey";
+    final String url = "$baseUrl/top-headlines?country=$country&apiKey=$apiKey";
 
     try {
       final dataResponse = await http.get(Uri.parse(url));
@@ -19,7 +19,6 @@ class APIService {
       if (dataResponse.statusCode == 200) {
         final Map<String, dynamic> jsonData = json.decode(dataResponse.body);
         final List<dynamic> articlesJson = jsonData['articles'];
-        print("Response data: ${dataResponse.body}");
 
         // Chuyển đổi đối tượng json -> object article, chỉ lấy các bài có urlToImage không null
         List<Article> articles = [];
@@ -40,7 +39,6 @@ class APIService {
     }
   }
 
-
   //Method fetch data top headlines by category, button category
   Future<List<Article>> getCategoryNews(String category) async {
     //Url
@@ -56,6 +54,8 @@ class APIService {
         final Map<String, dynamic> jsonData = json.decode(dataResponse.body);
         //To save object convert from API
         final List<dynamic> articlesJson = jsonData['articles'];
+
+        print(dataResponse.body);
 
         return articlesJson.map((json) => Article.fromJson(json)).toList();
       } else {
@@ -90,5 +90,4 @@ class APIService {
       throw Exception(e.toString());
     }
   }
-
 }
