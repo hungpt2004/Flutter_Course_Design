@@ -1,17 +1,17 @@
 import 'dart:convert';
 
-import 'package:news_app_flutter/model/Article.dart';
+import 'package:news_app_flutter/model/article.dart';
 import 'package:http/http.dart' as http;
 
 class APIService {
-  final String apiKey = "86c29130de2e467b9e259ef049db36aa";
+  final String apiKey = "1af72ee6d2b04f4cbc9e73f5cdc17d60";
   final String baseUrl = "https://newsapi.org/v2";
   final String country = "us";
 
   //Method fetch data top-headlines, latest
   Future<List<Article>> getLatestNews() async {
     // URL
-    final String url = "$baseUrl/top-headlines?country=$country&apiKey=$apiKey";
+    final String url = "$baseUrl/top-headlines?country=us&apiKey=1af72ee6d2b04f4cbc9e73f5cdc17d60";
 
     try {
       final dataResponse = await http.get(Uri.parse(url));
@@ -20,16 +20,9 @@ class APIService {
         final Map<String, dynamic> jsonData = json.decode(dataResponse.body);
         final List<dynamic> articlesJson = jsonData['articles'];
 
-        // Chuyển đổi đối tượng json -> object article, chỉ lấy các bài có urlToImage không null
-        List<Article> articles = [];
-        for (var json in articlesJson) {
-          // Kiểm tra nếu urlToImage không phải là null
-          if (json['urlToImage'] != null) {
-            articles.add(Article.fromJson(json));
-          }
-        }
+        print("Response body: ${dataResponse.body}");
 
-        return articles; // Trả về danh sách các bài viết đã lọc
+        return articlesJson.map((json) => Article.fromJson(json)).toList();
       } else {
         throw Exception("Có lỗi khi lấy dữ liệu tin tức mới nhất");
       }
@@ -43,7 +36,7 @@ class APIService {
   Future<List<Article>> getCategoryNews(String category) async {
     //Url
     final String url =
-        "$baseUrl/top-headlines?country=$country&category=$category&apiKey=$apiKey";
+        "$baseUrl/top-headlines?country=us&category=$category&apiKey=1af72ee6d2b04f4cbc9e73f5cdc17d60";
 
     try {
       final dataResponse = await http.get(Uri.parse(url));
@@ -55,7 +48,7 @@ class APIService {
         //To save object convert from API
         final List<dynamic> articlesJson = jsonData['articles'];
 
-        print(dataResponse.body);
+        print("Response body: ${dataResponse.body}");
 
         return articlesJson.map((json) => Article.fromJson(json)).toList();
       } else {
@@ -70,7 +63,7 @@ class APIService {
   //Method fetch everything data by keyword, search field
   Future<List<Article>> getEverythingNews(String keyWord) async {
     //Url
-    final String url = "$baseUrl/everything?q=$keyWord&apiKey=$apiKey";
+    final String url = "$baseUrl/everything?q=$keyWord&apiKey=1af72ee6d2b04f4cbc9e73f5cdc17d60";
     try {
       final dataResponse = await http.get(Uri.parse(url));
 
@@ -80,6 +73,8 @@ class APIService {
         final Map<String, dynamic> jsonData = json.decode(dataResponse.body);
         //To save object convert from API
         final List<dynamic> articlesJson = jsonData['articles'];
+
+        print("Response body: ${dataResponse.body}");
 
         return articlesJson.map((json) => Article.fromJson(json)).toList();
       } else {

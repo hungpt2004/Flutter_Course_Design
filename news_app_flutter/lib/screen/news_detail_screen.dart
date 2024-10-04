@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:news_app_flutter/constant/Constant.dart';
-import '../model/Article.dart';
+import 'package:news_app_flutter/constant/constant.dart';
+import '../model/article.dart';
 import 'package:intl/intl.dart';
 
 class NewsDetails extends StatefulWidget {
@@ -55,7 +55,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                 child: Column(
                   children: [
 
-                    SizedBox(height: 70),
+                    const SizedBox(height: 70),
 
                     Padding(
                       padding: const EdgeInsets.all(30.0),
@@ -64,7 +64,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                           Expanded(
                             child: Text(
                               article.content ?? '',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: textFontContent,
                                 fontSize: 17,
                                 fontWeight: FontWeight.w400
@@ -82,7 +82,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                           Expanded(
                             child: Text(
                               article.description ?? '',
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontFamily: textFontContent,
                                   fontSize: 17,
                                   fontWeight: FontWeight.w400
@@ -127,7 +127,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                   child: Text(
                                     _formatDate(article
                                         .publishedAt), // Thêm nội dung ở đây
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 14,
                                         fontFamily: textFontContent,
                                         fontWeight: FontWeight.w500),
@@ -135,16 +135,16 @@ class _NewsDetailsState extends State<NewsDetails> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 8,
                             ),
                             Row(
                               children: [
                                 Expanded(
                                   child: Text(
-                                    article.title, // Thêm nội dung ở đây
+                                    article.title ?? 'Unknown', // Thêm nội dung ở đây
                                     maxLines: 2,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 17,
                                         fontFamily: textFontContent,
                                         fontWeight: FontWeight.w700,
@@ -153,7 +153,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                 )
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             Row(
@@ -161,7 +161,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                 Expanded(
                                   child: Text(
                                     "Published by ${article.author}", // Thêm nội dung ở đây
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 14,
                                         fontFamily: textFontContent,
                                         fontWeight: FontWeight.w500),

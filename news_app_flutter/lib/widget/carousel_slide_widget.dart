@@ -1,20 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:news_app_flutter/constant/Constant.dart';
-import 'package:news_app_flutter/service/NewsDataAPI.dart';
+import 'package:news_app_flutter/constant/constant.dart';
+import 'package:news_app_flutter/service/news_data_api.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:news_app_flutter/widget/ArticleCard.dart';
+import 'package:news_app_flutter/widget/article_card_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../model/Article.dart';
+import '../model/article.dart';
 
-class LatestNewsSlideWidget extends StatefulWidget {
-  const LatestNewsSlideWidget({super.key});
+class CouselSlideWidget extends StatefulWidget {
+  const CouselSlideWidget({super.key});
+
+  final dotSize = 4;
 
   @override
-  State<LatestNewsSlideWidget> createState() => _LatestNewsSlideWidgetState();
+  State<CouselSlideWidget> createState() => _LatestNewsSlideWidgetState();
 }
 
-class _LatestNewsSlideWidgetState extends State<LatestNewsSlideWidget> {
+class _LatestNewsSlideWidgetState extends State<CouselSlideWidget> {
   late Future<List<Article>> articles;
   final PageController _pageController = PageController();
   int activeIndex = 0;
@@ -22,8 +24,9 @@ class _LatestNewsSlideWidgetState extends State<LatestNewsSlideWidget> {
   @override
   void initState() {
     super.initState();
-    articles = APIService().getLatestNews();
+    articles = APIService().getLatestNews(); // Không cần setState
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,30 +34,31 @@ class _LatestNewsSlideWidgetState extends State<LatestNewsSlideWidget> {
       future: articles,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          print(snapshot.data!.length);
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(
+          return Center(child: CircularProgressIndicator(),);
+        }
+        if (snapshot.hasError) {
+          return const Center(
             child: Text("Have an error when get data in slide"),
           );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
+        }
+        if (!snapshot.hasData) {
+          return const Center(
             child: Text("No data in slide"),
           );
         }
 
         //WIDGET
-        final List<Article> articleList = snapshot.data!;
+        final List<Article> articleList = snapshot.data ?? [];
+
         return Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Column(
-              children: [
+          child: Column(children: [
             //SLIDE BUILDER
             CarouselSlider.builder(
               itemCount: articleList.length,
               itemBuilder: (context, index, realIndex) {
                 final articleIndex = articleList[index];
-                return ArticleCardWidget(articleIndex: articleIndex);
+                return ArticleCardWidget(articleIndex: articleIndex,);
               },
               options: CarouselOptions(
                 onPageChanged: (index, reason) {
@@ -70,7 +74,7 @@ class _LatestNewsSlideWidgetState extends State<LatestNewsSlideWidget> {
               ),
             ),
 
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
 
@@ -79,11 +83,12 @@ class _LatestNewsSlideWidgetState extends State<LatestNewsSlideWidget> {
               padding: const EdgeInsets.all(12.0),
               child: AnimatedSmoothIndicator(
                 activeIndex: activeIndex,
-                count: articleList.length,
-                effect: WormEffect(
-                    activeDotColor: primaryColors, dotHeight: 8, dotWidth: 12),
+                count: widget.dotSize,
+                effect: const WormEffect(
+                    activeDotColor: primaryColors, dotHeight: 8, dotWidth: 12, ),
               ),
             ),
+
 
           ]),
         );

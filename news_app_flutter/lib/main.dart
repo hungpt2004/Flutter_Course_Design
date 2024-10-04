@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news_app_flutter/screen/HomeScreen.dart';
+import 'package:news_app_flutter/screen/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SafeArea(child: HomeScreen()),
     );

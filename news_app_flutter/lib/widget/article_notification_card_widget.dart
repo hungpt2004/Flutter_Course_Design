@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:news_app_flutter/constant/Constant.dart';
+import 'package:news_app_flutter/constant/constant.dart';
 
-import '../model/Article.dart';
+import '../model/article.dart';
 
 class ArticleNotificationCard extends StatelessWidget {
-  const ArticleNotificationCard({Key? key, required this.articleList}) : super(key: key);
+  const ArticleNotificationCard({super.key, required this.articleList});
 
   final List<Article> articleList;
 
@@ -19,6 +19,7 @@ class ArticleNotificationCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: articleList.map((article) {
+              // print(article.title);
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: Column(
@@ -45,7 +46,7 @@ class ArticleNotificationCard extends StatelessWidget {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      article.title,
+                      article.title ?? 'Title',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: textFontContent),
                     ),
                     SizedBox(height: 5),

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:news_app_flutter/constant/Constant.dart';
+import 'package:news_app_flutter/constant/constant.dart';
 
 class ButtonCategory extends StatefulWidget {
 
@@ -33,7 +33,7 @@ class _ButtonCategoryState extends State<ButtonCategory> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50,
+      height: 70,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: category.length,

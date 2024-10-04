@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:news_app_flutter/constant/Constant.dart';
-import 'package:news_app_flutter/service/NewsDataAPI.dart';
+import 'package:news_app_flutter/constant/constant.dart';
+import 'package:news_app_flutter/service/news_data_api.dart';
 
-import '../model/Article.dart';
-import '../widget/ArticleNotificationCard.dart';
+import '../model/article.dart';
+import '../widget/article_notification_card_widget.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -29,16 +29,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
         future: articles,
         builder: (conext, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
+            return const Center(
               child: Text(
                   "Have no data when fetching data in Notification Screen"),
             );
           } else if (snapshot.hasError) {
-            return Center(
+            return const Center(
               child: Text(
                   "Have an error when fetching data in Notification Screen"),
             );
@@ -59,10 +59,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     left: 0,
                     right: 0,
                     child: Container(
-                      margin: EdgeInsets.only(bottom: 50),
+                      margin: const EdgeInsets.only(bottom: 50),
                       width: MediaQuery.of(context).size.width,
                       height: 50,
-                      decoration: BoxDecoration(color: Colors.white),
+                      decoration: const BoxDecoration(color: Colors.white),
                       child: Row(
                         children: [
                           GestureDetector(
@@ -76,7 +76,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             ),
                           ),
 
-                          Expanded(
+                          const Expanded(
                             child: Text(
                               "Hot Updates",
                               textAlign: TextAlign.center,
@@ -89,7 +89,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           ),
 
                           // Same width as the back arrow padding
-                          SizedBox(
+                          const SizedBox(
                             width: 48,
                           ),
                         ],

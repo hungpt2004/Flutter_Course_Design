@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:news_app_flutter/constant/Constant.dart';
-import 'package:news_app_flutter/screen/NewsDetailScreen.dart';
-import 'package:news_app_flutter/widget/SlidePageRoute.dart';
+import 'package:news_app_flutter/constant/constant.dart';
+import 'package:news_app_flutter/screen/news_detail_screen.dart';
+import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
 // IMPORT
-import '../model/Article.dart';
+import '../model/article.dart';
 
 class ArticleCardWidget extends StatefulWidget {
   const ArticleCardWidget({super.key, required this.articleIndex});
@@ -39,13 +39,13 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
               ),
             ],
           ),
-
-          //IMAGE
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.network(
-              article.urlToImage ??
-                  'https://cdn.pixabay.com/photo/2016/02/01/00/56/news-1172463_640.jpg',
+              article.urlToImage ?? 'https://s.abcnews.com/images/US/abcnl__NEW_streamingnow_1664457649883_hpMain_16x9_608.jpg',
+              errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                return const SizedBox.shrink();  // Ẩn ảnh khi lỗi
+              },
               fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,
@@ -84,10 +84,10 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
             children: [
               Text(
                 "by ${article.author ?? 'Unknown'}",
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: textFontContent,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 10,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 12,
                   color: Colors.white,
                 ),
               ),
@@ -97,16 +97,16 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
 
         //TITLE
         Positioned(
-          top: 93,
+          top: 90,
           left: 20,
           child: Container(
-            width: 280,
+            width: 300,
             child: Text(
-              article.title,
-              style: TextStyle(
+              article.title ?? 'Title',
+              style: const TextStyle(
                 fontFamily: textFontContent,
                 fontWeight: FontWeight.w600,
-                fontSize: 13,
+                fontSize: 14,
                 color: Colors.white,
               ),
             ),
@@ -121,10 +121,12 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
             width: 280,
             child: Text(
               "'${article.content ?? 'No content'}'",
-              style: TextStyle(
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
                 fontFamily: textFontContent,
                 fontWeight: FontWeight.w300,
-                fontSize: 9,
+                fontSize: 12,
                 color: Colors.white,
               ),
             ),
