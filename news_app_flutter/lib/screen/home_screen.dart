@@ -51,10 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Column(
               children: [
 
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
 
                 //SEARCH & NOTIFICATION
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: 65,
                   child: Padding(
@@ -144,9 +144,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               SlidePageRoute(
                                   page: ArticleNotificationCard(
                                       articleList: listArticle),
-                                  beginOffset: Offset(1, 0),
+                                  beginOffset: const Offset(1, 0),
                                   endOffset: Offset.zero,
-                                  duration: Duration(milliseconds: 1000)));
+                                  duration: const Duration(milliseconds: 1000)));
                         },
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
