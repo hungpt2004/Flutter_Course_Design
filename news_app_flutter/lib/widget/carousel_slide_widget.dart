@@ -80,12 +80,13 @@ class _LatestNewsSlideWidgetState extends State<CouselSlideWidget> {
 
             //DOT
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.only(top: 10),
               child: AnimatedSmoothIndicator(
+                duration: Duration(milliseconds: 800),
                 activeIndex: activeIndex,
                 count: widget.dotSize,
                 effect: const WormEffect(
-                    activeDotColor: primaryColors, dotHeight: 8, dotWidth: 12, ),
+                    activeDotColor: primaryColors, dotHeight: 5, dotWidth: 15, ),
               ),
             ),
 
