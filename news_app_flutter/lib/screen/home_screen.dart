@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:news_app_flutter/screen/notification_screen.dart';
+import 'package:news_app_flutter/screen/search_screen.dart';
 import 'package:news_app_flutter/service/news_data_api.dart';
 import 'package:news_app_flutter/widget/article_category_card_widget.dart';
 import 'package:news_app_flutter/widget/button_category_widget.dart';
@@ -21,6 +22,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Article>> articles;
   late List<Article> listArticle;
+  final TextEditingController _searchController = TextEditingController();
+
+  //Unnecessary
   bool isSelected1 = false;
   bool isSelected2 = true;
   bool isSelected3 = true;
@@ -36,6 +40,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  @override
+  void dispose(){
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  //Method fetch data by category
   void fetchDataByCategory(String category) {
     setState(() {
       articles = APIService().getCategoryNews(category);
@@ -66,24 +77,37 @@ class _HomeScreenState extends State<HomeScreen> {
                         Flexible(
                           flex: 3,
                           child: TextFormField(
+                            controller: _searchController,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: textFontContent,
+                                fontSize: 15
+                            ),
                             decoration: InputDecoration(
                               hintText: 'Dogecoin to the Moon...',
+                              hintStyle: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: textFontContent,
+                                fontSize: 12
+                              ),
                               suffixIcon: Padding(
                                 padding: const EdgeInsets.only(right: 10),
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(context, SlidePageRoute(page: SearchScreen(searchController: _searchController), beginOffset: Offset(1,0), endOffset: Offset.zero, duration: Duration(milliseconds: 1000)));
+                                  },
                                   icon: Icon(
                                     Icons.search_outlined,
                                     color: Colors.grey[300],
-                                    size: 30,
+                                    size: 25,
                                   ),
                                 ),
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  width: 1,
+                                borderSide: const BorderSide(
+                                  style: BorderStyle.none,
+                                  color: primaryColors,
                                 ),
                               ),
                             ),
@@ -212,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(50)),
                   child: Padding(
-                    padding: const EdgeInsets.all(5.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -277,11 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Column(
                               children: [
                                 IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      isSelected3 = !isSelected3;
-                                    });
-                                  },
+                                  onPressed: () {},
                                   icon: Icon(
                                     Icons.person,
                                     color: isSelected3
@@ -306,7 +326,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             )
-
           ],
         ),
       ),

@@ -49,7 +49,7 @@ class _ButtonCategoryState extends State<ButtonCategory> {
                 //BUTTON CHOOSE TYPE
                 TextButton(
                     style: ButtonStyle(
-                        padding: MaterialStateProperty.all(const EdgeInsets.only(right: 5, left: 5, top: 5, bottom: 5)),
+                        padding: MaterialStateProperty.all(const EdgeInsets.only(right: 2, left: 2, top: 2, bottom: 2)),
                         backgroundColor: MaterialStateProperty.all(
                             selectType == type ? primaryColors : Colors.transparent
                         ),
