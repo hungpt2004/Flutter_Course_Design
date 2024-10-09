@@ -1,13 +1,22 @@
 class Task {
-  final String name;
-  final String description;
+  int id;
+  String name;
+  String description;
   final DateTime createdAt;
-  bool isDone;
+  DateTime deadlineAt;
+  bool isFavourite;
 
-  Task({required this.name, required this.createdAt, required this.description, this.isDone = false});
+  Task(
+      {required this.id,
+      required this.name,
+      required this.createdAt,
+      required this.deadlineAt,
+      this.isFavourite = false,
+      required this.description,
+      });
 
-  void toggleDone() {
-    isDone = !isDone;
-  }
+  // void toggleDone() {
+  //   isDone = !isDone;
+  // }
 
 }

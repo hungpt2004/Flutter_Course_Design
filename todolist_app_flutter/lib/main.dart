@@ -11,7 +11,7 @@ void main() => runApp(
         create: (context) => TaskData(),
       ),
     ],
-    child: MyApp(), // Move child parameter here
+    child: const MyApp(), // Move child parameter here
   ),
 );
 class MyApp extends StatelessWidget {
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomeScreen(),
     );
