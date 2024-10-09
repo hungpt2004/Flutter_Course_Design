@@ -1,16 +1,4 @@
-# todolist_app_flutter
+# Source code 
+A simple Take Note App with Provider State Management + UI figma free
+Link figma: https://www.figma.com/design/bdj7Da9K76ZagDfIQ9rOOG/Learn-UIUX-%3A-To-Do-List-App-(Community)?node-id=2-10&node-type=frame&t=zeMl3fDG73yMNlye-0
 
-A simple app with provider state management
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
