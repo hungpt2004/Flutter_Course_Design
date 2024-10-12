@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:news_app_flutter/constant/constant.dart';
 
 import '../model/article.dart';
+import 'message_dialog.dart';
 
 class ArticleNotificationCard extends StatelessWidget {
   const ArticleNotificationCard({super.key, required this.articleList});
@@ -41,7 +42,7 @@ class ArticleNotificationCard extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      _formatDate(article.publishedAt),
+                      formatDate(article.publishedAt),
                       style: TextStyle(fontSize: 15, fontFamily: textFontContent),
                     ),
                     SizedBox(height: 5),
@@ -69,10 +70,5 @@ class ArticleNotificationCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatDate(String date) {
-    DateTime parsedDate = DateTime.parse(date);
-    return DateFormat('EEEE, dd MMMM yyyy').format(parsedDate);
   }
 }

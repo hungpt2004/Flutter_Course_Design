@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:news_app_flutter/constant/constant.dart';
-import 'package:news_app_flutter/screen/news_detail_screen.dart';
+import 'package:news_app_flutter/screen/details/news_detail_screen.dart';
 import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
 // IMPORT
 import '../model/article.dart';
@@ -21,35 +21,21 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
   Widget build(BuildContext context) {
     // Initialize
     final article = widget.articleIndex;
-
+    //Provider
     return Stack(
       children: [
 
         //IMAGE
-        Container(
-          decoration: BoxDecoration(
-            borderRadius:
-                BorderRadius.circular(10), // Thêm góc bo cho Container
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(0.2),
-                spreadRadius: 2,
-                blurRadius: 15,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              article.urlToImage ?? 'https://s.abcnews.com/images/US/abcnl__NEW_streamingnow_1664457649883_hpMain_16x9_608.jpg',
-              errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                return const SizedBox.shrink();  // Ẩn ảnh khi lỗi
-              },
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
-            ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.network(
+            article.urlToImage ?? 'https://s.abcnews.com/images/US/abcnl__NEW_streamingnow_1664457649883_hpMain_16x9_608.jpg',
+            errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+              return const SizedBox.shrink();  // Ẩn ảnh khi lỗi
+            },
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
           ),
         ),
 

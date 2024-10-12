@@ -9,6 +9,7 @@ class Article {
   final String? urlToImage;
   final String publishedAt;
   final String? content;
+  bool isFavourite = false;
 
   Article({
     required this.source,
@@ -19,6 +20,7 @@ class Article {
     this.urlToImage, // urlToImage can be null
     required this.publishedAt,
     this.content, // content can be null
+    this.isFavourite = false
   });
 
   // Phương thức ánh xạ JSON vào đối tượng Article

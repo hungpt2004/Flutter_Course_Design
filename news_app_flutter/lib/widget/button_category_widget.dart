@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter/constant/constant.dart';
+import 'package:news_app_flutter/providers/theme_provider.dart';
 
 class ButtonCategory extends StatefulWidget {
-
   const ButtonCategory({super.key, required this.onSelected});
 
   final Function(String) onSelected;
@@ -13,7 +13,6 @@ class ButtonCategory extends StatefulWidget {
 }
 
 class _ButtonCategoryState extends State<ButtonCategory> {
-
   //List category
   final List<String> category = [
     "Health",
@@ -25,13 +24,13 @@ class _ButtonCategoryState extends State<ButtonCategory> {
     "Entertainment",
   ];
 
-
-
-  String selectType = "Health";
-
+  String selectType = "";
 
   @override
   Widget build(BuildContext context) {
+
+    final themeProvider = ThemeProvider.of(context);
+
     return SizedBox(
       height: 70,
       child: ListView.builder(
@@ -45,29 +44,36 @@ class _ButtonCategoryState extends State<ButtonCategory> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
                 //BUTTON CHOOSE TYPE
                 TextButton(
                     style: ButtonStyle(
-                        padding: MaterialStateProperty.all(const EdgeInsets.only(right: 2, left: 2, top: 2, bottom: 2)),
+                        padding: MaterialStateProperty.all(
+                            const EdgeInsets.only(
+                                right: 2, left: 2, top: 2, bottom: 2)),
                         backgroundColor: MaterialStateProperty.all(
-                            selectType == type ? primaryColors : Colors.transparent
-                        ),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                side: BorderSide(
-                                  color: selectType == type ? primaryColors : Colors.black12,
-                                  width: 1
-                                )
-                            )
-                        )
-                    ),
+                            selectType == type
+                                ? primaryColors
+                                : Colors.transparent),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    side: BorderSide(
+                                        color: selectType == type
+                                            ? primaryColors
+                                            : themeProvider.isDark ? Colors.white : Colors.black54,
+                                        width: 1)))),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
                         type,
-                        style: TextStyle(fontSize: 15, color:  selectType == type ? Colors.white : Colors.black),
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: selectType == type
+                                ? Colors.white
+                                : themeProvider.isDark ? Colors.white : Colors.black54,
+                            fontFamily: textFontContent,
+                            fontWeight: FontWeight.w400),
                       ),
                     ),
                     onPressed: () {
@@ -75,9 +81,7 @@ class _ButtonCategoryState extends State<ButtonCategory> {
                         selectType = type;
                       });
                       widget.onSelected(type);
-                    }
-                ),
-
+                    }),
               ],
             ),
           );

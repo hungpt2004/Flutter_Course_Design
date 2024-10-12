@@ -11,7 +11,7 @@ class APIService {
   //Method fetch data top-headlines, latest
   Future<List<Article>> getLatestNews() async {
     // URL
-    final String url = "$baseUrl/top-headlines?country=us&apiKey=1af72ee6d2b04f4cbc9e73f5cdc17d60";
+    final String url = "$baseUrl/top-headlines?country=us&apiKey=$apiKey";
 
     try {
       final dataResponse = await http.get(Uri.parse(url));
@@ -36,7 +36,7 @@ class APIService {
   Future<List<Article>> getCategoryNews(String category) async {
     //Url
     final String url =
-        "$baseUrl/top-headlines?country=us&category=$category&apiKey=1af72ee6d2b04f4cbc9e73f5cdc17d60";
+        "$baseUrl/top-headlines?country=us&category=$category&apiKey=$apiKey";
 
     try {
       final dataResponse = await http.get(Uri.parse(url));
@@ -63,7 +63,7 @@ class APIService {
   //Method fetch everything data by keyword, search field
   Future<List<Article>> getEverythingNews(String keyWord) async {
     //Url
-    final String url = "$baseUrl/everything?q=$keyWord&apiKey=1af72ee6d2b04f4cbc9e73f5cdc17d60";
+    final String url = "$baseUrl/everything?q=$keyWord&apiKey=$apiKey";
     try {
       final dataResponse = await http.get(Uri.parse(url));
 
