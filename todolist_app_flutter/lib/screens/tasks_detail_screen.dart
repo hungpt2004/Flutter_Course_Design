@@ -126,11 +126,6 @@ class _TasksDetailScreenState extends State<TasksDetailScreen> {
                       ),
                       InkWell(
                         onTap: () {
-                          // _deleteTaskByID(widget.task.id);
-                          // if (!status) {
-                          //   _showTimeToast(context, widget.task.createdAt,
-                          //       widget.task.deadlineAt);
-                          // }
                           _showConfirmDeleteToast(context);
                         },
                         child: AssetImage("trash-2.png", 20, 20),
