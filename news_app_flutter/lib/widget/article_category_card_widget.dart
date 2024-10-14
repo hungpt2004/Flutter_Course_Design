@@ -5,6 +5,7 @@ import 'package:news_app_flutter/model/article.dart';
 import 'package:news_app_flutter/screen/details/news_detail_screen.dart';
 import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
 
+import '../providers/history_provider.dart';
 import 'message_dialog.dart';
 
 class ArticleListCategory extends StatelessWidget {
@@ -14,6 +15,8 @@ class ArticleListCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final historyProvider = HistoryProvider.of(context);
+
     return FutureBuilder<List<Article>>(
       future: articles,
       builder: (context, snapshot) {
@@ -27,7 +30,7 @@ class ArticleListCategory extends StatelessWidget {
           return const Center(child: Text('Have no data in Article Category'));
         }
 
-        final articlesData = snapshot.data!;
+        final articlesData = snapshot.data ?? [];
         return SizedBox(
           height: MediaQuery.of(context).size.height * 0.75,
           child: ListView.builder(
@@ -78,7 +81,8 @@ class ArticleListCategory extends StatelessWidget {
                         padding: const EdgeInsets.all(12.0),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(
+                            historyProvider.toggleHistoryNews(article);
+                             Navigator.push(
                                 context,
                                 SlidePageRoute(
                                     page: NewsDetails(
@@ -87,7 +91,7 @@ class ArticleListCategory extends StatelessWidget {
                                     beginOffset: const Offset(0, 1),
                                     endOffset: Offset.zero,
                                     duration:
-                                        const Duration(milliseconds: 1000)));
+                                    const Duration(milliseconds: 1000)),);
                           },
                           child: Container(
                             decoration: BoxDecoration(

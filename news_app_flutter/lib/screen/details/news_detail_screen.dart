@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/providers/favourite_provider.dart';
+import 'package:news_app_flutter/providers/history_provider.dart';
 import '../../model/article.dart';
 import 'package:intl/intl.dart';
 import '../../providers/theme_provider.dart';

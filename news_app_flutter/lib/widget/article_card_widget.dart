@@ -6,6 +6,7 @@ import 'package:news_app_flutter/screen/details/news_detail_screen.dart';
 import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
 // IMPORT
 import '../model/article.dart';
+import '../providers/history_provider.dart';
 
 class ArticleCardWidget extends StatefulWidget {
   const ArticleCardWidget({super.key, required this.articleIndex});
@@ -19,6 +20,9 @@ class ArticleCardWidget extends StatefulWidget {
 class _ArticleCardWidgetState extends State<ArticleCardWidget> {
   @override
   Widget build(BuildContext context) {
+
+    final historyProvider = HistoryProvider.of(context);
+
     // Initialize
     final article = widget.articleIndex;
     //Provider
@@ -43,6 +47,7 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
         GestureDetector(
           onTap: () {
             setState(() {
+              historyProvider.toggleHistoryNews(article);
               Navigator.push(
                   context,
                   SlidePageRoute(

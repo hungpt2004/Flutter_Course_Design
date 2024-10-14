@@ -97,11 +97,6 @@ class _GetStartedScreenState extends State<GetStartedScreen>
               ],
             ),
           ),
-
-          const SizedBox(
-            height: 10,
-          ),
-
           //LOGO EARTH
           Center(
             child: Container(
@@ -144,7 +139,7 @@ class _GetStartedScreenState extends State<GetStartedScreen>
 
           //TITLE
           SizedBox(
-              height: 290,
+              height: 320,
               child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
@@ -183,7 +178,7 @@ class _GetStartedScreenState extends State<GetStartedScreen>
           ),
 
           const SizedBox(
-            height: 50,
+            height: 30,
           ),
 
           //BUTTON START

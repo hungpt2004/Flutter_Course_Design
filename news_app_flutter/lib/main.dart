@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter/providers/favourite_provider.dart';
+import 'package:news_app_flutter/providers/history_provider.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/screen/details/get_started_screen.dart';
 import 'package:news_app_flutter/screen/home_screen.dart';
@@ -28,7 +29,8 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FavouriteProvider()),
-        ChangeNotifierProvider(create: (_) => ThemeProvider())
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => HistoryProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, provider, child) {
