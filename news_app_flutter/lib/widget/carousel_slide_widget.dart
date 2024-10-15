@@ -69,7 +69,7 @@ class _LatestNewsSlideWidgetState extends State<CouselSlideWidget> {
                 autoPlay: true,
                 aspectRatio: 16 / 9,
                 viewportFraction:
-                    1, // Điều chỉnh này có thể thay đổi để phù hợp với thiết kế của bạn
+                    0.8, // Điều chỉnh này có thể thay đổi để phù hợp với thiết kế của bạn
                 enlargeCenterPage: true, // Tắt phóng to trang ở giữa
               ),
             ),

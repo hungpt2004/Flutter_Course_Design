@@ -22,7 +22,6 @@ class _NewsDetailsState extends State<NewsDetails> {
 
   @override
   Widget build(BuildContext context) {
-
     final provider = FavouriteProvider.of(context);
     final themeProvider = ThemeProvider.of(context);
     final Article article = widget.articleIndex;
@@ -54,7 +53,7 @@ class _NewsDetailsState extends State<NewsDetails> {
               child: Container(
                 height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
-                    color: themeProvider.isDark ? Colors.black12 :  Colors.white,
+                    color: themeProvider.isDark ? Colors.black12 : Colors.white,
                     borderRadius: BorderRadius.circular(30)),
                 child: Column(
                   children: [
@@ -64,8 +63,8 @@ class _NewsDetailsState extends State<NewsDetails> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: _description(article.content ?? 'Content', themeProvider.isDark)
-                          ),
+                              child: _description(article.content ?? 'Content',
+                                  themeProvider.isDark)),
                         ],
                       ),
                     ),
@@ -75,8 +74,9 @@ class _NewsDetailsState extends State<NewsDetails> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: _description(article.description ?? 'Description', themeProvider.isDark)
-                          ),
+                              child: _description(
+                                  article.description ?? 'Description',
+                                  themeProvider.isDark)),
                         ],
                       ),
                     ),
@@ -112,24 +112,20 @@ class _NewsDetailsState extends State<NewsDetails> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Expanded(
-                                  child: _publishDate(article.publishedAt)
-                                ),
+                                    child: _publishDate(article.publishedAt)),
                               ],
                             ),
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                Expanded(
-                                  child: _title(article.title)
-                                )
+                                Expanded(child: _title(article.title))
                               ],
                             ),
                             const SizedBox(height: 5),
                             Row(
                               children: [
                                 Expanded(
-                                  child: _author(article.author ?? 'Author')
-                                )
+                                    child: _author(article.author ?? 'Author'))
                               ],
                             )
                           ],
@@ -155,7 +151,12 @@ class _NewsDetailsState extends State<NewsDetails> {
                   child: Padding(
                     padding: const EdgeInsets.only(
                         left: 12, top: 10, bottom: 10, right: 5),
-                    child: Center(child: Icon(Icons.arrow_back_ios,color: themeProvider.isDark ? Colors.white : Colors.black54,)),
+                    child: Center(
+                        child: Icon(
+                      Icons.arrow_back_ios,
+                      color:
+                          themeProvider.isDark ? Colors.white : Colors.black54,
+                    )),
                   ),
                 ),
               ),
@@ -166,27 +167,34 @@ class _NewsDetailsState extends State<NewsDetails> {
               top: 30,
               right: 20,
               child: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
                     color: Colors.grey.withOpacity(0.3),
-                    ),
-                child: IconButton(
-                    onPressed: () async {
-                      setState(() {
-                        article.isFavourite ? provider.toggleRemoveFavourite(article) : provider.toggleAddFavourite(article);
-                        if (article.isFavourite) {
-                          showMessageDialog(context, "Add favourite success", true);
-                        } else {
-                          showMessageDialog(
-                              context, "Remove favourite success", false);
-                        }
-                      });
-                    },
-                    icon:  Icon(Icons.bookmark_sharp, color: article.isFavourite ? Colors.yellow : Colors.white60,size: 30,)
-                )
-              ),
+                  ),
+                  child: IconButton(
+                      onPressed: () async {
+                        setState(() {
+                          article.isFavourite
+                              ? provider.toggleRemoveFavourite(article)
+                              : provider.toggleAddFavourite(article);
+                          if (article.isFavourite) {
+                            showMessageDialog(
+                                context, "Add favourite success", true);
+                          } else {
+                            showMessageDialog(
+                                context, "Remove favourite success", false);
+                          }
+                        });
+                      },
+                      icon: Icon(
+                        Icons.bookmark_sharp,
+                        color: article.isFavourite
+                            ? Colors.yellow
+                            : Colors.white60,
+                        size: 30,
+                      ))),
             ),
 
             //SHARE BUTTON
@@ -202,16 +210,17 @@ class _NewsDetailsState extends State<NewsDetails> {
                   ),
                   child: IconButton(
                       onPressed: () {
-                        showDialogShareLink(context, article.url);
+                        showDialogShareLink(context, article.url, isShare);
                         setState(() {
                           isShare = !isShare;
                         });
                       },
-                      icon:  Icon(Icons.share, color: isShare ? Colors.yellow : Colors.white60,size: 30,)
-                  )
-              ),
+                      icon: Icon(
+                        Icons.share,
+                        color: isShare ? Colors.yellow : Colors.white60,
+                        size: 30,
+                      ))),
             ),
-
           ],
         ),
       ),
@@ -219,60 +228,53 @@ class _NewsDetailsState extends State<NewsDetails> {
   }
 
   //DESCRIPTION
-  Widget _description(String content, bool themeProvider){
+  Widget _description(String content, bool themeProvider) {
     return Text(
       content,
       style: TextStyle(
           fontFamily: textFontContent,
           fontSize: 17,
           fontWeight: FontWeight.w400,
-          color: themeProvider ? Colors.white : Colors.black
-      ),
+          color: themeProvider ? Colors.white : Colors.black),
     );
   }
 
   //TITLE
-  Widget _title(String title){
+  Widget _title(String title) {
     return Text(
       title, // Add content here
       maxLines: 2,
       style: const TextStyle(
-        fontSize: 17,
-        fontFamily: textFontContent,
-        fontWeight: FontWeight.w700,
-        color: Colors.black
-      ),
+          fontSize: 17,
+          fontFamily: textFontContent,
+          fontWeight: FontWeight.w700,
+          color: Colors.black),
     );
   }
 
   //AUTHOR
-  Widget _author(String author){
+  Widget _author(String author) {
     return Text(
       "Published by ${author}", // Add content here
       style: const TextStyle(
           fontSize: 14,
           fontFamily: textFontContent,
           fontWeight: FontWeight.w500,
-          color: Colors.black
-      ),
+          color: Colors.black),
     );
   }
 
   //PUBLISH DATE
-  Widget _publishDate(String date,){
+  Widget _publishDate(
+    String date,
+  ) {
     return Text(
       formatDate(date), // Add content here
       style: const TextStyle(
           fontSize: 14,
           fontFamily: textFontContent,
           fontWeight: FontWeight.w500,
-          color: Colors.black
-      ),
+          color: Colors.black),
     );
   }
-
-
-
 }
-
-

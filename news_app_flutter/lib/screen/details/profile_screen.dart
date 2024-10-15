@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
+import 'package:news_app_flutter/providers/user_provider.dart';
 import 'package:news_app_flutter/screen/details/history_news_screen.dart';
 import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
 
@@ -17,8 +18,10 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    final themeProvider = ThemeProvider.of(context);
 
+    final themeProvider = ThemeProvider.of(context);
+    final userProvider = UserProvider.of(context);
+    // print(userProvider.currentUser.urlImage);
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -88,8 +91,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 200,
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: NetworkImage(
-                                  "https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-6/454206983_1705671040183720_8572129252423530010_n.jpg?stp=cp6_dst-jpg&_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=9PRnRgEVYEoQ7kNvgHA_bUI&_nc_ht=scontent.fsgn2-8.fna&_nc_gid=ACs5HDSwZi_Z6qdl7KK4QrM&oh=00_AYB0rs2Apng8Dwh-BMLpSiHi4dIPyIbuCFyU6FBjqkNTNA&oe=671238D8"),
+                              image: AssetImage(
+                                  "${userProvider.currentUser.urlImage}"),
                             ),
                             shape: BoxShape.circle,
                             border: Border.all(
@@ -129,8 +132,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 GestureDetector(
                     child: _cardInformation(
                         context,
-                        "Pham Trong Hung",
+                        "${userProvider.currentUser.fullName}",
                         Icon(Icons.person),
+                        () {},
                         () {},
                         themeProvider.isDark
                             ? Colors.transparent
@@ -142,8 +146,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         false)),
                 _cardInformation(
                     context,
-                    "hungptfpt2004@gmail.com",
+                    "${userProvider.currentUser.email}",
                     Icon(Icons.mail),
+                    () {},
                     () {},
                     themeProvider.isDark ? Colors.transparent : Colors.black,
                     themeProvider.isDark ? Colors.transparent : Colors.black,
@@ -151,36 +156,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     false),
                 _cardInformation(
                     context,
-                    "hungtrang4U@",
+                    "${userProvider.currentUser.password}",
                     Icon(Icons.key),
+                    () {},
                     () {},
                     themeProvider.isDark ? Colors.transparent : Colors.black,
                     themeProvider.isDark ? Colors.transparent : Colors.black,
                     themeProvider.isDark ? Colors.white : Colors.black,
                     true),
-                _cardInformation(
-                    context,
-                    "Viet Nam",
-                    Icon(Icons.location_pin),
+                _cardInformation(context, "${userProvider.currentUser.country}", Icon(Icons.location_pin),
+                    () {},
                     () {},
                     themeProvider.isDark ? Colors.transparent : Colors.black,
                     themeProvider.isDark ? Colors.transparent : Colors.black,
                     themeProvider.isDark ? Colors.white : Colors.black,
                     false),
-                _cardInformation(context, "History News", Icon(Icons.history),
-                    () {
-                      setState(() {
-                        Navigator.push(
-                            context,
-                            SlidePageRoute(
-                                page: HistoryNewsScreen(),
-                                beginOffset: Offset(1, 0),
-                                endOffset: Offset.zero,
-                                duration: Duration(milliseconds: 1000)
-                            )
-                        );
-                      });
-                    },
+                _cardInformation(
+                    context,
+                    "${userProvider.currentUser.phoneNumber}",
+                    Icon(Icons.phone_enabled),
+                    () {},
+                    () {},
                     themeProvider.isDark ? Colors.transparent : Colors.black,
                     themeProvider.isDark ? Colors.transparent : Colors.black,
                     themeProvider.isDark ? Colors.white : Colors.black,
@@ -189,6 +185,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     context,
                     "Logout",
                     Icon(Icons.logout),
+                    () {
+                      userProvider.logout(context);
+                    },
                     () {},
                     themeProvider.isDark ? Colors.transparent : Colors.black,
                     themeProvider.isDark ? Colors.transparent : Colors.black,
@@ -210,6 +209,7 @@ Widget _cardInformation(
     BuildContext context,
     String content,
     Icon prefixIcon,
+    Function prefixFunction,
     Function suffixFunction,
     Color prefixIconColor,
     Color suffixIconColor,
@@ -239,16 +239,15 @@ Widget _cardInformation(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide.none),
               prefixIcon: IconButton(
-                  onPressed: isPassword
-                      ? () {}
-                      : () {
-                          isPassword = !isPassword;
-                        },
+                  onPressed: () {
+                    prefixFunction();
+                  },
                   icon: prefixIcon),
               suffixIcon: IconButton(
-                  onPressed: (){
+                  onPressed: () {
                     suffixFunction();
-                  }, icon: Icon(Icons.edit)),
+                  },
+                  icon: Icon(Icons.edit)),
               prefixIconColor: prefixIconColor,
               suffixIconColor: suffixIconColor,
               hintText: content,

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../constant/constant.dart';
 
+//SHOW MESSAGE DIALOG
 void showMessageDialog(BuildContext context, String message, bool status) {
   Flushbar(
     messageText: Row(
@@ -49,7 +50,7 @@ String formatDate(String date) {
 }
 
 //DIALOG SHARE
-void showDialogShareLink(BuildContext context, String url){
+void showDialogShareLink(BuildContext context, String url, bool isShare){
   TextEditingController controller = TextEditingController();
   controller.text = url;
   showDialog(
@@ -94,6 +95,7 @@ void showDialogShareLink(BuildContext context, String url){
       actions: [
         TextButton(
           onPressed: () {
+            isShare = !isShare;
             Navigator.pop(context);
           },
           child: const Text("Done"),
