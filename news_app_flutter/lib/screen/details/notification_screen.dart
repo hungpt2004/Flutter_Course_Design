@@ -6,6 +6,7 @@ import 'package:news_app_flutter/service/news_data_api.dart';
 
 import '../../model/article.dart';
 import '../../providers/theme_provider.dart';
+import '../../theme/style.dart';
 import '../../widget/article_notification_card_widget.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -32,9 +33,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         future: articles,
         builder: (conext, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+              return const Center(
+                  child: CircularProgressIndicator());
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(
               child: Text(
@@ -51,7 +51,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
             child: Scaffold(
               body: Stack(
                 children: [
-
                   //HOT UPDATES NEWS NOTIFICATION
                   Positioned(
                     top: 50,
@@ -65,60 +64,35 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                   ),
 
-
                   //BACK BUTTON
-                  Positioned(
-                      top: 0,
-                      left: 5,
-                      right: 0,
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color:
+                          !themeProvider.isDark ? Colors.white : Colors.black12,
+                    ),
+                    child: Align(
+                      alignment: Alignment.topCenter,
                       child: Container(
-                        margin: const EdgeInsets.only(bottom: 50),
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: themeProvider.isDark
-                                ? Colors.black
-                                : Colors.white),
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () => {
-                                Navigator.pop(context),
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 12, top: 10, bottom: 10, right: 5),
-                                child: Center(
-                                    child: Icon(
-                                  Icons.arrow_back_ios,
-                                  color: themeProvider.isDark
-                                      ? Colors.white
-                                      : Colors.black,
-                                )),
-                              ),
-                            ),
-
-                            Expanded(
-                              child: Text(
-                                "Hot Updates",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontFamily: textFontContent,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 20,
-                                    color: themeProvider.isDark
-                                        ? Colors.white
-                                        : primaryColors),
-                              ),
-                            ),
-
-                            // Same width as the back arrow padding
-                            const SizedBox(
-                              width: 48,
-                            ),
-                          ],
-                        ),
-                      )),
+                        child: Style.styleTitlePage("Hot Updates", 35, themeProvider)
+                      ),
+                    ),
+                  ),
+                  // Positioned Back Button
+                  Positioned(
+                    top: 5,
+                    left: 5,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color:
+                            themeProvider.isDark ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

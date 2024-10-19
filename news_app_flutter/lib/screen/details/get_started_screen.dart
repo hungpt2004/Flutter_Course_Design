@@ -5,7 +5,7 @@ import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/screen/details/login_screen.dart';
 import 'package:news_app_flutter/screen/details/register_screen.dart';
-import 'package:news_app_flutter/widget/message_dialog.dart';
+import 'package:news_app_flutter/theme/message_dialog.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../model/category.dart';
@@ -67,7 +67,7 @@ class _GetStartedScreenState extends State<GetStartedScreen>
             _buildDivider(context),
             _buildTitleAndCarousel(themeProvider),
             _buildHeading(themeProvider),
-            const SizedBox(height: 30),
+            const SizedBox(height: 5),
             _buildButton(themeProvider, "SIGN IN", const LoginScreen(), themeProvider.isDark ? Colors.white : primaryColors),
             _buildDivider(context),
             _buildButton(themeProvider, "SIGN UP", const RegisterScreen(), themeProvider.isDark ? Colors.white : primaryColors),
@@ -107,7 +107,7 @@ class _GetStartedScreenState extends State<GetStartedScreen>
   Widget _buildRotatingLogo(ThemeProvider themeProvider) {
     return Center(
       child: Container(
-        height: 200,
+        height: 150,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           boxShadow: [
@@ -145,9 +145,9 @@ class _GetStartedScreenState extends State<GetStartedScreen>
 
   Widget _buildTitleAndCarousel(ThemeProvider themeProvider) {
     return SizedBox(
-      height: 320,
+      height: MediaQuery.of(context).size.height * 0.35, // Responsive height
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             _buildText("Breaking Boundaries with Media", 20, false, themeProvider.isDark),
@@ -160,8 +160,10 @@ class _GetStartedScreenState extends State<GetStartedScreen>
                   setState(() => activeIndex = index);
                 },
                 autoPlay: true,
+                autoPlayAnimationDuration: const Duration(seconds: 1),
+                autoPlayCurve: Curves.fastOutSlowIn,
                 aspectRatio: 16 / 9,
-                viewportFraction: 0.6,
+                viewportFraction: 0.7,
                 enlargeCenterPage: true,
               ),
             ),
@@ -173,30 +175,21 @@ class _GetStartedScreenState extends State<GetStartedScreen>
 
   Widget _buildHeading(ThemeProvider themeProvider) {
     return Center(
-      child: _buildText("Breaking News", 50, false, themeProvider.isDark),
+      child: _buildText("NewPulses", 40, false, themeProvider.isDark),
     );
   }
 
   Widget _buildButton(ThemeProvider themeProvider, String text, Widget page, Color color) {
     return Center(
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 10000),
+        duration: const Duration(milliseconds: 1000),
         curve: Curves.easeInOut,
         width: MediaQuery.of(context).size.width * 0.5,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 8,
-              offset: const Offset(2, 5),
-            ),
-          ],
-        ),
         child: ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(color),
-            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+            backgroundColor: WidgetStatePropertyAll(color),
+            elevation: const WidgetStatePropertyAll(4),
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
           ),
           onPressed: () {
             Navigator.push(
@@ -237,7 +230,7 @@ class _GetStartedScreenState extends State<GetStartedScreen>
 
   Widget _buildCategoryCard(Category category) {
     return Container(
-      height: 200,
+      height: 180,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         image: DecorationImage(

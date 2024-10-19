@@ -34,7 +34,7 @@ class _LatestNewsSlideWidgetState extends State<CouselSlideWidget> {
       future: articles,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator(),);
+          return const Center(child: CircularProgressIndicator(),);
         }
         if (snapshot.hasError) {
           return const Center(
@@ -67,10 +67,11 @@ class _LatestNewsSlideWidgetState extends State<CouselSlideWidget> {
                   });
                 },
                 autoPlay: true,
+                autoPlayAnimationDuration: const Duration(seconds: 2),
                 aspectRatio: 16 / 9,
-                viewportFraction:
-                    0.8, // Điều chỉnh này có thể thay đổi để phù hợp với thiết kế của bạn
-                enlargeCenterPage: true, // Tắt phóng to trang ở giữa
+                viewportFraction: 1,
+                enlargeCenterPage: true,
+                autoPlayCurve: Curves.fastOutSlowIn
               ),
             ),
 
@@ -82,7 +83,7 @@ class _LatestNewsSlideWidgetState extends State<CouselSlideWidget> {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: AnimatedSmoothIndicator(
-                duration: Duration(milliseconds: 800),
+                duration: const Duration(milliseconds: 800),
                 activeIndex: activeIndex,
                 count: widget.dotSize,
                 effect: const WormEffect(

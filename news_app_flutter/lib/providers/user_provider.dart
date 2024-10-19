@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:news_app_flutter/screen/details/login_screen.dart';
 import 'package:news_app_flutter/screen/home_screen.dart';
-import 'package:news_app_flutter/widget/message_dialog.dart';
+import 'package:news_app_flutter/theme/message_dialog.dart';
 import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +10,9 @@ import '../model/user.dart';
 class UserProvider extends ChangeNotifier {
   late User _currentUser;
 
+  //GETTER
   User get currentUser => _currentUser;
+
 
   List<User> _users = [
     User("1", "user01", "password01", "Nguyen Van A", "assets/images/user1.jpg",
@@ -50,13 +52,14 @@ class UserProvider extends ChangeNotifier {
               page: const HomeScreen(),
               beginOffset: const Offset(0, 1),
               endOffset: Offset.zero,
-              duration: Duration(milliseconds: 1000)));
+              duration: const Duration(milliseconds: 1000)));
     } else {
       showMessageDialog(context, "Login Failed", false);
     }
     notifyListeners();
   }
 
+  //LOGOUT
   void logout(BuildContext context) async {
     _currentUser == null;
     await Future.delayed(const Duration(milliseconds: 1000));
@@ -67,8 +70,9 @@ class UserProvider extends ChangeNotifier {
             page: const LoginScreen(),
             beginOffset: const Offset(0, 1),
             endOffset: Offset.zero,
-            duration: Duration(milliseconds: 1000)));
+            duration: const Duration(milliseconds: 1000)));
   }
+
 
   static UserProvider of(BuildContext context, {listen = true}) {
     return Provider.of(context, listen: listen);

@@ -6,22 +6,23 @@ import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/providers/user_provider.dart';
 
 import '../../model/user.dart';
-
+import '../../theme/style.dart';
+import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<RegisterScreen> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
-  TextEditingController _countryController = TextEditingController();
-  TextEditingController _fullnameController = TextEditingController();
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _countryController = TextEditingController();
+  final TextEditingController _fullnameController = TextEditingController();
   bool? isMale;
 
   @override
@@ -37,7 +38,6 @@ class _LoginScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final themeProvider = ThemeProvider.of(context);
     final userProvider = UserProvider.of(context);
 
@@ -50,156 +50,17 @@ class _LoginScreenState extends State<RegisterScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    IconButton(onPressed: (){
-                      Navigator.pop(context);
-                    }, icon: Icon(Icons.arrow_back_ios)),
-                  ],
-                ),
-                _text("SIGN UP", 30, textFontTitle, FontWeight.w700, themeProvider.isDark ? primaryColors : Colors.black),
-                const SizedBox(
-                  height: 8,
-                ),
-                _loginSocialNetwork(context, Colors.blueAccent, Colors.white,
-                    "facebook.svg", "Sign up with Facebook", () {}),
-                const SizedBox(
-                  height: 8,
-                ),
-                _loginSocialNetwork(context, themeProvider.isDark ? Colors.white : Colors.grey.withOpacity(0.1),
-                    Colors.black, "google.svg", "Sign up with Google", () {}),
-                const SizedBox(
-                  height: 8,
-                ),
-                _loginSocialNetwork(context,themeProvider.isDark ? Colors.white : Colors.grey.withOpacity(0.1),
-                    Colors.black, "apple.svg", "Sign up with Apple", () {}),
-                const SizedBox(
-                  height: 15,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                          child: Divider(
-                            color: Colors.grey.withOpacity(0.5),
-                            thickness: 1,
-                          )),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8, right: 8),
-                        child: _text("or login with email", 14, textFontContent, FontWeight.w400, themeProvider.isDark ? Colors.white : Colors.black),
-                      ),
-                      Expanded(
-                          child: Divider(
-                            color: Colors.grey.withOpacity(0.5),
-                          )),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                _TextInputActionWidget(
-                    controller: _usernameController,
-                    hinttext: "Enter username",
-                    label: "Username",
-                    icon: const Icon(Icons.person),
-                    isPassword: false),
-                const SizedBox(
-                  height: 8,
-                ),
-                _TextInputActionWidget(
-                    controller: _passwordController,
-                    hinttext: "Enter password",
-                    label: "Password",
-                    icon: const Icon(Icons.key),
-                    isPassword: true),
-                const SizedBox(
-                  height: 8,
-                ),
-                _TextInputActionWidget(
-                    controller: _fullnameController,
-                    hinttext: "Enter fullname",
-                    label: "Fullname",
-                    icon: const Icon(Icons.drive_file_rename_outline),
-                    isPassword: false),
-                const SizedBox(
-                  height: 8,
-                ),
-                _TextInputActionWidget(
-                    controller: _phoneController,
-                    hinttext: "Enter phone number",
-                    label: "PhoneNumber",
-                    icon: const Icon(Icons.phone_in_talk),
-                    isPassword: false),
-                const SizedBox(
-                  height: 8,
-                ),
-                _TextInputActionWidget(
-                    controller: _emailController,
-                    hinttext: "Enter email",
-                    label: "Email",
-                    icon: const Icon(Icons.email),
-                    isPassword: false),
-                const SizedBox(
-                  height: 8,
-                ),
-                _TextInputActionWidget(
-                    controller: _countryController,
-                    hinttext: "Enter country",
-                    label: "Country",
-                    icon: const Icon(Icons.location_pin),
-                    isPassword: false),
-                const SizedBox(
-                  height: 8,
-                ),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: RadioListTile<bool>(
-                        title: Text("Male"),
-                        value: true,
-                        groupValue: isMale,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            isMale = value;
-                          });
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: RadioListTile<bool>(
-                        title: Text("Female"),
-                        value: false,
-                        groupValue: isMale,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            isMale = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        visualDensity: const VisualDensity(horizontal: 3, vertical: 4),
-                        backgroundColor: const WidgetStatePropertyAll(primaryColors),
-                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
-                        animationDuration: const Duration(milliseconds: 2000),
-                        shadowColor: const WidgetStatePropertyAll(Colors.black),
-                        fixedSize: WidgetStatePropertyAll(Size.fromWidth(MediaQuery.of(context).size.width))
-                    ),
-                    onPressed: () {
-                      bool gender = isMale ?? true;
-                      userProvider.addUsers(context, User("${userProvider.users.length+1}",_usernameController.text, _passwordController.text, _fullnameController.text, "assets/images/user4.jpg",_phoneController.text,_emailController.text,_countryController.text,gender));
-                    },
-                    child: _text("SIGN UP", 25, textFontContent, FontWeight.w600,
-                        Colors.white)
-                ),
-                SizedBox(height: 15,),
+                _buildBackButton(context),
+                _buildTitle(themeProvider),
+                const SizedBox(height: 8),
+                _buildSocialLoginButtons(context, themeProvider),
+                const SizedBox(height: 15),
+                _buildDividerWithText(context, themeProvider, "or login with email"),
+                const SizedBox(height: 15),
+                _buildTextFields(),
+                _buildGenderSelection(),
+                const SizedBox(height: 15),
+                _buildSignUpButton(context, userProvider,themeProvider),
               ],
             ),
           ),
@@ -207,110 +68,168 @@ class _LoginScreenState extends State<RegisterScreen> {
       ),
     );
   }
-}
 
-Widget _loginSocialNetwork(BuildContext context, Color color, Color textColor,
-    String url, String text, Function function) {
-  return GestureDetector(
-    onTap: () {
-      function();
-    },
-    child: Container(
-      width: MediaQuery.of(context).size.width,
-      height: 60,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: color),
-          color: color),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 12, bottom: 12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: SvgPicture.asset("assets/images/$url", height: 100),
-            ),
-            _text(text, 18, textFontContent, FontWeight.w400, textColor)
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-Widget _text(
-    String text, double size, String textFont, FontWeight weight, Color color) {
-  return Text(text,
-      style: TextStyle(
-          color: color,
-          fontSize: size,
-          fontFamily: textFont,
-          fontWeight: weight));
-}
-
-class _TextInputActionWidget extends StatefulWidget {
-  final TextEditingController controller;
-  final String hinttext;
-  final String label;
-  final Icon icon;
-  final bool isPassword;
-
-  const _TextInputActionWidget({
-    Key? key,
-    required this.controller,
-    required this.hinttext,
-    required this.label,
-    required this.icon,
-    required this.isPassword,
-  }) : super(key: key);
-
-  @override
-  _TextInputActionWidgetState createState() => _TextInputActionWidgetState();
-}
-
-class _TextInputActionWidgetState extends State<_TextInputActionWidget> {
-  bool isObserve = true;
-
-  @override
-  Widget build(BuildContext context) {
-    final themeProvider = ThemeProvider.of(context);
-
-    return TextFormField(
-      controller: widget.controller,
-      obscureText: widget.isPassword ? isObserve : !isObserve,
-      decoration: InputDecoration(
-        hintText: widget.hinttext,
-        hintStyle: TextStyle(
-            fontFamily: textFontContent,
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
-            color: themeProvider.isDark ? Colors.white : Colors.black),
-        label: Text(widget.label),
-        labelStyle: TextStyle(
-            fontFamily: textFontContent,
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
-            color: themeProvider.isDark ? Colors.white : Colors.black),
-        prefixIcon: widget.icon,
-        suffixIcon: widget.isPassword
-            ? IconButton(
-          icon: Icon(
-            isObserve ? Icons.visibility_off : Icons.visibility,
-          ),
+  Widget _buildBackButton(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
           onPressed: () {
-            setState(() {
-              isObserve = !isObserve;
-            });
+            Navigator.pop(context);
           },
-        )
-            : null,
-        border: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.white24),
-          borderRadius: BorderRadius.circular(20),
+          icon: const Icon(Icons.arrow_back_ios),
         ),
+      ],
+    );
+  }
+
+  Widget _buildTitle(ThemeProvider themeProvider) {
+    return Style.styleTitleText(
+      "SIGN UP",
+      30, themeProvider
+    );
+  }
+
+  Widget _buildSocialLoginButtons(BuildContext context, ThemeProvider themeProvider) {
+    return Column(
+      children: [
+        loginSocialNetwork(context, Colors.blueAccent, Colors.white, "facebook.svg", "Sign up with Facebook", () {},themeProvider),
+        const SizedBox(height: 8),
+        loginSocialNetwork(context, themeProvider.isDark ? Colors.white : Colors.grey.withOpacity(0.1), Colors.black, "google.svg", "Sign up with Google", () {},themeProvider),
+      ],
+    );
+  }
+
+  Widget _buildDividerWithText(BuildContext context, ThemeProvider themeProvider, String textControl) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
+        children: [
+          Expanded(
+            child: Divider(color: Colors.grey.withOpacity(0.5), thickness: 1),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Style.styleContentText(textControl, 14,themeProvider),
+          ),
+          Expanded(
+            child: Divider(color: Colors.grey.withOpacity(0.5)),
+          ),
+        ],
       ),
     );
   }
+
+  Widget _buildTextFields() {
+    return Column(
+      children: [
+        TextInputActionWidget(
+          controller: _usernameController,
+          hinttext: "Enter username",
+          label: "Username",
+          icon: const Icon(Icons.person),
+          isPassword: false,
+        ),
+        const SizedBox(height: 8),
+        TextInputActionWidget(
+          controller: _passwordController,
+          hinttext: "Enter password",
+          label: "Password",
+          icon: const Icon(Icons.key),
+          isPassword: true,
+        ),
+        const SizedBox(height: 8),
+        TextInputActionWidget(
+          controller: _fullnameController,
+          hinttext: "Enter fullname",
+          label: "Fullname",
+          icon: const Icon(Icons.drive_file_rename_outline),
+          isPassword: false,
+        ),
+        const SizedBox(height: 8),
+        TextInputActionWidget(
+          controller: _phoneController,
+          hinttext: "Enter phone number",
+          label: "PhoneNumber",
+          icon: const Icon(Icons.phone_in_talk),
+          isPassword: false,
+        ),
+        const SizedBox(height: 8),
+        TextInputActionWidget(
+          controller: _emailController,
+          hinttext: "Enter email",
+          label: "Email",
+          icon: const Icon(Icons.email),
+          isPassword: false,
+        ),
+        const SizedBox(height: 8),
+        TextInputActionWidget(
+          controller: _countryController,
+          hinttext: "Enter country",
+          label: "Country",
+          icon: const Icon(Icons.location_pin),
+          isPassword: false,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGenderSelection() {
+    return Row(
+      children: [
+        Expanded(
+          child: RadioListTile<bool>(
+            title: const Text("Male"),
+            value: true,
+            groupValue: isMale,
+            onChanged: (bool? value) {
+              setState(() {
+                isMale = value;
+              });
+            },
+          ),
+        ),
+        Expanded(
+          child: RadioListTile<bool>(
+            title: const Text("Female"),
+            value: false,
+            groupValue: isMale,
+            onChanged: (bool? value) {
+              setState(() {
+                isMale = value;
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSignUpButton(BuildContext context, UserProvider userProvider, ThemeProvider themeProvider) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 5), backgroundColor: primaryColors,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        fixedSize: Size(MediaQuery.of(context).size.width * 0.4, 48),
+      ),
+      onPressed: () {
+        bool gender = isMale ?? true;
+        userProvider.addUsers(
+          context,
+          User(
+            "${userProvider.users.length + 1}",
+            _usernameController.text,
+            _passwordController.text,
+            _fullnameController.text,
+            "assets/images/user4.jpg",
+            _phoneController.text,
+            _emailController.text,
+            _countryController.text,
+            gender,
+          ),
+        );
+      },
+      child: Style.styleContentText("SIGN UP", 18, themeProvider),
+    );
+  }
 }
+

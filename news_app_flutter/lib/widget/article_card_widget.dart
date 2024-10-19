@@ -7,6 +7,7 @@ import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
 // IMPORT
 import '../model/article.dart';
 import '../providers/history_provider.dart';
+import '../theme/style.dart';
 
 class ArticleCardWidget extends StatefulWidget {
   const ArticleCardWidget({super.key, required this.articleIndex});
@@ -21,110 +22,88 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
   @override
   Widget build(BuildContext context) {
 
+    //PROVIDER
     final historyProvider = HistoryProvider.of(context);
 
     // Initialize
     final article = widget.articleIndex;
-    //Provider
-    return Stack(
-      children: [
 
-        //IMAGE
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Image.network(
-            article.urlToImage ?? 'https://s.abcnews.com/images/US/abcnl__NEW_streamingnow_1664457649883_hpMain_16x9_608.jpg',
-            errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-              return const SizedBox.shrink();  // Ẩn ảnh khi lỗi
-            },
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-        ),
+    return RepaintBoundary(
+      child: Stack(
+        children: [
+          //IMAGE
+          _image(article),
 
-        // OVERLAY
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              historyProvider.toggleHistoryNews(article);
-              Navigator.push(
+          // OVERLAY
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                historyProvider.toggleHistoryNews(article);
+                Style.navigatorPush(
                   context,
-                  SlidePageRoute(
-                      page: NewsDetails(
-                        articleIndex: article,
-                      ),
-                      beginOffset: const Offset(1, 0),
-                      endOffset: Offset.zero,
-                      duration: const Duration(milliseconds: 1000)));
-            });
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.black.withOpacity(0.5), // Độ trong suốt của màu đen
-            ),
-          ),
-        ),
-
-        // AUTHOR
-        Positioned(
-          top: 75,
-          left: 20,
-          child: Column(
-            children: [
-              Text(
-                "by ${article.author ?? 'Unknown'}",
-                style: const TextStyle(
-                  fontFamily: textFontContent,
-                  fontWeight: FontWeight.w300,
-                  fontSize: 12,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        //TITLE
-        Positioned(
-          top: 90,
-          left: 20,
-          child: Container(
-            width: 300,
-            child: Text(
-              article.title ?? 'Title',
-              style: const TextStyle(
-                fontFamily: textFontContent,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-                color: Colors.white,
+                  NewsDetails(
+                    articleIndex: article,
+                  ),
+                );
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color:
+                    Colors.black.withOpacity(0.5), // Độ trong suốt của màu đen
               ),
             ),
           ),
-        ),
 
-        //CONTENT
-        Positioned(
-          bottom: 15,
-          left: 20,
-          child: Container(
-            width: 280,
-            child: Text(
-              "'${article.content ?? 'No content'}'",
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontFamily: textFontContent,
-                fontWeight: FontWeight.w300,
-                fontSize: 12,
-                color: Colors.white,
-              ),
+          // AUTHOR
+          Positioned(
+            top: 75,
+            left: 20,
+            child: Column(
+              children: [
+                Style.styleContentOnCard("by ${article.author ?? 'Unknown'}", 12)
+              ],
             ),
           ),
-        )
 
-      ],
+          //TITLE
+          Positioned(
+            top: 90,
+            left: 20,
+            child: SizedBox(
+              width: 300,
+              child: Style.styleTitleOnCard(article.title, 14)
+            ),
+          ),
+
+          //CONTENT
+          Positioned(
+            bottom: 15,
+            left: 20,
+            child: SizedBox(
+              width: 280,
+              child: Style.styleContentOnCard("'${article.content ?? 'No content'}'", 12)
+              ),
+            ),
+        ],
+      ),
     );
   }
+}
+
+Widget _image(Article article) {
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(10),
+    child: Image.network(
+      article.urlToImage!,
+      errorBuilder:
+          (BuildContext context, Object error, StackTrace? stackTrace) {
+        return const SizedBox.shrink(); // Ẩn ảnh khi lỗi
+      },
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+  );
 }

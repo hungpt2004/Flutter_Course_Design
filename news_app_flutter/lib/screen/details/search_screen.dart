@@ -2,19 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:news_app_flutter/providers/theme_provider.dart';
+import 'package:news_app_flutter/providers/user_provider.dart';
 import 'package:news_app_flutter/widget/article_notification_card_widget.dart';
 
 import '../../constant/constant.dart';
 import '../../model/article.dart';
 import '../../service/news_data_api.dart';
+import '../../theme/style.dart';
 import '../../widget/article_category_card_widget.dart';
 import '../../widget/button_category_widget.dart';
 import '../../widget/slide_page_route_widget.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key, required this.searchController});
-
-  final TextEditingController searchController;
+  const SearchScreen({super.key});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -22,11 +23,19 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   late Future<List<Article>> articles;
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     articles = APIService().getLatestNews();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   //Method fetch data by category
@@ -39,19 +48,20 @@ class _SearchScreenState extends State<SearchScreen> {
   //Method fetch data by keyword
   Future<void> fetchDataByKeyword(String keyword) async {
     setState(() {
-       articles = APIService().getEverythingNews(keyword);
+      articles = APIService().getEverythingNews(keyword);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = ThemeProvider.of(context);
+
     return Scaffold(
       body: Stack(children: [
         ListView(
           children: [
-            const SizedBox(
-              height: 10,
-            ),
+
+            Style.space(10, 0),
 
             //SEARCH & NOTIFICATION
             SizedBox(
@@ -63,48 +73,71 @@ class _SearchScreenState extends State<SearchScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Flexible(
-                      child: TextFormField(
-                        controller: widget.searchController,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: textFontContent,
-                            fontSize: 15),
-                        decoration: InputDecoration(
-                          hintText: 'Dogecoin to the Moon...',
-                          hintStyle: const TextStyle(
+                      child: Form(
+                        key: _formKey,
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == null || value.length == 0) {
+                              return "Search word can't be empty";
+                            } else {
+                              return null;
+                            }
+                          },
+                          controller: _searchController,
+                          style: const TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: textFontContent,
-                              fontSize: 12),
-                          suffixIcon: Padding(
-                            padding: const EdgeInsets.only(right: 0),
-                            child:
-
-                            widget.searchController.text == ""
-
-                                ? IconButton(
-                              onPressed: () async {
-                                await fetchDataByKeyword(widget.searchController.text);
-                              },
-                              icon: const Icon(Icons.search_outlined,
-                                color: primaryColors,
-                                size: 25,
-                              ),
-                            )
-                                : IconButton(
-                              onPressed: () {
+                              fontSize: 15),
+                          decoration: InputDecoration(
+                            errorMaxLines: 1,
+                            hintText: 'Dogecoin to the Moon...',
+                            hintStyle: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: textFontContent,
+                                fontSize: 12),
+                            prefixIcon: IconButton(
+                                onPressed: () {
                                   Navigator.pop(context);
-                              },
-                              icon: const Icon(Icons.clear,
-                                color: primaryColors,
-                                size: 25,
-                              ),
+                                },
+                                icon: Icon(
+                                  Icons.home_filled,
+                                  color: themeProvider.isDark
+                                      ? Colors.white
+                                      : primaryColors,
+                                )),
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.only(right: 0),
+                              child: _searchController.text == ""
+                                  ? IconButton(
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          fetchDataByKeyword(
+                                              _searchController.text);
+                                        }
+                                      },
+                                      icon: const Icon(
+                                        Icons.search_outlined,
+                                        color: primaryColors,
+                                        size: 25,
+                                      ),
+                                    )
+                                  : IconButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(
+                                        Icons.clear,
+                                        color: primaryColors,
+                                        size: 25,
+                                      ),
+                                    ),
                             ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(
-                              style: BorderStyle.none,
-                              color: primaryColors,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(
+                                style: BorderStyle.none,
+                                color: primaryColors,
+                              ),
                             ),
                           ),
                         ),
@@ -115,9 +148,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
 
-            const SizedBox(
-              height: 10,
-            ),
+            Style.space(10, 0),
 
             Padding(
               padding: const EdgeInsets.only(left: 12),
@@ -129,9 +160,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         onPressed: () {
                           _showModalFilter(context);
                         },
-                        style: ButtonStyle(
+                        style: const ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(primaryColors),
+                              WidgetStatePropertyAll(primaryColors),
                         ),
                         child: const Padding(
                           padding: EdgeInsets.all(9.0),
@@ -153,9 +184,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                         )),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
+
+                  Style.space(10, 0),
+
                   Flexible(
                     flex: 4,
                     child: ButtonCategory(
@@ -231,7 +262,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ElevatedButton(
                           onPressed: () {},
                           style: ButtonStyle(
-                            side: MaterialStatePropertyAll(
+                            side: WidgetStatePropertyAll(
                               BorderSide(color: Colors.grey.withOpacity(0.5)),
                             ),
                           ),
@@ -295,7 +326,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     Container(
                         margin: const EdgeInsets.only(left: 5, bottom: 10),
                         width: MediaQuery.of(context).size.width * 0.905,
-                        child: _buttonSubmit("Save", () {}))
+                        child: _buttonSubmit("Save", () {})),
                   ],
                 )
               ],

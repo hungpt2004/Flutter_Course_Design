@@ -47,15 +47,16 @@ class _ButtonCategoryState extends State<ButtonCategory> {
                 //BUTTON CHOOSE TYPE
                 TextButton(
                     style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
-                            const EdgeInsets.only(
+                      elevation: const WidgetStatePropertyAll(4),
+                        padding: const WidgetStatePropertyAll(
+                            EdgeInsets.only(
                                 right: 2, left: 2, top: 2, bottom: 2)),
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStatePropertyAll(
                             selectType == type
                                 ? primaryColors
                                 : Colors.transparent),
                         shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                            WidgetStatePropertyAll<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                     side: BorderSide(

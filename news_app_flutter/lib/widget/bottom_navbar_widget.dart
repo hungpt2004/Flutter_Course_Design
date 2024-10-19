@@ -37,7 +37,7 @@ Widget bottomNavbar(BuildContext context, Function function, int selected) {
     left: 0,
     right: 0,
     child: Padding(
-      padding: const EdgeInsets.all(50.0),
+      padding: const EdgeInsets.all(30.0),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.grey[100],

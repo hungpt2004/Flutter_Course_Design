@@ -3,10 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/model/article.dart';
 import 'package:news_app_flutter/screen/details/news_detail_screen.dart';
+import 'package:news_app_flutter/theme/style.dart';
 import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
 
 import '../providers/history_provider.dart';
-import 'message_dialog.dart';
+import '../theme/message_dialog.dart';
 
 class ArticleListCategory extends StatelessWidget {
   final Future<List<Article>> articles;
@@ -21,11 +22,9 @@ class ArticleListCategory extends StatelessWidget {
       future: articles,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          print('CATEGORY: ${snapshot.data!.length}');
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return const Center(
-              child:
-                  Text('Have an error when fetching data in Article Category'));
+          return const Center(child: Text('Have an error when fetching data in Article Category'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(child: Text('Have no data in Article Category'));
         }
@@ -42,6 +41,7 @@ class ArticleListCategory extends StatelessWidget {
               return SingleChildScrollView(
                 child: Stack(
                   children: [
+
                     //IMAGE
                     Padding(
                       padding: const EdgeInsets.all(12.0),
@@ -51,14 +51,6 @@ class ArticleListCategory extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(
                               10), // Thêm góc bo cho Container
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.white.withOpacity(0.2),
-                              spreadRadius: 2,
-                              blurRadius: 15,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
                         ),
 
                         //IMAGE
@@ -82,22 +74,14 @@ class ArticleListCategory extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             historyProvider.toggleHistoryNews(article);
-                             Navigator.push(
-                                context,
-                                SlidePageRoute(
-                                    page: NewsDetails(
-                                      articleIndex: articlesData[index],
-                                    ),
-                                    beginOffset: const Offset(0, 1),
-                                    endOffset: Offset.zero,
-                                    duration:
-                                    const Duration(milliseconds: 1000)),);
+                            Style.navigatorPush(context, NewsDetails(
+                              articleIndex: articlesData[index],
+                            ));
                           },
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Colors.black.withOpacity(
-                                  0.3), // Semi-transparent black overlay
+                              color: Colors.black.withOpacity(0.3), // Semi-transparent black overlay
                             ),
                             alignment: Alignment.center,
                             child: Column(
@@ -109,14 +93,7 @@ class ArticleListCategory extends StatelessWidget {
                                   child: SizedBox(
                                     width: double.infinity * 0.2,
                                     height: 50,
-                                    child: Text(
-                                      article.title ?? 'Title',
-                                      style: const TextStyle(
-                                          fontFamily: textFontTitle,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white),
-                                    ),
+                                    child: Style.styleTitleOnCard(article.title, 17)
                                   ),
                                 ),
                                 Padding(
@@ -126,7 +103,7 @@ class ArticleListCategory extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Container(
+                                      SizedBox(
                                         width: 150,
                                         child: Text(
                                           article.author ?? '',
@@ -139,14 +116,7 @@ class ArticleListCategory extends StatelessWidget {
                                               color: Colors.white),
                                         ),
                                       ),
-                                      Text(
-                                        formatDate(article.publishedAt),
-                                        style: const TextStyle(
-                                            fontFamily: textFontContent,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.white),
-                                      ),
+                                      Style.styleContentOnCard(formatDate(article.publishedAt), 10)
                                     ],
                                   ),
                                 )
@@ -156,6 +126,7 @@ class ArticleListCategory extends StatelessWidget {
                         ),
                       ),
                     ),
+
                   ],
                 ),
               );
@@ -166,4 +137,6 @@ class ArticleListCategory extends StatelessWidget {
     );
   }
 }
+
+
 

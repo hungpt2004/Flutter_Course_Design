@@ -6,7 +6,8 @@ import 'package:news_app_flutter/providers/history_provider.dart';
 import '../../model/article.dart';
 import 'package:intl/intl.dart';
 import '../../providers/theme_provider.dart';
-import '../../widget/message_dialog.dart';
+import '../../theme/message_dialog.dart';
+import '../../theme/style.dart';
 
 class NewsDetails extends StatefulWidget {
   const NewsDetails({super.key, required this.articleIndex});
@@ -53,7 +54,7 @@ class _NewsDetailsState extends State<NewsDetails> {
               child: Container(
                 height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
-                    color: themeProvider.isDark ? Colors.black12 : Colors.white,
+                    color: themeProvider.isDark ? Colors.black : Colors.white,
                     borderRadius: BorderRadius.circular(30)),
                 child: Column(
                   children: [
@@ -63,8 +64,8 @@ class _NewsDetailsState extends State<NewsDetails> {
                       child: Row(
                         children: [
                           Expanded(
-                              child: _description(article.content ?? 'Content',
-                                  themeProvider.isDark)),
+                              child: _description(
+                                  article.content ?? 'Content', themeProvider)),
                         ],
                       ),
                     ),
@@ -76,7 +77,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                           Expanded(
                               child: _description(
                                   article.description ?? 'Description',
-                                  themeProvider.isDark)),
+                                  themeProvider)),
                         ],
                       ),
                     ),
@@ -228,15 +229,8 @@ class _NewsDetailsState extends State<NewsDetails> {
   }
 
   //DESCRIPTION
-  Widget _description(String content, bool themeProvider) {
-    return Text(
-      content,
-      style: TextStyle(
-          fontFamily: textFontContent,
-          fontSize: 17,
-          fontWeight: FontWeight.w400,
-          color: themeProvider ? Colors.white : Colors.black),
-    );
+  Widget _description(String content, ThemeProvider themeProvider) {
+    return Style.styleContentText(content, 17, themeProvider);
   }
 
   //TITLE

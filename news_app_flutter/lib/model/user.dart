@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:news_app_flutter/widget/message_dialog.dart';
 
 class User {
   String id;
