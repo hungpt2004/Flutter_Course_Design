@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/providers/user_provider.dart';
-import 'package:news_app_flutter/widget/bottom_navbar_widget.dart';
+import 'package:news_app_flutter/screen/home_screen.dart';
+import 'package:news_app_flutter/widget/bottom_navbar/bottom_navbar_widget.dart';
+
+import '../../theme/style.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -32,26 +35,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Container(
-                  child: Text(
-                    "Profile",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontFamily: textFontTitle,
-                      fontSize: 40,
-                      color: themeProvider.isDark ? Colors.white : primaryColors,
-                      shadows: CupertinoContextMenu.kEndBoxShadow,
-                    ),
-                  ),
+                  child: Style.styleTitlePage("Profile", 40, themeProvider)
                 ),
               ),
             ),
             // Positioned Back Button
             Positioned(
               top: 10,
-              left: 5,
+              left: 10,
               child: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  setState(() {
+                    Style.navigatorPush(context, const HomeScreen());
+                  });
                 },
                 icon: Icon(Icons.arrow_back_ios, color: themeProvider.isDark ? Colors.white : Colors.black,),
               ),
@@ -60,11 +56,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const SizedBox(height: 70),
+                    Style.space(70, 0),
                     _buildProfileImage(userProvider, isDarkTheme),
-                    const SizedBox(height: 10),
+                    Style.space(30, 0),
                     _buildUserDetails(context, userProvider, themeProvider),
-                    const SizedBox(height: 50),
+                    Style.space(50, 0),
                   ],
                 ),
               ),
@@ -97,13 +93,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           Positioned(
             bottom: 0,
-            right: 140,
+            right: 120,
             child: IconButton(
               onPressed: () {},
               icon: Icon(Icons.edit),
               color: isDarkTheme ? Colors.black : Colors.white,
               style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(
+                backgroundColor: WidgetStatePropertyAll(
                   isDarkTheme ? Colors.white : primaryColors,
                 ),
               ),
@@ -185,11 +181,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               borderSide: BorderSide.none,
             ),
             prefixIcon: IconButton(
-              onPressed: () {},
+              onPressed: onTap,
               icon: prefixIcon,
             ),
             suffixIcon: IconButton(
-              onPressed: onTap,
+              onPressed: (){},
               icon: const Icon(Icons.edit),
             ),
             prefixIconColor: themeProvider.isDark ? Colors.transparent : Colors.black,

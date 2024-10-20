@@ -4,15 +4,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/providers/user_provider.dart';
-import 'package:news_app_flutter/widget/article_notification_card_widget.dart';
+import 'package:news_app_flutter/widget/card/article_notification_card_widget.dart';
 
 import '../../constant/constant.dart';
 import '../../model/article.dart';
 import '../../service/news_data_api.dart';
 import '../../theme/style.dart';
-import '../../widget/article_category_card_widget.dart';
-import '../../widget/button_category_widget.dart';
-import '../../widget/slide_page_route_widget.dart';
+import '../../widget/card/article_category_card_widget.dart';
+import '../../widget/button/button_category_widget.dart';
+import '../../widget/route/slide_page_route_widget.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});

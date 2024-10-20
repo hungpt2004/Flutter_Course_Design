@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:news_app_flutter/screen/details/favourite_news_screen.dart';
 import 'package:news_app_flutter/screen/details/history_news_screen.dart';
 import 'package:news_app_flutter/screen/home_screen.dart';
-import 'package:news_app_flutter/screen/details/profile_screen.dart';
+import 'package:news_app_flutter/screen/auth/profile_screen.dart';
 
-import '../constant/constant.dart';
+import '../../constant/constant.dart';
 
 class BottomNavbarWidget extends StatefulWidget {
   const BottomNavbarWidget({super.key, required this.indexStaying});

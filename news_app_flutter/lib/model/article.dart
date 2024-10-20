@@ -36,4 +36,5 @@ class Article {
       content: json['content'] ?? 'No Content',
     );
   }
+
 }

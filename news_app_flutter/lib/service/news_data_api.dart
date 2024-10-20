@@ -16,10 +16,10 @@ class APIService {
       final dataResponse = await client.get(Uri.parse(url));
 
       if (dataResponse.statusCode == 200) {
-        final Map<String, dynamic> jsonData = json.decode(dataResponse.body);
-        final List<dynamic> articlesJson = jsonData['articles'];
 
-        // print("Response body: ${dataResponse.body}");
+        final Map<String, dynamic> jsonData = json.decode(dataResponse.body);
+
+        final List<dynamic> articlesJson = jsonData['articles'];
 
         return articlesJson.map((json) => Article.fromJson(json)).toList();
       } else {
@@ -34,20 +34,19 @@ class APIService {
   //Method fetch data top headlines by category, button category
   Future<List<Article>> getCategoryNews(String category) async {
     //Url
-    final String url =
-        "$baseUrl/top-headlines?country=us&category=$category&apiKey=$apiKey";
+    final String url = "$baseUrl/top-headlines?country=us&category=$category&apiKey=$apiKey";
 
     try {
+
       final dataResponse = await client.get(Uri.parse(url));
 
       //If success
       if (dataResponse.statusCode == 200) {
         //To save object follow MAP
         final Map<String, dynamic> jsonData = json.decode(dataResponse.body);
+
         //To save object convert from API
         final List<dynamic> articlesJson = jsonData['articles'];
-
-        // print("Response body: ${dataResponse.body}");
 
         return articlesJson.map((json) => Article.fromJson(json)).toList();
       } else {
@@ -61,19 +60,19 @@ class APIService {
 
   //Method fetch everything data by keyword, search field
   Future<List<Article>> getEverythingNews(String keyWord) async {
-    //Url
+
     final String url = "$baseUrl/everything?q=$keyWord&apiKey=$apiKey";
+
     try {
+
       final dataResponse = await client.get(Uri.parse(url));
 
       //If success
       if (dataResponse.statusCode == 200) {
-        //To save object follow MAP
-        final Map<String, dynamic> jsonData = json.decode(dataResponse.body);
-        //To save object convert from API
-        final List<dynamic> articlesJson = jsonData['articles'];
 
-        // print("Response body: ${dataResponse.body}");
+        final Map<String, dynamic> jsonData = json.decode(dataResponse.body);
+
+        final List<dynamic> articlesJson = jsonData['articles'];
 
         return articlesJson.map((json) => Article.fromJson(json)).toList();
       } else {

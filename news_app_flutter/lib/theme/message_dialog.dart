@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:news_app_flutter/theme/style.dart';
 
 import '../constant/constant.dart';
 
@@ -15,7 +16,7 @@ void showMessageDialog(BuildContext context, String message, bool status) {
           status ? Icons.check : Icons.clear,
           color: status ? Colors.green : Colors.red,
         ),
-        const SizedBox(width: 8),
+        Style.space(10, 0),
         Text(
           message,
           style: const TextStyle(
@@ -34,10 +35,10 @@ void showMessageDialog(BuildContext context, String message, bool status) {
           blurRadius: 5,
           offset: const Offset(0, 3)),
     ],
-    duration: Duration(seconds: 3),
+    duration: const Duration(seconds: 3),
     backgroundColor: Colors.white60,
     // Màu nền của Toast
-    margin: EdgeInsets.all(8),
+    margin: const EdgeInsets.all(8),
     // Lề của Toast
     borderRadius: BorderRadius.circular(8), // Bo góc cho Toast
   ).show(context);

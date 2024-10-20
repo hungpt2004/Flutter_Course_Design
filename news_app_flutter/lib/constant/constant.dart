@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 
-import '../widget/slide_page_route_widget.dart';
+import '../widget/route/slide_page_route_widget.dart';
 
   const primaryColors = Color(0xFFFF3A44);
   const secondaryColors = Color(0xFF0080FF);

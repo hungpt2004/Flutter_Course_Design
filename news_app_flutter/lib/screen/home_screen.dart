@@ -6,15 +6,15 @@ import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/screen/details/notification_screen.dart';
 import 'package:news_app_flutter/screen/details/search_screen.dart';
 import 'package:news_app_flutter/service/news_data_api.dart';
-import 'package:news_app_flutter/widget/article_category_card_widget.dart';
-import 'package:news_app_flutter/widget/bottom_navbar_widget.dart';
-import 'package:news_app_flutter/widget/button_category_widget.dart';
-import 'package:news_app_flutter/widget/carousel_slide_widget.dart';
-import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
+import 'package:news_app_flutter/widget/card/article_category_card_widget.dart';
+import 'package:news_app_flutter/widget/bottom_navbar/bottom_navbar_widget.dart';
+import 'package:news_app_flutter/widget/button/button_category_widget.dart';
+import 'package:news_app_flutter/widget/slide/carousel_slide_widget.dart';
+import 'package:news_app_flutter/widget/route/slide_page_route_widget.dart';
 import '../constant/constant.dart';
 import '../model/article.dart';
 import '../theme/style.dart';
-import '../widget/article_notification_card_widget.dart';
+import '../widget/card/article_notification_card_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.favouriteList}); // Keep it optional
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 //SEARCH & NOTIFICATION
                 SizedBox(
-                  width: MediaQuery.of(context).size.width,
+                  width: Style.styleWidthDevice(context),
                   height: 65,
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
@@ -87,13 +87,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                         RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(40))),
-                                    fixedSize: WidgetStatePropertyAll(
+                                    fixedSize: const WidgetStatePropertyAll(
                                         Size(double.infinity, 80)),
-                                    elevation: WidgetStatePropertyAll(4),
+                                    elevation: const WidgetStatePropertyAll(4),
                                     backgroundColor:
-                                        WidgetStatePropertyAll(primaryColors)),
+                                        const WidgetStatePropertyAll(primaryColors)),
                                 onPressed: () {
-                                 Style.navigatorPush(context, SearchScreen());
+                                 Style.navigatorPush(context, const SearchScreen());
                                 },
                                 child: Row(
                                   children: [
@@ -112,8 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: const ButtonStyle(
                               elevation: WidgetStatePropertyAll(4),
                               shape: WidgetStatePropertyAll(CircleBorder()),
-                              backgroundColor:
-                                  WidgetStatePropertyAll(primaryColors),
+                              backgroundColor: WidgetStatePropertyAll(primaryColors),
                               fixedSize: WidgetStatePropertyAll(Size(50, 80)),
                             ),
                             onPressed: () {
@@ -142,17 +141,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       Style.styleTitleText("Latest News", 30, themeProvider),
                       TextButton(
                         onPressed: () {
-                          Style.navigatorPush(
-                              context,
-                              ArticleNotificationCard(
-                                  articleList: listArticle));
+                          Style.navigatorPush(context, ArticleNotificationCard(articleList: listArticle));
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Style.styleContentText(
-                                "See All", 14, themeProvider),
+                            Style.styleContentText("See All", 14, themeProvider),
                             Style.space(5, 0),
                             Icon(
                               Icons.arrow_forward,
@@ -182,7 +177,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 //ARTICLE CATEGORY
                 Expanded(
-                  // Use Expanded to take up the remaining space
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: ArticleListCategory(articles: articles)

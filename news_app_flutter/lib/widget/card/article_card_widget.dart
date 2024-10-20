@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/screen/details/news_detail_screen.dart';
-import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
+import 'package:news_app_flutter/widget/route/slide_page_route_widget.dart';
 // IMPORT
-import '../model/article.dart';
-import '../providers/history_provider.dart';
-import '../theme/style.dart';
+import '../../model/article.dart';
+import '../../providers/history_provider.dart';
+import '../../theme/style.dart';
 
 class ArticleCardWidget extends StatefulWidget {
   const ArticleCardWidget({super.key, required this.articleIndex});

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/service/news_data_api.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:news_app_flutter/widget/article_card_widget.dart';
+import 'package:news_app_flutter/widget/card/article_card_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../model/article.dart';
+import '../../model/article.dart';
 
 class CouselSlideWidget extends StatefulWidget {
   const CouselSlideWidget({super.key});

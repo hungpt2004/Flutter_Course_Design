@@ -3,8 +3,8 @@ import 'package:news_app_flutter/providers/favourite_provider.dart';
 import 'package:news_app_flutter/providers/history_provider.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/providers/user_provider.dart';
-import 'package:news_app_flutter/screen/details/get_started_screen.dart';
-import 'package:news_app_flutter/screen/details/login_screen.dart';
+import 'package:news_app_flutter/screen/start/get_started_screen.dart';
+import 'package:news_app_flutter/screen/auth/login_screen.dart';
 import 'package:news_app_flutter/screen/home_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +45,6 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             theme: themeData,
             debugShowCheckedModeBanner: false,
-            // home: SafeArea(child: GetStartedScreen(isDark: isDark,)), // No need to pass isDark
             home: GetStartedScreen(isDark: isDark),
           );
         },

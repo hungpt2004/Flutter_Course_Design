@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/theme/message_dialog.dart';
-import '../model/article.dart';
-import '../theme/style.dart';
+import '../../model/article.dart';
+import '../../theme/style.dart';
 
 class ArticleNotificationCard extends StatelessWidget {
   const ArticleNotificationCard({super.key, required this.articleList});

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../constant/constant.dart';
 import '../providers/theme_provider.dart';
-import '../widget/slide_page_route_widget.dart';
+import '../widget/route/slide_page_route_widget.dart';
 
 class Style {
   static Widget space(double height, double width){
@@ -12,6 +12,7 @@ class Style {
       width: width,
     );
   }
+
   static Widget styleContentText(String text, double size, ThemeProvider themeProvider){
     return Text(
       text,
@@ -74,10 +75,6 @@ class Style {
     );
   }
 
-  // color: themeProvider.isDark ? Colors.white : primaryColors
-
-
-
   static void navigatorPush(BuildContext context, Widget page){
     Navigator.push(
         context,
@@ -87,5 +84,10 @@ class Style {
             endOffset: Offset.zero,
             duration: const Duration(milliseconds: 1000)));
   }
+
+  static double styleWidthDevice(BuildContext context){
+      return MediaQuery.of(context).size.width;
+  }
+
 
 }

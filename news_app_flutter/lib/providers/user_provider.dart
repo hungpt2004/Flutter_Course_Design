@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:news_app_flutter/screen/details/login_screen.dart';
+import 'package:news_app_flutter/screen/auth/login_screen.dart';
 import 'package:news_app_flutter/screen/home_screen.dart';
 import 'package:news_app_flutter/theme/message_dialog.dart';
-import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
+import 'package:news_app_flutter/widget/route/slide_page_route_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../model/user.dart';
+import '../theme/style.dart';
 
 class UserProvider extends ChangeNotifier {
   late User _currentUser;
@@ -40,41 +41,36 @@ class UserProvider extends ChangeNotifier {
 
   //LOGIN
   void login(BuildContext context, String username, String password) async {
+    if (username.isEmpty || password.isEmpty) {
+      showMessageDialog(context, "Please fill in both username and password", false);
+      return; // Không tiếp tục thực hiện nếu có dữ liệu trống
+    }
     User? user = _users.firstWhere(
         (items) => items.username == username && items.password == password);
     if (user != null) {
       _currentUser = user;
       showMessageDialog(context, "Login Successfully", true);
       await Future.delayed(const Duration(milliseconds: 1000));
-      Navigator.push(
-          context,
-          SlidePageRoute(
-              page: const HomeScreen(),
-              beginOffset: const Offset(0, 1),
-              endOffset: Offset.zero,
-              duration: const Duration(milliseconds: 1000)));
+      Style.navigatorPush(context, const HomeScreen());
+    } else if (username.isEmpty && password.isEmpty){
+      showMessageDialog(context, "Password or Username is empty", false);
     } else {
-      showMessageDialog(context, "Login Failed", false);
+      showMessageDialog(context, "Login failed", false);
     }
     notifyListeners();
   }
 
   //LOGOUT
   void logout(BuildContext context) async {
-    _currentUser == null;
+    _currentUser == "";
     await Future.delayed(const Duration(milliseconds: 1000));
     showMessageDialog(context, "Please wait a few seconds !", true);
-    Navigator.push(
-        context,
-        SlidePageRoute(
-            page: const LoginScreen(),
-            beginOffset: const Offset(0, 1),
-            endOffset: Offset.zero,
-            duration: const Duration(milliseconds: 1000)));
+    Style.navigatorPush(context, const LoginScreen());
   }
 
-
+  //listen true => lang nghe su thay doi
   static UserProvider of(BuildContext context, {listen = true}) {
     return Provider.of(context, listen: listen);
   }
+
 }

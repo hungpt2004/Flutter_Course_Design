@@ -7,7 +7,7 @@ import 'package:news_app_flutter/service/news_data_api.dart';
 import '../../model/article.dart';
 import '../../providers/theme_provider.dart';
 import '../../theme/style.dart';
-import '../../widget/article_notification_card_widget.dart';
+import '../../widget/card/article_notification_card_widget.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});

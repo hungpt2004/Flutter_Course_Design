@@ -4,10 +4,10 @@ import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/model/article.dart';
 import 'package:news_app_flutter/screen/details/news_detail_screen.dart';
 import 'package:news_app_flutter/theme/style.dart';
-import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
+import 'package:news_app_flutter/widget/route/slide_page_route_widget.dart';
 
-import '../providers/history_provider.dart';
-import '../theme/message_dialog.dart';
+import '../../providers/history_provider.dart';
+import '../../theme/message_dialog.dart';
 
 class ArticleListCategory extends StatelessWidget {
   final Future<List<Article>> articles;

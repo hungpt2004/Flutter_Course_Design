@@ -3,9 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/providers/user_provider.dart';
-import 'package:news_app_flutter/screen/details/get_started_screen.dart';
-import 'package:news_app_flutter/screen/details/register_screen.dart';
-import 'package:news_app_flutter/widget/slide_page_route_widget.dart';
+import 'package:news_app_flutter/screen/start/get_started_screen.dart';
+import 'package:news_app_flutter/screen/auth/register_screen.dart';
+import 'package:news_app_flutter/widget/route/slide_page_route_widget.dart';
 
 import '../../theme/style.dart';
 
@@ -17,11 +17,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usernameControllerLogin =
-      TextEditingController();
-  final TextEditingController _passwordControllerLogin =
-      TextEditingController();
-  // final _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameControllerLogin = TextEditingController();
+  final TextEditingController _passwordControllerLogin = TextEditingController();
+  bool isLoad = false;
 
   @override
   void dispose() {
@@ -29,6 +27,18 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordControllerLogin.dispose();
     super.dispose();
   }
+
+  _startLoad() async {
+    setState(() {
+      isLoad = true;
+    });
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      isLoad = false;
+    });
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -145,19 +155,16 @@ class _LoginScreenState extends State<LoginScreen> {
       style: ButtonStyle(
         visualDensity: const VisualDensity(horizontal: 2, vertical: 2),
         backgroundColor: const WidgetStatePropertyAll(primaryColors),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
+        shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),),
         shadowColor: const WidgetStatePropertyAll(Colors.black),
-        fixedSize: WidgetStatePropertyAll(
-          Size.fromWidth(MediaQuery.of(context).size.width * 0.4),
-        ),
+        fixedSize: WidgetStatePropertyAll(Size.fromWidth(MediaQuery.of(context).size.width * 0.4),),
       ),
-      onPressed: () {
+      onPressed: () async {
+        await _startLoad();
         userProvider.login(context, _usernameControllerLogin.text,
             _passwordControllerLogin.text);
       },
-      child: Style.styleContentText("LOGIN", 20, themeProvider),
+      child: isLoad ? const SizedBox(width: 30,height: 30,child: CircularProgressIndicator(color: Colors.white,),) : Style.styleContentText("LOGIN", 20, themeProvider) ,
     );
   }
 

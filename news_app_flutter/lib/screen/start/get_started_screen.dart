@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
-import 'package:news_app_flutter/screen/details/login_screen.dart';
-import 'package:news_app_flutter/screen/details/register_screen.dart';
+import 'package:news_app_flutter/screen/auth/login_screen.dart';
+import 'package:news_app_flutter/screen/auth/register_screen.dart';
 import 'package:news_app_flutter/theme/message_dialog.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../model/category.dart';
-import '../../widget/slide_page_route_widget.dart';
+import '../../widget/route/slide_page_route_widget.dart';
 
 class GetStartedScreen extends StatefulWidget {
   const GetStartedScreen({super.key, required this.isDark});
