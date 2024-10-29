@@ -4,8 +4,6 @@ import 'package:news_app_flutter/providers/history_provider.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/providers/user_provider.dart';
 import 'package:news_app_flutter/screen/start/get_started_screen.dart';
-import 'package:news_app_flutter/screen/auth/login_screen.dart';
-import 'package:news_app_flutter/screen/home_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
