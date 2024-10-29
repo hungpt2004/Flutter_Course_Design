@@ -37,10 +37,8 @@ void showMessageDialog(BuildContext context, String message, bool status) {
     ],
     duration: const Duration(seconds: 3),
     backgroundColor: Colors.white60,
-    // Màu nền của Toast
     margin: const EdgeInsets.all(8),
-    // Lề của Toast
-    borderRadius: BorderRadius.circular(8), // Bo góc cho Toast
+    borderRadius: BorderRadius.circular(8),
   ).show(context);
 }
 

@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:news_app_flutter/model/article.dart';
-import 'package:news_app_flutter/service/news_data_api.dart';
 import 'package:provider/provider.dart';
 
 class FavouriteProvider extends ChangeNotifier {
-  List<Article> _articles = [];
+  final List<Article> _articles = [];
   List<Article> get articles => _articles;
 
   void toggleAddFavourite(Article article){

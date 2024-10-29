@@ -16,11 +16,22 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool isLoad = false;
+
+  _startLoad() async {
+    setState(() {
+      isLoad = true;
+    });
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      isLoad = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = ThemeProvider.of(context);
     final userProvider = UserProvider.of(context);
-
     final isDarkTheme = themeProvider.isDark;
 
     return SafeArea(
@@ -35,8 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Container(
-                  child: Style.styleTitlePage("Profile", 40, themeProvider)
-                ),
+                    child: Style.styleTitlePage("Profile", 40, themeProvider)),
               ),
             ),
             // Positioned Back Button
@@ -45,34 +55,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
               left: 10,
               child: IconButton(
                 onPressed: () {
-                  setState(() {
-                    Style.navigatorPush(context, const HomeScreen());
-                  });
+                  Style.navigatorPush(context, const HomeScreen());
                 },
-                icon: Icon(Icons.arrow_back_ios, color: themeProvider.isDark ? Colors.white : Colors.black,),
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Style.space(70, 0),
-                    _buildProfileImage(userProvider, isDarkTheme),
-                    Style.space(30, 0),
-                    _buildUserDetails(context, userProvider, themeProvider),
-                    Style.space(50, 0),
-                  ],
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: themeProvider.isDark ? Colors.white : Colors.black,
                 ),
               ),
             ),
+            // Use SingleChildScrollView directly without Expanded
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Style.space(70, 0),
+                  _buildProfileImage(userProvider, isDarkTheme),
+                  Style.space(30, 0),
+                  _buildUserDetails(context, userProvider, themeProvider),
+                  Style.space(50, 0),
+                ],
+              ),
+            ),
+            // Uncomment if you need the Bottom Navbar
             // const BottomNavbarWidget(indexStaying: 3),
           ],
         ),
       ),
     );
   }
-
-
 
   Widget _buildProfileImage(UserProvider userProvider, bool isDarkTheme) {
     return Center(
@@ -96,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             right: 120,
             child: IconButton(
               onPressed: () {},
-              icon: Icon(Icons.edit),
+              icon: const Icon(Icons.edit),
               color: isDarkTheme ? Colors.black : Colors.white,
               style: ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(
@@ -110,8 +119,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildUserDetails(BuildContext context, UserProvider userProvider, ThemeProvider themeProvider) {
-
+  Widget _buildUserDetails(BuildContext context, UserProvider userProvider,
+      ThemeProvider themeProvider) {
     return Column(
       children: [
         _cardInformation(
@@ -145,6 +154,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           themeProvider,
           onTap: () => userProvider.logout(context),
         ),
+        Style.space(20, 0),
+        _backToHomeButton()
       ],
     );
   }
@@ -185,21 +196,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
               icon: prefixIcon,
             ),
             suffixIcon: IconButton(
-              onPressed: (){},
+              onPressed: () {},
               icon: const Icon(Icons.edit),
             ),
-            prefixIconColor: themeProvider.isDark ? Colors.transparent : Colors.black,
-            suffixIconColor: themeProvider.isDark ? Colors.transparent : Colors.black,
+            prefixIconColor:
+                themeProvider.isDark ? Colors.white : Colors.black,
+            suffixIconColor:
+                themeProvider.isDark ? Colors.white : Colors.black,
             hintText: content,
             hintStyle: TextStyle(
                 color: themeProvider.isDark ? Colors.white : Colors.black,
                 fontSize: 14,
                 fontFamily: textFontContent,
-                fontWeight: FontWeight.w400
-            ),
+                fontWeight: FontWeight.w400),
           ),
         ),
       ),
     );
+  }
+
+  Widget _backToHomeButton() {
+    return ElevatedButton(
+        style: Style.ButtonStyleLoading(isLoad),
+        onPressed: () async {
+          await _startLoad();
+          Style.navigatorPush(context, const HomeScreen());
+        },
+        child: isLoad
+            ? const SizedBox(
+                width: 30,
+                height: 30,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                    size: 15,
+                  ),
+                  Style.styleContentOnCard("Back to Home", 16)
+                ],
+              ));
   }
 }

@@ -1,9 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/service/news_data_api.dart';
-
 import '../../model/article.dart';
 import '../../providers/theme_provider.dart';
 import '../../theme/style.dart';

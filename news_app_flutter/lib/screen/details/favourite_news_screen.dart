@@ -1,12 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/providers/favourite_provider.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/widget/bottom_navbar/bottom_navbar_widget.dart';
 import '../../theme/message_dialog.dart';
 import '../../theme/style.dart';
-import '../../widget/route/slide_page_route_widget.dart';
 import 'news_detail_screen.dart';
 
 class FavouriteNewsScreen extends StatefulWidget {
@@ -130,7 +127,7 @@ class _FavouriteNewsScreenState extends State<FavouriteNewsScreen> {
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Container(
+                                            SizedBox(
                                               width: 150,
                                               child: Style.styleContentOnCard(article.author ?? '', 12)
                                             ),

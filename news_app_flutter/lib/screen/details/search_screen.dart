@@ -1,18 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
-import 'package:news_app_flutter/providers/user_provider.dart';
-import 'package:news_app_flutter/widget/card/article_notification_card_widget.dart';
-
 import '../../constant/constant.dart';
 import '../../model/article.dart';
 import '../../service/news_data_api.dart';
 import '../../theme/style.dart';
 import '../../widget/card/article_category_card_widget.dart';
 import '../../widget/button/button_category_widget.dart';
-import '../../widget/route/slide_page_route_widget.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -24,7 +18,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   late Future<List<Article>> articles;
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -84,6 +78,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             }
                           },
                           controller: _searchController,
+                          textInputAction: TextInputAction.done,
                           style: const TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: textFontContent,
@@ -123,7 +118,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                     )
                                   : IconButton(
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        setState(() {
+                                          _searchController.clear();
+                                        });
                                       },
                                       icon: const Icon(
                                         Icons.clear,
@@ -341,8 +338,8 @@ Widget _textButtonStyle(String text, VoidCallback onPressed) {
     padding: const EdgeInsets.only(right: 10),
     child: TextButton(
         style: ButtonStyle(
-            backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
-            side: MaterialStatePropertyAll(BorderSide(
+            backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+            side: WidgetStatePropertyAll(BorderSide(
               color: Colors.grey.withOpacity(0.5),
             ))),
         onPressed: onPressed,
@@ -362,19 +359,12 @@ Widget _buttonSubmit(String text, VoidCallback onPressed) {
     padding: const EdgeInsets.only(right: 10),
     child: TextButton(
         style: const ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(primaryColors),
-            side: MaterialStatePropertyAll(BorderSide(
+            backgroundColor: WidgetStatePropertyAll(primaryColors),
+            side: WidgetStatePropertyAll(BorderSide(
               color: primaryColors,
             ))),
         onPressed: onPressed,
-        child: Text(
-          text,
-          style: const TextStyle(
-              fontSize: 18,
-              fontFamily: textFontContent,
-              fontWeight: FontWeight.w400,
-              color: Colors.white),
-        )),
+        child: Style.styleContentOnCard(text, 18)),
   );
 }
 

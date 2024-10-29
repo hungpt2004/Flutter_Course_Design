@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:news_app_flutter/screen/auth/login_screen.dart';
 import 'package:news_app_flutter/screen/home_screen.dart';
 import 'package:news_app_flutter/theme/message_dialog.dart';
-import 'package:news_app_flutter/widget/route/slide_page_route_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../model/user.dart';
@@ -15,11 +14,11 @@ class UserProvider extends ChangeNotifier {
   User get currentUser => _currentUser;
 
 
-  List<User> _users = [
+  final List<User> _users = [
     User("1", "user01", "password01", "Nguyen Van A", "assets/images/user1.jpg",
         "0123456789", "user01@example.com", "United States", true),
     User("2", "user02", "password02", "Tran Thi B", "assets/images/user2.jpg",
-        "0987654321", "user02@example.com", "Lodon", false),
+        "0987654321", "user02@example.com", "London", false),
     User("3", "user03", "password03", "Le Van C", "assets/images/user3.jpg",
         "0123456781", "user03@example.com", "Viet Nam", true)
   ];
@@ -33,6 +32,8 @@ class UserProvider extends ChangeNotifier {
     if (!existedUser) {
       _users.add(user);
       showMessageDialog(context, "Sign Up Successfully", true);
+    } else if (existedUser) {
+      showMessageDialog(context, "User already existed ! Login now", false);
     } else {
       showMessageDialog(context, "Sign Up Failed", false);
     }
@@ -41,21 +42,14 @@ class UserProvider extends ChangeNotifier {
 
   //LOGIN
   void login(BuildContext context, String username, String password) async {
-    if (username.isEmpty || password.isEmpty) {
-      showMessageDialog(context, "Please fill in both username and password", false);
-      return; // Không tiếp tục thực hiện nếu có dữ liệu trống
-    }
-    User? user = _users.firstWhere(
-        (items) => items.username == username && items.password == password);
+    User? user = _users.firstWhere((items) => items.username == username && items.password == password);
     if (user != null) {
       _currentUser = user;
       showMessageDialog(context, "Login Successfully", true);
       await Future.delayed(const Duration(milliseconds: 1000));
       Style.navigatorPush(context, const HomeScreen());
-    } else if (username.isEmpty && password.isEmpty){
-      showMessageDialog(context, "Password or Username is empty", false);
-    } else {
-      showMessageDialog(context, "Login failed", false);
+    } else if (username != user.username && password != user.password){
+      showMessageDialog(context, "Password or Username Incorrect", false);
     }
     notifyListeners();
   }

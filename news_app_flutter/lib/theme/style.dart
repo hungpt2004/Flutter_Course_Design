@@ -13,6 +13,9 @@ class Style {
     );
   }
 
+  // static TextStyle
+
+
   static Widget styleContentText(String text, double size, ThemeProvider themeProvider){
     return Text(
       text,
@@ -75,6 +78,7 @@ class Style {
     );
   }
 
+
   static void navigatorPush(BuildContext context, Widget page){
     Navigator.push(
         context,
@@ -89,5 +93,31 @@ class Style {
       return MediaQuery.of(context).size.width;
   }
 
+
+  static ButtonStyleLoading(bool isLoad){
+    return ButtonStyle(
+        visualDensity: const VisualDensity(horizontal: 2, vertical: 2),
+        backgroundColor: const WidgetStatePropertyAll(primaryColors),
+        shape: WidgetStatePropertyAll(
+          isLoad
+              ? const CircleBorder()
+              : RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25)),
+        ),
+        shadowColor: const WidgetStatePropertyAll(Colors.black),
+        animationDuration: const Duration(milliseconds: 800),
+        fixedSize: const WidgetStatePropertyAll(Size(200, 30)),
+        elevation: const WidgetStatePropertyAll(4));
+  }
+
+  static Widget loading(){
+    return const SizedBox(
+      width: 30,
+      height: 30,
+      child: CircularProgressIndicator(
+        color: Colors.white,
+      ),
+    );
+  }
 
 }

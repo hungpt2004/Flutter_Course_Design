@@ -26,21 +26,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _formKey = GlobalKey<FormState>();
   late Future<List<Article>> articles;
   late List<Article> listArticle;
   final TextEditingController _searchController = TextEditingController();
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    articles = APIService().getLatestNews();
-    articles.then(
-      (article) => setState(() {
-        listArticle = article;
-      }),
-    );
+      articles = APIService().getLatestNews();
+      articles.then(
+            (article) => setState(() {
+          listArticle = article;
+        }),
+      );
   }
+
 
   @override
   void dispose() {
@@ -55,8 +56,19 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  _startLoad() async {
+    setState(() {
+      isLoading = true;
+    });
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+
     //PROVIDER
     final themeProvider = ThemeProvider.of(context);
 
@@ -69,7 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
             Column(
               children: [
                 Style.space(20, 0),
-
                 //SEARCH & NOTIFICATION
                 SizedBox(
                   width: Style.styleWidthDevice(context),
@@ -86,16 +97,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     shape: WidgetStatePropertyAll(
                                         RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(40))),
+                                            BorderRadius.circular(40))),
                                     fixedSize: const WidgetStatePropertyAll(
                                         Size(double.infinity, 80)),
                                     elevation: const WidgetStatePropertyAll(4),
                                     backgroundColor:
-                                        const WidgetStatePropertyAll(primaryColors)),
-                                onPressed: () {
-                                 Style.navigatorPush(context, const SearchScreen());
+                                    const WidgetStatePropertyAll(primaryColors)),
+                                onPressed: () async {
+                                  await _startLoad();
+                                  Style.navigatorPush(context, const SearchScreen());
                                 },
-                                child: Row(
+                                child: isLoading ? Row( mainAxisAlignment: MainAxisAlignment.center,children: [Style.loading()],) : Row(
                                   children: [
                                     const Icon(
                                       Icons.search_outlined,
@@ -183,9 +195,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         .animate()
                         .fade(delay: 800.ms)
                         .slideY(
-                            begin: 1.0,
-                            end: 0,
-                            duration: 800.ms), // Use the ArticleList widget
+                        begin: 1.0,
+                        end: 0,
+                        duration: 800.ms), // Use the ArticleList widget
                   ),
                 ),
               ],
@@ -201,3 +213,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+

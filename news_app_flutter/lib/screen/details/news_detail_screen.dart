@@ -2,9 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/providers/favourite_provider.dart';
-import 'package:news_app_flutter/providers/history_provider.dart';
 import '../../model/article.dart';
-import 'package:intl/intl.dart';
 import '../../providers/theme_provider.dart';
 import '../../theme/message_dialog.dart';
 import '../../theme/style.dart';
@@ -34,7 +32,7 @@ class _NewsDetailsState extends State<NewsDetails> {
             ListView(
               children: [
                 // IMAGE
-                Container(
+                SizedBox(
                   width: double.infinity,
                   height: 370,
                   child: Image.network(
@@ -56,32 +54,34 @@ class _NewsDetailsState extends State<NewsDetails> {
                 decoration: BoxDecoration(
                     color: themeProvider.isDark ? Colors.black : Colors.white,
                     borderRadius: BorderRadius.circular(30)),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 70),
-                    Padding(
-                      padding: const EdgeInsets.all(30.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: _description(
-                                  article.content ?? 'Content', themeProvider)),
-                        ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Style.space(70, 0),
+                      Padding(
+                        padding: const EdgeInsets.all(30.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: _description(
+                                    article.content ?? 'Content', themeProvider)),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 0, left: 30, right: 30, bottom: 30),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: _description(
-                                  article.description ?? 'Description',
-                                  themeProvider)),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 0, left: 30, right: 30, bottom: 30),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: _description(
+                                    article.description ?? 'Description',
+                                    themeProvider)),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -249,7 +249,7 @@ class _NewsDetailsState extends State<NewsDetails> {
   //AUTHOR
   Widget _author(String author) {
     return Text(
-      "Published by ${author}", // Add content here
+      "Published by $author", // Add content here
       style: const TextStyle(
           fontSize: 14,
           fontFamily: textFontContent,
