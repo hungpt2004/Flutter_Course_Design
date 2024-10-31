@@ -30,6 +30,8 @@ class LoadingProvider extends ChangeNotifier {
     }
   }
 
+
+
   static LoadingProvider stateLoadingProvider(BuildContext context, {listen = true}){
     return Provider.of(context,listen: listen);
   }

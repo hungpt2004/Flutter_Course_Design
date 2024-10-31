@@ -17,6 +17,20 @@ class TextStyleApp {
     );
   }
 
+  static Widget underlineText(String content, double size, FontWeight weight, Color color){
+    return SelectableText(
+      content,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        decoration: TextDecoration.underline,
+        decorationColor: color,
+        fontSize: size,
+        fontWeight: weight,
+        color: color, // Sử dụng màu đen nếu không có màu nào được chỉ định
+        fontFamily: textFont,
+      ),
+    );
+  }
 
   static Widget tabviewText(String content, double size, FontWeight weight) {
     return Text(
@@ -29,7 +43,6 @@ class TextStyleApp {
       ),
     );
   }
-
 
   static TextStyle textStyleForm(double size, FontWeight weight, Color color){
     return TextStyle(

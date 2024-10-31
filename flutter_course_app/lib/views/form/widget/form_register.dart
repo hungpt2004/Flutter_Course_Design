@@ -10,17 +10,17 @@ import '../../../provider/loading_provider.dart';
 import '../../../theme/style/space_style.dart';
 import '../../../theme/style/style_text.dart';
 
-class FormRegiterWidget extends StatefulWidget {
-  const FormRegiterWidget({super.key});
+class FormRegisterWidget extends StatefulWidget {
+  const FormRegisterWidget({super.key});
 
   @override
-  State<FormRegiterWidget> createState() => _FormRegiterWidgetState();
+  State<FormRegisterWidget> createState() => _FormRegiterWidgetState();
 }
 
-class _FormRegiterWidgetState extends State<FormRegiterWidget> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
+class _FormRegiterWidgetState extends State<FormRegisterWidget> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   void refresh(){

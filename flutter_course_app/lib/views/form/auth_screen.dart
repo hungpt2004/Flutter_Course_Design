@@ -86,7 +86,7 @@ class _TabBarPageState extends State<AuthenticationScreen>
                     controller: tabController,
                     children: const [
                       FormLoginWidget(),
-                      FormRegiterWidget(),
+                      FormRegisterWidget(),
                     ],
                   ),
                 )

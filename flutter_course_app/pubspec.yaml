@@ -42,6 +42,9 @@ dependencies:
   social_login_buttons: ^1.0.7
   fluttertoast: ^8.2.8
   cached_network_image: ^3.4.1
+  http: ^1.2.2
+  carousel_slider: ^5.0.0
+  smooth_page_indicator: ^1.2.0+3
 
 dev_dependencies:
   flutter_test:

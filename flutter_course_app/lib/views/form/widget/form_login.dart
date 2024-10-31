@@ -103,7 +103,7 @@ class _FormLoginState extends State<FormLoginWidget> {
                         },
                         decoration: InputDecoration(
                             hoverColor: Colors.blue,
-                            labelText: 'Email Address',
+                            labelText: 'Username',
                             labelStyle: TextStyleApp.textStyleForm(16, FontWeight.w300, kPrimaryColor),
                             hintText: 'Enter username ...',
                             hintStyle: TextStyleApp.textStyleForm(16, FontWeight.w300, kPrimaryColor),
@@ -112,28 +112,28 @@ class _FormLoginState extends State<FormLoginWidget> {
                                 horizontal: 15, vertical: 10),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: kPrimaryColor, // Màu khi trường đang được chọn
                               width: 2, // Có thể điều chỉnh độ dày
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: kPrimaryColor, // Màu khi trường được kích hoạt
                               width: 1,
                             ),
                           ),
                           errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: Colors.red, // Màu cho trạng thái lỗi
                               width: 1,
                             ),
                           ),
                           focusedErrorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: Colors.redAccent, // Màu khi trường lỗi và được chọn
                               width: 2,
                             ),
@@ -165,28 +165,28 @@ class _FormLoginState extends State<FormLoginWidget> {
                           // Đặt màu cho các trạng thái khác nhau của border
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: kPrimaryColor, // Màu khi trường đang được chọn
                               width: 2, // Có thể điều chỉnh độ dày
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: kPrimaryColor, // Màu khi trường được kích hoạt
                               width: 1,
                             ),
                           ),
                           errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: Colors.red, // Màu cho trạng thái lỗi
                               width: 1,
                             ),
                           ),
                           focusedErrorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: Colors.redAccent, // Màu khi trường lỗi và được chọn
                               width: 2,
                             ),
@@ -195,13 +195,13 @@ class _FormLoginState extends State<FormLoginWidget> {
                       ),
                       SpaceStyle.boxSpaceHeight(10),
                       Row(
-                        children: [Expanded(child: forgotPassword(() {}))],
+                        children: [Expanded(child: forgotPassword(context))],
                       ),
                       SpaceStyle.boxSpaceHeight(10),
                       loginButton(() async {
                         if(_formKey.currentState!.validate()){
                           await loadProvider.loading();
-                          await authProvider.credentialLogin(_usernameController.text, _passwordController.text, context);
+                          await authProvider.credentialLogin(_usernameController.text, _passwordController.text);
                           Navigator.pushNamed(context, "/home");
                         }
                       }, loadProvider),
@@ -230,9 +230,11 @@ Widget facebookLogin(VoidCallback? function) {
       onPressed: function);
 }
 
-Widget forgotPassword(VoidCallback? function) {
+Widget forgotPassword(BuildContext context) {
   return TextButton(
-    onPressed: function,
+    onPressed: (){
+      Navigator.pushNamed(context, "/forgot");
+    },
     child: TextStyleApp.normalText(
         "Forgot password?", 16, FontWeight.w500, kPrimaryColor),
   );
