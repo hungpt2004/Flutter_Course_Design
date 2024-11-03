@@ -3,12 +3,11 @@ import 'package:course_app_flutter/provider/auth_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
-
 import '../../../constant/color.dart';
 import '../../../constant/reg_exp.dart';
 import '../../../provider/loading_provider.dart';
-import '../../../theme/style/space_style.dart';
-import '../../../theme/style/style_text.dart';
+import '../../../theme/data/space_style.dart';
+import '../../../theme/data/style_text.dart';
 
 class FormRegisterWidget extends StatefulWidget {
   const FormRegisterWidget({super.key});

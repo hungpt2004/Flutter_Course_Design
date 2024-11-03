@@ -1,16 +1,12 @@
-import 'dart:math';
-
 import 'package:course_app_flutter/constant/color.dart';
 import 'package:course_app_flutter/provider/auth_provider.dart';
 import 'package:course_app_flutter/provider/loading_provider.dart';
-import 'package:course_app_flutter/theme/style/style_text.dart';
-import 'package:course_app_flutter/views/form/widget/form_login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../../../theme/style/space_style.dart';
-import '../../../theme/style/style_button.dart';
+import '../../../theme/data/space_style.dart';
+import '../../../theme/data/style_button.dart';
+import '../../../theme/data/style_text.dart';
 
 class FormPinWidget extends StatefulWidget {
   const FormPinWidget({super.key, required this.emailUser});

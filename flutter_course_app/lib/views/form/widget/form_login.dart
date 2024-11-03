@@ -1,13 +1,11 @@
 import 'package:course_app_flutter/constant/color.dart';
-import 'package:course_app_flutter/constant/reg_exp.dart';
 import 'package:course_app_flutter/provider/auth_provider.dart';
 import 'package:course_app_flutter/provider/loading_provider.dart';
-import 'package:course_app_flutter/theme/style/space_style.dart';
-import 'package:course_app_flutter/theme/style/style_text.dart';
-import 'package:course_app_flutter/theme/style/style_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
+import '../../../theme/data/space_style.dart';
+import '../../../theme/data/style_text.dart';
 
 class FormLoginWidget extends StatefulWidget {
   const FormLoginWidget({super.key});
@@ -202,7 +200,7 @@ class _FormLoginState extends State<FormLoginWidget> {
                         if(_formKey.currentState!.validate()){
                           await loadProvider.loading();
                           await authProvider.credentialLogin(_usernameController.text, _passwordController.text);
-                          Navigator.pushNamed(context, "/home");
+                          Navigator.pushNamed(context, "/bottom");
                         }
                       }, loadProvider),
                     ],

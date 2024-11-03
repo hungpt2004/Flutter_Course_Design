@@ -4,12 +4,10 @@ import 'package:provider/provider.dart';
 class LoadingProvider extends ChangeNotifier {
 
   bool _isLoading = false;
-  bool _isLoading1 = false;
-  bool _isLoading2 = false;
+  int? _currentIndex;
 
   bool get isLoading => _isLoading;
-  bool get isLoading1 => _isLoading1;
-  bool get isLoading2 => _isLoading2;
+  int? get currentIndex => _currentIndex;
 
   Future<void> loading() async {
     _isLoading = true;
@@ -19,15 +17,13 @@ class LoadingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> tabViewLoading(int index) async {
-    if(index == 1) {
-      _isLoading1 = true;
-      notifyListeners();
+  void toggleExpanded(int index) async {
+    if(_currentIndex == index) {
+      _currentIndex = null;
+    } else {
+      _currentIndex = index;
     }
-    if(index == 2) {
-      _isLoading2 = true;
-      notifyListeners();
-    }
+    notifyListeners();
   }
 
 

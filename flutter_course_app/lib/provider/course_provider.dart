@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
 import '../models/course.dart';
+import '../models/video.dart';
 
 class CourseProvider extends ChangeNotifier {
 
@@ -12,13 +13,21 @@ class CourseProvider extends ChangeNotifier {
 
   List<Course> _courses = [];
 
+  late Course _currentCourse;
+
   // GETTER
   List<Course> get courses => _courses;
+  Course get currentCourse => _currentCourse;
 
   // GET ALL COURSES
   Future<void> fetchAllCourses() async {
     _courses = await courseRepository.getAllCourses();
-    debugPrint("DEBUG: ${_courses.length}");
+    debugPrint("DEBUG IN PROVIDER: ${_courses.length}");
+    notifyListeners();
+  }
+
+  Future<void> toggleJoin(Course course) async {
+    _currentCourse = course;
     notifyListeners();
   }
 

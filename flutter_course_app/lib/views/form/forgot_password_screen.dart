@@ -1,13 +1,12 @@
 import 'package:course_app_flutter/constant/color.dart';
 import 'package:course_app_flutter/provider/auth_provider.dart';
 import 'package:course_app_flutter/services/send_email_service.dart';
-import 'package:course_app_flutter/theme/style/space_style.dart';
-import 'package:course_app_flutter/theme/style/style_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../constant/reg_exp.dart';
 import '../../provider/loading_provider.dart';
-import '../../theme/style/style_button.dart';
+import '../../theme/data/space_style.dart';
+import '../../theme/data/style_button.dart';
+import '../../theme/data/style_text.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});

@@ -1,5 +1,5 @@
 import 'package:course_app_flutter/repository/auth_repository.dart';
-import 'package:course_app_flutter/theme/style/style_toast.dart';
+import 'package:course_app_flutter/theme/data/style_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

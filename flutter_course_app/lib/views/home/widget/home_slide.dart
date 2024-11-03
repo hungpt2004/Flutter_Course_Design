@@ -1,16 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:course_app_flutter/constant/color.dart';
 import 'package:course_app_flutter/provider/course_provider.dart';
-import 'package:course_app_flutter/theme/style/space_style.dart';
-import 'package:course_app_flutter/theme/style/style_button.dart';
-import 'package:course_app_flutter/theme/style/style_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import '../../../models/course.dart';
+import '../../../theme/data/space_style.dart';
+import '../../../theme/data/style_button.dart';
+import '../../../theme/data/style_text.dart';
 
 class SlideHome extends StatefulWidget {
   const SlideHome({super.key, required this.isBanner});
@@ -34,20 +31,21 @@ class _SlideAdvertisementState extends State<SlideHome> {
 
   @override
   Widget build(BuildContext context) {
+
     final courseProvider = CourseProvider.stateCourseManagement(context);
     final isBannerCheck = widget.isBanner;
-    debugPrint("Debug in screen: ${courseProvider.courses.length}");
 
     return isBannerCheck
         ? FutureBuilder<void>(
             future: courseProvider.fetchAllCourses(),
             builder: (context, snapshot) {
+              debugPrint("LENGTH COURSE PROVIDER: ${courseProvider.courses.length}");
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: courseProvider.courses.length,
                 itemBuilder: (context, index) {
                   final courseIndex = courseProvider.courses[index];
-                  return cardCourse(courseIndex);
+                  return cardCourse(courseIndex, courseProvider, context);
                 },
               );
             })
@@ -56,7 +54,6 @@ class _SlideAdvertisementState extends State<SlideHome> {
               itemCount: urlImage.length,
               itemBuilder: (context, index, realIndex) {
                 String urlImageIndex = urlImage[index];
-                debugPrint("Debug in screen: ${courseProvider.courses.length}");
                 return cardAdvertisement(urlImageIndex, context);
               },
               options: CarouselOptions(
@@ -93,12 +90,12 @@ Widget cardAdvertisement(String urlImage, BuildContext context) {
           child: Padding(
               padding: const EdgeInsets.only(left: 15, bottom: 10),
               child: ButtonStyleApp.normalButton(() {}, "Explore Now",
-                  kPrimaryColor, kDefaultColor, kDefaultColor, 15, 12, 15)),
+                  Colors.orange.withOpacity(0.9), kPrimaryColor, kPrimaryColor, 15, 12, 15)),
         )),
   );
 }
 
-Widget cardCourse(course) {
+Widget cardCourse(course, CourseProvider courseProvider, BuildContext context) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10),
     child: Container(
@@ -106,9 +103,6 @@ Widget cardCourse(course) {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: kDefaultColor, // Thêm màu nền cho dễ nhìn
-          boxShadow: [
-
-          ],
         ),
         child: Column(
           children: [
@@ -142,7 +136,7 @@ Widget cardCourse(course) {
               ),
             ),
             Container(
-              height: 110,
+              height: 120,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 10),
                 child: Column(
@@ -162,7 +156,12 @@ Widget cardCourse(course) {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("⭐${course.rating} 🕔${course.time}", style: TextStyleApp.textStyleForm(12, FontWeight.w500, kCardTextColor),),
-                        ButtonStyleApp.normalButton((){}, "Join", kPrimaryColor, kDefaultColor, kDefaultColor, 15, 15, 10)
+                        ButtonStyleApp.normalButton(() async {
+                           await courseProvider.toggleJoin(course);
+                           await Future.delayed(const Duration(milliseconds: 500),(){
+                             Navigator.pushNamed(context, '/detail');
+                           });
+                        }, "Join", Colors.orange.withOpacity(0.9), kPrimaryColor, kPrimaryColor, 20, 10, 10)
                       ],
                     )
                   ],
@@ -184,7 +183,7 @@ Widget dotSlide(currentIndex, List<String> urlImage) {
       effect: ExpandingDotsEffect(
         radius: 50,
         spacing: 4,
-        activeDotColor: Colors.black.withOpacity(0.6),
+        activeDotColor: Colors.orange.withOpacity(0.9),
         expansionFactor: 2,
         dotHeight: 4,
         dotWidth: 10,

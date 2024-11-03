@@ -1,12 +1,12 @@
 import 'package:course_app_flutter/constant/color.dart';
-import 'package:course_app_flutter/theme/style/space_style.dart';
-import 'package:course_app_flutter/theme/style/style_text.dart';
 import 'package:course_app_flutter/views/form/widget/form_login.dart';
 import 'package:course_app_flutter/views/form/widget/form_register.dart';
 import 'package:flutter/material.dart';
+import '../../theme/data/space_style.dart';
+import '../../theme/data/style_text.dart';
 
 class AuthenticationScreen extends StatefulWidget {
-  const AuthenticationScreen({Key? key}) : super(key: key);
+  const AuthenticationScreen({super.key});
 
   @override
   _TabBarPageState createState() => _TabBarPageState();

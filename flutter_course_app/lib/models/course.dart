@@ -1,3 +1,5 @@
+import 'package:course_app_flutter/models/video.dart';
+
 class Course {
   final String courseId; // Document ID
   final String title;
@@ -10,6 +12,7 @@ class Course {
   final DateTime createdAt;
   final String time;
   final String url;
+  final List<Video> videos;
 
   Course(
       {required this.courseId,
@@ -22,15 +25,17 @@ class Course {
       required this.company,
       required this.createdAt,
       required this.time,
-      required this.url});
+      required this.url,
+      required this.videos
+      });
 
   // Phương thức tạo đối tượng từ JSON
-  factory Course.fromFirebase(Map<String, dynamic> firebase, String id) {
+  factory Course.fromFirebase(Map<String, dynamic> firebase, String id, List<Video> videos) {
     return Course(
         courseId: id,
         title: firebase['title'] ?? 'Flutter',
         author: firebase['author'] ?? 'null',
-        description: firebase['description'] ?? 'null',
+        description: firebase['description'] ?? 'This course provides a foundational understanding of Ruby, a dynamic and expressive programming language. Ideal for beginners, it covers essential programming concepts and object-oriented principles !',
         logo: firebase['logo'] ??
             'https://www.mindinventory.com/blog/wp-content/uploads/2022/10/flutter-3.png',
         rating: firebase['rating'],
@@ -38,7 +43,9 @@ class Course {
         totalReviews: firebase['totalReviews'],
         company: firebase['company'] ?? 'null',
         createdAt: DateTime.parse(firebase['created_at'] ?? 'null'),
-        url: firebase['url']);
+        url: firebase['url'],
+        videos: videos
+    );
   }
 
   Map<String, dynamic> toFirebase() {

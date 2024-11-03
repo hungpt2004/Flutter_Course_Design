@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:course_app_flutter/constant/email_key.dart';
 import 'package:course_app_flutter/repository/auth_repository.dart';
 import 'package:course_app_flutter/services/password_service.dart';
-import 'package:course_app_flutter/theme/style/style_toast.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/user.dart';
+import '../theme/data/style_toast.dart';
 
 class SendEmailService {
 

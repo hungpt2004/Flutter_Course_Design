@@ -4,7 +4,6 @@ class Video {
   final String url;
   final int duration;
   final int order;
-  final String courseId; // Khóa ngoại liên kết đến khóa học
 
   Video({
     required this.videoId,
@@ -12,18 +11,16 @@ class Video {
     required this.url,
     required this.duration,
     required this.order,
-    required this.courseId,
   });
 
   // Phương thức tạo đối tượng từ JSON
-  factory Video.fromFirebase(Map<String, dynamic> json, String id) {
+  factory Video.fromFirebase(Map<String, dynamic> firebase, String id) {
     return Video(
       videoId: id,
-      title: json['title'],
-      url: json['url'],
-      duration: json['duration'],
-      order: json['order'],
-      courseId: json['course_id'],
+      title: firebase['title'],
+      url: firebase['url'],
+      duration: firebase['duration'],
+      order: firebase['order'],
     );
   }
 }

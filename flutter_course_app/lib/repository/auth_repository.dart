@@ -1,12 +1,8 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:course_app_flutter/services/send_email_service.dart';
 import 'package:flutter/material.dart';
-
 import '../models/pin.dart';
 import '../models/user.dart';
-import '../theme/style/style_toast.dart';
+import '../theme/data/style_toast.dart';
 
 class AuthenticationRepository {
 

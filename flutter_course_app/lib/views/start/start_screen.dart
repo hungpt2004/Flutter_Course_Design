@@ -1,9 +1,9 @@
 import 'package:course_app_flutter/constant/color.dart';
 import 'package:course_app_flutter/provider/loading_provider.dart';
-import 'package:course_app_flutter/theme/style/space_style.dart';
-import 'package:course_app_flutter/theme/style/style_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../theme/data/space_style.dart';
+import '../../theme/data/style_text.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
@@ -82,7 +82,7 @@ class StartPage extends StatelessWidget {
 }
 
 Widget _containerText(Widget widget, double w, double h) {
-  return Container(
+  return SizedBox(
     width: w,
     height: h,
     child: widget,
