@@ -200,6 +200,9 @@ class _FormLoginState extends State<FormLoginWidget> {
                         if(_formKey.currentState!.validate()){
                           await loadProvider.loading();
                           await authProvider.credentialLogin(_usernameController.text, _passwordController.text);
+                          if(authProvider.user == null){
+                            return;
+                          }
                           Navigator.pushNamed(context, "/bottom");
                         }
                       }, loadProvider),

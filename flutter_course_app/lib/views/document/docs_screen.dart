@@ -50,7 +50,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(15),
-                                    child: ImageNetworkStyle.networkImage(cardIndex)
+                                    child: ImageNetworkStyle.networkImage(cardIndex.url)
                                   ),
                                 ),
                                 title: Text(

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:course_app_flutter/repository/auth_repository.dart';
 import 'package:course_app_flutter/repository/course_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -15,6 +16,7 @@ class CourseProvider extends ChangeNotifier {
 
   late Course _currentCourse;
 
+
   // GETTER
   List<Course> get courses => _courses;
   Course get currentCourse => _currentCourse;
@@ -26,9 +28,15 @@ class CourseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // JOIN
   Future<void> toggleJoin(Course course) async {
     _currentCourse = course;
     notifyListeners();
+  }
+
+  // GET COURSE
+  Future<Course?> getCourseByID(String courseID) async {
+    return await courseRepository.getCourseByID(courseID);
   }
 
   // STATIC CALL PROVIDER

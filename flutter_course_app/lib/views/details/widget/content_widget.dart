@@ -1,16 +1,10 @@
 import 'package:course_app_flutter/constant/color.dart';
 import 'package:course_app_flutter/provider/course_provider.dart';
-import 'package:course_app_flutter/provider/favorite_provider.dart';
 import 'package:course_app_flutter/provider/loading_provider.dart';
 import 'package:course_app_flutter/theme/data/style_text.dart';
 import 'package:flick_video_player/flick_video_player.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-
-import '../../../models/course.dart';
-import '../../../models/video.dart';
-import '../../../theme/data/space_style.dart';
 
 class ContentWidget extends StatefulWidget {
   const ContentWidget({super.key});
@@ -39,7 +33,6 @@ class _ContentWidgetState extends State<ContentWidget>
   Widget build(BuildContext context) {
 
     final courseProvider = CourseProvider.stateCourseManagement(context);
-
 
     return Column(
       children: [

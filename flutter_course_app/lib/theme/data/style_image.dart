@@ -7,9 +7,9 @@ import '../../models/document.dart';
 
 class ImageNetworkStyle {
 
-  static Widget networkImage(Document document){
+  static Widget networkImage(String url){
     return CachedNetworkImage(
-      imageUrl: document.url,
+      imageUrl: url,
       fit: BoxFit.cover,
       progressIndicatorBuilder: (context, url, downloadProgress) =>
           Center(child: CircularProgressIndicator(

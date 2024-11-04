@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:course_app_flutter/constant/color.dart';
 import 'package:course_app_flutter/provider/course_provider.dart';
+import 'package:course_app_flutter/theme/data/style_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -105,10 +106,11 @@ Widget cardCourse(course, CourseProvider courseProvider, BuildContext context) {
           color: kDefaultColor, // Thêm màu nền cho dễ nhìn
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               width: double.infinity,
-              height: 125,
+              height: 130,
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(12),
@@ -118,25 +120,11 @@ Widget cardCourse(course, CourseProvider courseProvider, BuildContext context) {
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(12),
                     topRight: Radius.circular(12)),
-                child: CachedNetworkImage(
-                  imageUrl: course.logo,
-                  fit: BoxFit.cover,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      Center(child: CircularProgressIndicator(
-                        color: kPrimaryColor,
-                          value: downloadProgress.progress),),
-                  errorWidget: (context, url, error) {
-                    return const Center(
-                      child: Icon(CupertinoIcons.info_circle),
-                    );
-                  },
-                  fadeInDuration: const Duration(milliseconds: 500),
-                  fadeInCurve: Curves.easeInOut,
-                ),
+                child: ImageNetworkStyle.networkImage(course.logo),
               ),
             ),
-            Container(
-              height: 120,
+            SizedBox(
+              height: 150,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 10),
                 child: Column(

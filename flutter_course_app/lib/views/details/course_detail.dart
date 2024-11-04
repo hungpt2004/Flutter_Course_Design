@@ -1,4 +1,6 @@
 import 'package:course_app_flutter/constant/color.dart';
+import 'package:course_app_flutter/models/enrollment.dart';
+import 'package:course_app_flutter/provider/auth_provider.dart';
 import 'package:course_app_flutter/provider/course_provider.dart';
 import 'package:course_app_flutter/theme/data/space_style.dart';
 import 'package:course_app_flutter/theme/data/style_button.dart';
@@ -22,6 +24,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   Widget build(BuildContext context) {
 
     final courseProvider = CourseProvider.stateCourseManagement(context);
+    final authProvider = AuthenticationProvider.stateAuthenticationProvider(context);
+    final loadingProvider = LoadingProvider.stateLoadingProvider(context);
 
     return SafeArea(
       child: Scaffold(
@@ -36,12 +40,18 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
               DescriptionWidget(course: courseProvider.currentCourse),
               SpaceStyle.boxSpaceHeight(20),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.35,
+                height: MediaQuery.of(context).size.height * 0.32,
                 child: const Padding(
                   padding: EdgeInsets.only(bottom: 20),
                   child: ContentWidget(),
                 ),
               ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                  child: ButtonStyleApp.customerButton(() async {
+                    await loadingProvider.loading();
+                    await authProvider.joinCourse(authProvider.user!.userId, Enrollment(id: '', courseID: courseProvider.currentCourse.courseId));
+              },loadingProvider,"Enroll",kDefaultColor,kPrimaryColor))
             ],
           ),
         ),

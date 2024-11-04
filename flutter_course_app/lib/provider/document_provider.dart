@@ -17,7 +17,6 @@ class DocumentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   static DocumentProvider documentStateManagement(BuildContext context, {listen = true}) {
     return Provider.of<DocumentProvider>(context, listen: listen);
   }

@@ -37,12 +37,11 @@ class CourseRepository {
   }
 
   // GET COURSE BY COURSE ID
-  Future<Course?> getVideosAndCourse(String courseID) async {
+  Future<Course?> getCourseByID(String courseID) async {
     try {
       DocumentSnapshot doc =
           await firebaseFireStore.collection('courses').doc(courseID).get();
       if (doc.exists) {
-        //ListVideo
         List<Video> videos = await getAllVideos(courseID);
         return Course.fromFirebase(
             doc.data() as Map<String, dynamic>, doc.id, videos);

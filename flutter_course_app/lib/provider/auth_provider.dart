@@ -1,3 +1,5 @@
+import 'package:course_app_flutter/models/enrollment.dart';
+import 'package:course_app_flutter/models/favorite.dart';
 import 'package:course_app_flutter/repository/auth_repository.dart';
 import 'package:course_app_flutter/theme/data/style_toast.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../models/user.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
+
   final AuthenticationRepository authenticationRepository = AuthenticationRepository();
 
   User? _currentUser;
@@ -35,13 +38,13 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> credentialLogout() async {
-    _currentUser = null; // Đặt lại trạng thái người dùng
-    notifyListeners(); // Chỉ gọi khi _currentUser thay đổi
+    _currentUser = null;
+    notifyListeners();
   }
 
   Future<void> changePassword(String email, String newPassword) async {
     _currentUser = await authenticationRepository.userChangePassword(email, newPassword);
-    notifyListeners(); // Gọi khi có thay đổi mật khẩu
+    notifyListeners();
   }
 
   Future<bool> checkEmailExist(String email) async {
@@ -55,16 +58,52 @@ class AuthenticationProvider extends ChangeNotifier {
     return existed;
   }
 
+  // VERIFY PIN
   Future<bool> verifyPin(String pinCode, String email) async {
     return await authenticationRepository.verifyPin(pinCode, email);
   }
 
+  // GET PIN
   Future<void> getPinInput(String num1, String num2, String num3, String num4) async {
     _pin = num1 + num2 + num3 + num4;
-    notifyListeners(); // Gọi khi có thay đổi mã pin
+    notifyListeners();
+  }
+
+
+  // ================================================= USER'S COURSE ==============================================
+
+  // ENROLL COURSE
+  Future<void> joinCourse(String userID, Enrollment enrollment) async {
+    await authenticationRepository.enrollCourse(userID, enrollment);
+    notifyListeners();
+  }
+
+  // UN-ENROLL COURSE
+  Future<void> leaveCourse(String userID) async {
+
+  }
+
+  // ================================================= USER'S FAVORITE ==============================================
+
+  // ADD FAVORITES COURSE
+  Future<void> addFavoriteCourse(String userID, Favorite fav) async {
+    await authenticationRepository.addFavorite(userID, fav);
+    notifyListeners();
+  }
+
+  Future<void> removeFavoriteCourse(String userID, String courseID) async {
+    await authenticationRepository.removeFavorite(userID, courseID);
+    await getAllFavorite(userID);
+    notifyListeners();
+  }
+
+  Future<void> getAllFavorite(String userID) async {
+    user!.favoriteCourse = await authenticationRepository.getAllFavorites(userID);
+    notifyListeners();
   }
 
   static AuthenticationProvider stateAuthenticationProvider(BuildContext context, {bool listen = true}) {
     return Provider.of<AuthenticationProvider>(context, listen: listen);
   }
+
 }

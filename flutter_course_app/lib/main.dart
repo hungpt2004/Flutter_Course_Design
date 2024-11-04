@@ -3,13 +3,11 @@ import 'package:course_app_flutter/provider/auth_provider.dart';
 import 'package:course_app_flutter/provider/bottom_navbar_provider.dart';
 import 'package:course_app_flutter/provider/course_provider.dart';
 import 'package:course_app_flutter/provider/document_provider.dart';
-import 'package:course_app_flutter/provider/favorite_provider.dart';
 import 'package:course_app_flutter/provider/loading_provider.dart';
 import 'package:course_app_flutter/views/bottom_navbar/bottom_navbar.dart';
 import 'package:course_app_flutter/views/details/course_detail.dart';
 import 'package:course_app_flutter/views/form/auth_screen.dart';
 import 'package:course_app_flutter/views/form/forgot_password_screen.dart';
-import 'package:course_app_flutter/views/form/widget/form_login.dart';
 import 'package:course_app_flutter/views/form/widget/form_pin.dart';
 import 'package:course_app_flutter/views/home/home_screen.dart';
 import 'package:course_app_flutter/views/start/start_screen.dart';
@@ -37,7 +35,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthenticationProvider()),
         ChangeNotifierProvider(create: (context) => CourseProvider()),
         ChangeNotifierProvider(create: (context) => BottomNavbarProvider()),
-        ChangeNotifierProvider(create: (context) => FavoriteProvider()),
         ChangeNotifierProvider(create: (context) => DocumentProvider())
       ],
       child: MaterialApp(
@@ -51,7 +48,7 @@ class MyApp extends StatelessWidget {
           "/bottom": (context) => const BottomNavbarWidget(),
           "/detail": (context) => const CourseDetailScreen()
         },
-        initialRoute: "/bottom",
+        initialRoute: "/auth",
       ),
     );
   }
