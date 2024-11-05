@@ -1,7 +1,5 @@
 import 'package:course_app_flutter/constant/font.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../constant/color.dart';
 
 class TextStyleApp {
@@ -60,12 +58,12 @@ class TextStyleApp {
   static AppBar appbarStyle(String text) {
     return AppBar(
       elevation: 10,
-      backgroundColor: Colors.orange.withOpacity(0.9),
+      backgroundColor: kPrimaryColor,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10))
       ),
       centerTitle: true,
-      title: TextStyleApp.normalText(text, 30, FontWeight.w500, kPrimaryColor),
+      title: TextStyleApp.normalText(text, 30, FontWeight.w500, kCardTitleColor),
     );
   }
 

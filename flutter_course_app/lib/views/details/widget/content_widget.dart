@@ -32,15 +32,13 @@ class _ContentWidgetState extends State<ContentWidget>
   @override
   Widget build(BuildContext context) {
 
-    final courseProvider = CourseProvider.stateCourseManagement(context);
-
     return Column(
       children: [
         TabBar(
-          dividerColor: homeBackgroundColor,
+          dividerColor: kCardTitleColor,
           indicatorWeight: 3,
-          unselectedLabelColor: Colors.orange.withOpacity(0.9),
-          indicatorColor: Colors.orange.withOpacity(0.9),
+          unselectedLabelColor: kCardTitleColor,
+          indicatorColor: kPrimaryColor,
           tabAlignment: TabAlignment.fill,
           controller: _tabController,
           tabs: [
@@ -85,7 +83,7 @@ class _LessonContentWidgetState extends State<LessonContentWidget> {
           child: Card(
             elevation: 10,
             shadowColor: Colors.grey.withOpacity(0.5),
-            color: Colors.orange.withOpacity(0.9),
+            color: kPrimaryColor,
             child: Column(
               children: [
                 ListTile(
@@ -94,12 +92,12 @@ class _LessonContentWidgetState extends State<LessonContentWidget> {
                       loadingProvider.toggleExpanded(index);
                     },
                     icon: const Icon(Icons.play_circle_outline_outlined),
-                    color: kPrimaryColor,
+                    color: kDefaultColor,
                   ),
                   title: Text(
                     videoIndex.title,
                     style: TextStyleApp.textStyleForm(
-                        16, FontWeight.w700, kPrimaryColor),
+                        16, FontWeight.w700, kCardTitleColor),
                   ),
                 ),
                 AnimatedContainer(

@@ -1,12 +1,10 @@
 import 'package:course_app_flutter/constant/color.dart';
 import 'package:course_app_flutter/models/favorite.dart';
 import 'package:course_app_flutter/provider/auth_provider.dart';
-import 'package:course_app_flutter/provider/loading_provider.dart';
 import 'package:course_app_flutter/theme/data/space_style.dart';
 import 'package:course_app_flutter/theme/data/style_text.dart';
 import 'package:flutter/material.dart';
 import '../../../models/course.dart';
-import '../../../theme/data/style_toast.dart';
 
 class DescriptionWidget extends StatelessWidget {
   const DescriptionWidget({super.key, required this.course});
@@ -15,9 +13,8 @@ class DescriptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider =
-        AuthenticationProvider.stateAuthenticationProvider(context);
-    final loadingProvider = LoadingProvider.stateLoadingProvider(context);
+
+    final authProvider = AuthenticationProvider.stateAuthenticationProvider(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -29,7 +26,7 @@ class DescriptionWidget extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: Colors.orange.withOpacity(0.9)),
+                    color: kPrimaryColor),
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -37,7 +34,7 @@ class DescriptionWidget extends StatelessWidget {
                     child: Text(
                       course.company,
                       style: TextStyleApp.textStyleForm(
-                          24, FontWeight.w700, kPrimaryColor),
+                          24, FontWeight.w700, kCardTitleColor),
                     ),
                   ),
                 ),

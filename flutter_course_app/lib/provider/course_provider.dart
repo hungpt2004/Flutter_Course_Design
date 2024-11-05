@@ -13,13 +13,19 @@ class CourseProvider extends ChangeNotifier {
   final CourseRepository courseRepository = CourseRepository();
 
   List<Course> _courses = [];
-
+  List<Course> _suggestionCourse = [];
   late Course _currentCourse;
-
 
   // GETTER
   List<Course> get courses => _courses;
   Course get currentCourse => _currentCourse;
+  List<Course> get suggestionCourse => _suggestionCourse;
+
+  // SETTER
+  Future<void> setCurrentCourse(Course course) async {
+    _currentCourse = course;
+    notifyListeners();
+  }
 
   // GET ALL COURSES
   Future<void> fetchAllCourses() async {
@@ -37,6 +43,18 @@ class CourseProvider extends ChangeNotifier {
   // GET COURSE
   Future<Course?> getCourseByID(String courseID) async {
     return await courseRepository.getCourseByID(courseID);
+  }
+
+  // ADD SUGGESTION
+  Future<void> toggleSearch(Course course) async {
+    _suggestionCourse.add(course);
+    notifyListeners();
+  }
+
+  // REFRESH SUGGESTION
+  Future<void> endToggleSearch() async {
+    _suggestionCourse.clear();
+    notifyListeners();
   }
 
   // STATIC CALL PROVIDER

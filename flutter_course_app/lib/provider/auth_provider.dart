@@ -15,9 +15,11 @@ class AuthenticationProvider extends ChangeNotifier {
 
   User? _currentUser;
   String _pin = '';
+  bool _isObsecure = false;
 
   User? get user => _currentUser;
   String get pin => _pin;
+  bool get isObsecure => _isObsecure;
 
   Future<void> credentialLogin(String username, String password) async {
     _currentUser = await authenticationRepository.userCredentialLogin(username, password);
@@ -69,25 +71,47 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // OBSECURE TEXT
+  void seePassword() async {
+    _isObsecure = !_isObsecure;
+    notifyListeners();
+  }
+
 
   // ================================================= USER'S COURSE ==============================================
 
   // ENROLL COURSE
   Future<void> joinCourse(String userID, Enrollment enrollment) async {
     await authenticationRepository.enrollCourse(userID, enrollment);
+    await getAllEnrollment(userID);
     notifyListeners();
   }
 
   // UN-ENROLL COURSE
-  Future<void> leaveCourse(String userID) async {
-
+  Future<void> leaveCourse(String userID, String courseID) async {
+    await authenticationRepository.unEnrollCourse(userID, courseID);
+    await getAllEnrollment(userID);
+    notifyListeners();
   }
+
+  // GET ALL ENROLLMENTS
+  Future<void> getAllEnrollment(String userID) async {
+    user!.enrollCourse = await authenticationRepository.getAllEnrollments(userID);
+    notifyListeners();
+  }
+
+  // CHECK STATUS ENROLL
+  Future<bool> checkStatusEnroll(String userID, String courseID) async {
+    return await authenticationRepository.statusEnroll(userID, courseID);
+  }
+
 
   // ================================================= USER'S FAVORITE ==============================================
 
   // ADD FAVORITES COURSE
   Future<void> addFavoriteCourse(String userID, Favorite fav) async {
     await authenticationRepository.addFavorite(userID, fav);
+    await getAllFavorite(userID);
     notifyListeners();
   }
 

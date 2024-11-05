@@ -12,6 +12,7 @@ class DocumentProvider extends ChangeNotifier {
 
   List<Document> get documents => _documents;
 
+  // GET ALL DOCUMENTS
   Future<void> getAllDocuments() async {
     _documents = await documentRepository.getAllDocuments();
     notifyListeners();

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:course_app_flutter/provider/auth_provider.dart';
+import 'package:course_app_flutter/provider/course_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../theme/data/space_style.dart';
@@ -29,7 +30,8 @@ class HeaderWidget extends StatelessWidget {
               child: ClipRRect(
               borderRadius: BorderRadius.circular(50),
                   // imageUrl: authProvider.user!.url, => real avatar from avatar
-                 child: ImageNetworkStyle.networkImage("https://www.pngitem.com/pimgs/m/130-1300253_female-user-icon-png-download-user-image-color.png")
+                  child: ImageNetworkStyle.networkImage(authProvider.user!.url),
+                 // child: ImageNetworkStyle.networkImage("https://www.pngitem.com/pimgs/m/130-1300253_female-user-icon-png-download-user-image-color.png")
               ),
             )
           ],

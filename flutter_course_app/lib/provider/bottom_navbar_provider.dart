@@ -5,9 +5,11 @@ class BottomNavbarProvider extends ChangeNotifier {
 
   int _currentIndex = 0;
 
+
   int get currentIndex => _currentIndex;
 
-  void setPageIndex(int index) {
+  // SET PAGE BOTTOM
+  Future<void> setPageIndex(int index) async {
     _currentIndex = index;
     notifyListeners();
   }

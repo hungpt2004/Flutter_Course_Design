@@ -1,4 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:course_app_flutter/constant/color.dart';
+import 'package:course_app_flutter/theme/data/style_text.dart';
+import 'package:course_app_flutter/views/profile/widget/profile_content_widget.dart';
+import 'package:flutter/material.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -8,8 +11,13 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
+  
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      backgroundColor: homeBackgroundColor,
+      appBar: TextStyleApp.appbarStyle("Profile Users"),
+      body: const ProfileContentWidget()
+    );
   }
 }

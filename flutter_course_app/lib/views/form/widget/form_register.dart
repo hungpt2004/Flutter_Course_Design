@@ -127,13 +127,16 @@ class _FormRegiterWidgetState extends State<FormRegisterWidget> {
                             return null;
                           }
                         },
+                        obscureText: authProvider.isObsecure,
                         decoration: InputDecoration(
                             labelText: 'Password',
                             hintText: 'Enter password ...',
                             errorMaxLines: 1,
                             contentPadding: const EdgeInsets.symmetric(horizontal: 15),
                             suffixIcon: IconButton(
-                                onPressed: () {}, icon: const Icon(CupertinoIcons.eye)),
+                                onPressed: ()  {
+                                  authProvider.seePassword();
+                                }, icon: Icon(authProvider.isObsecure ? CupertinoIcons.eye_slash : CupertinoIcons.eye)),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: const BorderSide(

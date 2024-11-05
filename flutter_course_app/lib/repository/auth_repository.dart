@@ -193,7 +193,7 @@ class AuthenticationRepository {
   }
 
 
-  
+
   //================================================== SAVE ENROLLMENT =============================================
 
   // ADD ENROLL
@@ -216,28 +216,30 @@ class AuthenticationRepository {
   // REMOVE ENROLL
   Future<void> unEnrollCourse(String userID, String courseID) async {
     List<Enrollment> enrollmentList = await getAllEnrollments(userID);
-    late Enrollment enrollment;
-    for(var e in enrollmentList) {
-      if(e.courseID == courseID) {
-        enrollment = e;
-        break;
-      }
-    }
-    debugPrint(enrollment.courseID);
-    if(enrollment == null) {
-      await ToastStyle.toastFail("You have not to enrolled this course");
-      return;
-    } else {
-      try {
-        await firebaseFireStore.collection('users').doc(userID).collection('enrollments').doc(enrollment.courseID).delete();
-        await ToastStyle.toastSuccess("Un-enrolled course successfully");
-      } catch (e) {
-        await ToastStyle.toastFail("Can not un-enroll course");
-        throw Exception("Error when un-enroll course $courseID");
+    try {
+      Enrollment? enrollment = enrollmentList.firstWhere((items) => items.courseID == courseID);
+
+      await firebaseFireStore.collection('users').doc(userID).collection('enrollments').doc(enrollment.id).delete();
+      await ToastStyle.toastSuccess("Un-enroll course successfully");
+    } catch (e) {
+      if (e is StateError) {
+        await ToastStyle.toastFail("You have not enroll this course");
+      } else {
+        await ToastStyle.toastFail("Cannot Un-enroll course");
+        throw Exception("Error when Un-enroll course $courseID: $e");
       }
     }
   }
 
+  // CHECK STATUS ENROLL
+  Future<bool> statusEnroll(String userID, courseID) async {
+    List<Enrollment> enrollmentList = await getAllEnrollments(userID);
+    bool check = enrollmentList.any((items) => items.courseID == courseID);
+    if(check) {
+      return true;
+    }
+    return false;
+  }
 
 
   //================================================== SAVE FAVORITE ===============================================
@@ -273,14 +275,13 @@ class AuthenticationRepository {
     } catch (e) {
       // Nếu không tìm thấy mục yêu thích
       if (e is StateError) {
-        await ToastStyle.toastFail("You have not enrolled in this course");
+        await ToastStyle.toastFail("You have not like this course");
       } else {
-        await ToastStyle.toastFail("Cannot un-enroll course");
-        throw Exception("Error when un-enroll course $courseID: $e");
+        await ToastStyle.toastFail("Cannot remove favorite course");
+        throw Exception("Error when remove favorite course $courseID: $e");
       }
     }
   }
-
 
   //ID TO INSERT
   int findMaxID(String prefixDocID, List<dynamic> list){

@@ -1,5 +1,6 @@
 import 'package:course_app_flutter/constant/color.dart';
 import 'package:course_app_flutter/provider/auth_provider.dart';
+import 'package:course_app_flutter/provider/bottom_navbar_provider.dart';
 import 'package:course_app_flutter/provider/loading_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,7 @@ class _FormLoginState extends State<FormLoginWidget> {
 
     final loadProvider = LoadingProvider.stateLoadingProvider(context);
     final authProvider = AuthenticationProvider.stateAuthenticationProvider(context);
+    final bottomProvider = BottomNavbarProvider.bottomStateMangement(context);
 
     return Scaffold(
         backgroundColor: kDefaultColor,
@@ -149,6 +151,7 @@ class _FormLoginState extends State<FormLoginWidget> {
                             return null;
                           }
                         },
+                        obscureText: authProvider.isObsecure,
                         decoration: InputDecoration(
                           labelText: 'Password',
                           labelStyle: TextStyleApp.textStyleForm(16, FontWeight.w300, kPrimaryColor),
@@ -157,8 +160,10 @@ class _FormLoginState extends State<FormLoginWidget> {
                           errorMaxLines: 1,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 15),
                           suffixIcon: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(CupertinoIcons.eye),
+                            onPressed: () {
+                              authProvider.seePassword();
+                            },
+                            icon: Icon(authProvider.isObsecure ? CupertinoIcons.eye_slash : CupertinoIcons.eye),
                           ),
                           // Đặt màu cho các trạng thái khác nhau của border
                           focusedBorder: OutlineInputBorder(
@@ -203,6 +208,7 @@ class _FormLoginState extends State<FormLoginWidget> {
                           if(authProvider.user == null){
                             return;
                           }
+                          await bottomProvider.setPageIndex(0);
                           Navigator.pushNamed(context, "/bottom");
                         }
                       }, loadProvider),

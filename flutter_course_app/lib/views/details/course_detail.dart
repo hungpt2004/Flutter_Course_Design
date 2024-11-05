@@ -7,9 +7,7 @@ import 'package:course_app_flutter/theme/data/style_button.dart';
 import 'package:course_app_flutter/views/details/widget/content_widget.dart';
 import 'package:course_app_flutter/views/details/widget/description_widget.dart';
 import 'package:course_app_flutter/views/details/widget/video_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../provider/loading_provider.dart';
 
 class CourseDetailScreen extends StatefulWidget {
@@ -20,22 +18,23 @@ class CourseDetailScreen extends StatefulWidget {
 }
 
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
+  String buttonText = 'Enroll';
+
   @override
   Widget build(BuildContext context) {
-
     final courseProvider = CourseProvider.stateCourseManagement(context);
     final authProvider = AuthenticationProvider.stateAuthenticationProvider(context);
     final loadingProvider = LoadingProvider.stateLoadingProvider(context);
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: homeBackgroundColor,
+        backgroundColor: kCardTitleColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              //VIDEO
+              // VIDEO
               VideoPlayWidget(course: courseProvider.currentCourse),
-              //DESCRIPTION
+              // DESCRIPTION
               SpaceStyle.boxSpaceHeight(20),
               DescriptionWidget(course: courseProvider.currentCourse),
               SpaceStyle.boxSpaceHeight(20),
@@ -48,10 +47,33 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,
-                  child: ButtonStyleApp.customerButton(() async {
-                    await loadingProvider.loading();
-                    await authProvider.joinCourse(authProvider.user!.userId, Enrollment(id: '', courseID: courseProvider.currentCourse.courseId));
-              },loadingProvider,"Enroll",kDefaultColor,kPrimaryColor))
+                child: ButtonStyleApp.customerButton(() async {
+                  await loadingProvider.loading();
+
+                  if (buttonText == 'Enroll') {
+                    // Attempt to enroll
+                    await authProvider.joinCourse(
+                      authProvider.user!.userId,
+                      Enrollment(id: '', courseID: courseProvider.currentCourse.courseId),
+                    );
+                  } else {
+                    // Attempt to leave
+                    await authProvider.leaveCourse(
+                      authProvider.user!.userId,
+                      courseProvider.currentCourse.courseId,
+                    );
+                  }
+
+                  // Update button text based on enrollment status
+                  bool isEnrolled = await authProvider.checkStatusEnroll(
+                    authProvider.user!.userId,
+                    courseProvider.currentCourse.courseId,
+                  );
+                  setState(() {
+                    buttonText = isEnrolled ? 'Leave' : 'Enroll';
+                  });
+                }, loadingProvider, buttonText, kDefaultColor, kPrimaryColor),
+              ),
             ],
           ),
         ),

@@ -42,7 +42,7 @@ class CardFavoriteWidget extends StatelessWidget {
           builder: (context, authProvider, _) {
             return Card(
               elevation: 15,
-              color: kDefaultColor,
+              color: kCardTitleColor,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -70,7 +70,7 @@ class CardFavoriteWidget extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
                       course.company,
-                      style: TextStyleApp.textStyleForm(14, FontWeight.w500, kPrimaryColor),
+                      style: TextStyleApp.textStyleForm(14, FontWeight.w500, kDefaultColor),
                     ),
                   ),
                   SpaceStyle.boxSpaceHeight(10),
@@ -78,7 +78,7 @@ class CardFavoriteWidget extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
                       "⭐ ${course.rating}  (${course.totalReviews} views)",
-                      style: TextStyleApp.textStyleForm(14, FontWeight.w500, kPrimaryColor),
+                      style: TextStyleApp.textStyleForm(14, FontWeight.w500, kDefaultColor),
                     ),
                   ),
                   Center(

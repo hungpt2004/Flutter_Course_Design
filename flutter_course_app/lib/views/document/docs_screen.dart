@@ -37,7 +37,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                       child: Card(
-                        color: index % 2 == 0 ? kDefaultColor : Colors.orange.withOpacity(0.9),
+                        color: index % 2 == 0 ? kDefaultColor : kCardTitleColor,
                         child: Column(
                           children: [
                             Padding(

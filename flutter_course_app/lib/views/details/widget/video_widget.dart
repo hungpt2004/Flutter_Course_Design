@@ -1,11 +1,7 @@
-import 'package:course_app_flutter/constant/color.dart';
-import 'package:course_app_flutter/provider/loading_provider.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-
 import '../../../models/course.dart';
 import '../../../theme/data/style_button.dart';
 

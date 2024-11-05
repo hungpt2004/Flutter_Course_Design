@@ -4,7 +4,6 @@ import 'package:course_app_flutter/views/favorite/favorite_screen.dart';
 import 'package:course_app_flutter/views/home/home_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-
 import '../document/docs_screen.dart';
 import '../profile/profile_screen.dart';
 
@@ -37,7 +36,7 @@ class _BottomNavbarWidgetState extends State<BottomNavbarWidget> {
       bottomNavigationBar: CurvedNavigationBar(
         height: 60,
         backgroundColor: homeBackgroundColor,
-        color: Colors.orange.withOpacity(0.9),
+        color: kPrimaryColor,
         animationDuration: const Duration(milliseconds: 800),
         animationCurve: Curves.fastOutSlowIn,
         onTap: (index) {

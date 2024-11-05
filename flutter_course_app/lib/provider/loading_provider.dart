@@ -9,6 +9,7 @@ class LoadingProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   int? get currentIndex => _currentIndex;
 
+  // START LOADING
   Future<void> loading() async {
     _isLoading = true;
     notifyListeners();
@@ -17,6 +18,7 @@ class LoadingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // READ DOCS
   void toggleExpanded(int index) async {
     if(_currentIndex == index) {
       _currentIndex = null;
@@ -25,8 +27,6 @@ class LoadingProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
-
 
   static LoadingProvider stateLoadingProvider(BuildContext context, {listen = true}){
     return Provider.of(context,listen: listen);

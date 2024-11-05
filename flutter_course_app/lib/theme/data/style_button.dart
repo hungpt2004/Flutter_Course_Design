@@ -89,10 +89,10 @@ class ButtonStyleApp {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        TextStyleApp.normalText(content, 16, FontWeight.w500, kDefaultColor),
+        TextStyleApp.normalText(content, 16, FontWeight.w500, kCardTitleColor),
         InkWell(
           onTap: () {},
-          child: TextStyleApp.underlineText("See all", 14, FontWeight.w500, Colors.orange.withOpacity(0.9)),
+          child: TextStyleApp.underlineText("See all", 14, FontWeight.w500, kPrimaryColor),
         )
       ],
     );
