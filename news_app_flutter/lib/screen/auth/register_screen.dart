@@ -1,15 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/providers/user_provider.dart';
 import 'package:news_app_flutter/screen/auth/widget/login_social_network.dart';
 import 'package:news_app_flutter/screen/auth/widget/text_input_action.dart';
-
 import '../../model/user.dart';
 import '../../theme/style.dart';
-import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

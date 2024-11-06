@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
@@ -38,7 +37,6 @@ class _ButtonCategoryState extends State<ButtonCategory> {
         itemCount: category.length,
         itemBuilder: (context, index) {
           final type = category[index];
-          final isSelected = type == selectType;
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5.0),
             child: Column(

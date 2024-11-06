@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:news_app_flutter/providers/user_provider.dart';
 import '../../../constant/constant.dart';
 import '../../../providers/theme_provider.dart';
 
@@ -27,21 +26,23 @@ class TextInputActionWidget extends StatefulWidget {
 }
 
 class TextInputActionWidgetState extends State<TextInputActionWidget> {
-  bool isObserve = true;
 
   @override
   Widget build(BuildContext context) {
+
+    final userProvider = UserProvider.of(context);
     final themeProvider = ThemeProvider.of(context);
+
     return TextFormField(
       validator: (value) {
-        if (value == null || value.length == 0) {
+        if (value == null || value.isEmpty) {
           return "${widget.label} can't not be empty";
         } else {
           return null;
         }
       },
       controller: widget.controller,
-      obscureText: widget.isPassword ? isObserve : !isObserve,
+      obscureText: widget.isPassword ? !userProvider.isObsecure : false,
       decoration: InputDecoration(
         hintText: widget.hinttext,
         hintStyle: TextStyle(
@@ -61,12 +62,10 @@ class TextInputActionWidgetState extends State<TextInputActionWidget> {
         suffixIcon: widget.isPassword
             ? IconButton(
           icon: Icon(
-            isObserve ? Icons.visibility_off : Icons.visibility,
+            !userProvider.isObsecure ? Icons.visibility_off : Icons.visibility,
           ),
           onPressed: () {
-            setState(() {
-              isObserve = !isObserve;
-            });
+            userProvider.seePassword();
           },
         )
             : null,

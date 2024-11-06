@@ -1,181 +1,75 @@
-import 'package:flutter/cupertino.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:news_app_flutter/providers/loading_provider.dart';
+import 'package:news_app_flutter/providers/theme_provider.dart';
+import 'package:news_app_flutter/screen/auth/profile_screen.dart';
 import 'package:news_app_flutter/screen/details/favourite_news_screen.dart';
 import 'package:news_app_flutter/screen/details/history_news_screen.dart';
-import 'package:news_app_flutter/screen/home_screen.dart';
-import 'package:news_app_flutter/screen/auth/profile_screen.dart';
-
 import '../../constant/constant.dart';
+import '../../screen/home_screen.dart';
 
 class BottomNavbarWidget extends StatefulWidget {
-  const BottomNavbarWidget({super.key, required this.indexStaying});
-
-  final int indexStaying;
+  const BottomNavbarWidget({super.key});
 
   @override
   State<BottomNavbarWidget> createState() => _BottomNavbarWidgetState();
 }
 
 class _BottomNavbarWidgetState extends State<BottomNavbarWidget> {
+
+  List<Widget> pages = [
+    const HomeScreen(),
+    const FavouriteNewsScreen(),
+    const HistoryNewsScreen(),
+    const ProfileScreen()
+  ];
+
   @override
   Widget build(BuildContext context) {
-    int select = widget.indexStaying;
+    final loadProvider = LoadingProvider.of(context);
+    final themeProvider = ThemeProvider.of(context);
 
-    void togglePage(int index) {
-      setState(() {
-        select = index;
-      });
-    }
-
-    return bottomNavbar(context, togglePage, select);
-  }
-}
-
-Widget bottomNavbar(BuildContext context, Function function, int selected) {
-  return Positioned(
-    bottom: 20,
-    left: 0,
-    right: 0,
-    child: Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(50),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Column(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        function(0);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeScreen(),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.home,
-                        color: selected == 0 ? primaryColors : Colors.grey,
-                      ),
-                    ),
-                    Text(
-                      "Home",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontFamily: textFontContent,
-                        fontWeight: FontWeight.w300,
-                        color: selected == 0 ? primaryColors : Colors.grey,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        function(1);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const FavouriteNewsScreen(),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.favorite,
-                        color: selected == 1 ? primaryColors : Colors.grey,
-                      ),
-                    ),
-                    Text(
-                      "Favourite",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontFamily: textFontContent,
-                        fontWeight: FontWeight.w300,
-                        color: selected == 1 ? primaryColors : Colors.grey,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        function(2);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HistoryNewsScreen(),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.history,
-                        color: selected == 2 ? primaryColors : Colors.grey,
-                      ),
-                    ),
-                    Text(
-                      "History",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontFamily: textFontContent,
-                        fontWeight: FontWeight.w300,
-                        color: selected == 2 ? primaryColors : Colors.grey,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        function(2);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ProfileScreen(),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.person,
-                        color: selected == 3 ? primaryColors : Colors.grey,
-                      ),
-                    ),
-                    Text(
-                      "Profile",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontFamily: textFontContent,
-                        fontWeight: FontWeight.w300,
-                        color: selected == 3 ? primaryColors : Colors.grey,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+    return Scaffold(
+      body: pages[loadProvider
+          .currentIndex],
+      backgroundColor: themeProvider.isDark ? Colors.black : Colors.white,
+      bottomNavigationBar: CurvedNavigationBar(
+        height: 60,
+        backgroundColor: themeProvider.isDark ? Colors.black : Colors.white,
+        color: primaryColors,
+        animationDuration: const Duration(milliseconds: 800),
+        animationCurve: Curves.fastOutSlowIn,
+        onTap: (index) {
+          loadProvider.setPageIndex(index);
+        },
+        items: [
+          SizedBox(
+              width: 25,
+              height: 25,
+              child: loadProvider.currentIndex == 0
+                  ? const Icon(EvaIcons.home,color: Colors.white,)
+                  : const Icon(EvaIcons.home,color: Colors.black38,)),
+          SizedBox(
+              width: 25,
+              height: 25,
+              child: loadProvider.currentIndex == 1
+                  ? const Icon(EvaIcons.heart,color: Colors.white,)
+                  : const Icon(EvaIcons.heart,color: Colors.black38,)),
+          SizedBox(
+              width: 25,
+              height: 25,
+              child: loadProvider.currentIndex == 2
+                  ? const Icon(EvaIcons.refreshOutline,color: Colors.white,)
+                  : const Icon(EvaIcons.refreshOutline,color: Colors.black38,)),
+          SizedBox(
+              width: 25,
+              height: 25,
+              child: loadProvider.currentIndex == 3
+                  ? const Icon(EvaIcons.person,color: Colors.white,)
+                  : const Icon(EvaIcons.person,color: Colors.black38,)),
+        ],
       ),
-    ),
-  );
+    );
+  }
 }

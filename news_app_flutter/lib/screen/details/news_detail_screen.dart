@@ -35,11 +35,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                 SizedBox(
                   width: double.infinity,
                   height: 370,
-                  child: Image.network(
-                    article.urlToImage ??
-                        'https://cdn.pixabay.com/photo/2016/02/01/00/56/news-1172463_640.jpg',
-                    fit: BoxFit.cover,
-                  ),
+                  child: Style.networkImage(article.urlToImage!)
                 ),
               ],
             ),
@@ -176,7 +172,6 @@ class _NewsDetailsState extends State<NewsDetails> {
                   ),
                   child: IconButton(
                       onPressed: () async {
-                        setState(() {
                           article.isFavourite
                               ? provider.toggleRemoveFavourite(article)
                               : provider.toggleAddFavourite(article);
@@ -187,7 +182,6 @@ class _NewsDetailsState extends State<NewsDetails> {
                             showMessageDialog(
                                 context, "Remove favourite success", false);
                           }
-                        });
                       },
                       icon: Icon(
                         Icons.bookmark_sharp,

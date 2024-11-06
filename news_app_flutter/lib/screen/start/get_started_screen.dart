@@ -1,32 +1,24 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:news_app_flutter/constant/constant.dart';
+import 'package:news_app_flutter/providers/loading_provider.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/screen/auth/login_screen.dart';
-import 'package:news_app_flutter/screen/auth/register_screen.dart';
 import 'package:news_app_flutter/theme/message_dialog.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../model/category.dart';
-import '../../widget/route/slide_page_route_widget.dart';
+import '../../theme/style.dart';
 
 class GetStartedScreen extends StatefulWidget {
-  const GetStartedScreen({super.key, required this.isDark});
+  const GetStartedScreen({super.key});
 
-  final bool isDark;
+  // final bool isDark;
 
   @override
   State<GetStartedScreen> createState() => _GetStartedScreenState();
 }
 
-class _GetStartedScreenState extends State<GetStartedScreen>
-    with TickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    duration: const Duration(seconds: 10),
-    vsync: this,
-  )..repeat();
-
+class _GetStartedScreenState extends State<GetStartedScreen> {
   int activeIndex = 0;
 
   final List<Category> categories = [
@@ -48,14 +40,9 @@ class _GetStartedScreenState extends State<GetStartedScreen>
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final themeProvider = ThemeProvider.of(context);
+    final loadProvider = LoadingProvider.of(context);
 
     return SafeArea(
       child: Scaffold(
@@ -63,14 +50,17 @@ class _GetStartedScreenState extends State<GetStartedScreen>
           children: [
             _buildTopBar(themeProvider),
             _buildRotatingLogo(themeProvider),
-            const SizedBox(height: 5),
+            Style.space(40, 0),
             _buildDivider(context),
             _buildTitleAndCarousel(themeProvider),
             _buildHeading(themeProvider),
-            const SizedBox(height: 5),
-            _buildButton(themeProvider, "SIGN IN", const LoginScreen(), themeProvider.isDark ? Colors.white : primaryColors),
-            _buildDivider(context),
-            _buildButton(themeProvider, "SIGN UP", const RegisterScreen(), themeProvider.isDark ? Colors.white : primaryColors),
+            Style.space(40, 0),
+            _buildButton(
+                themeProvider,
+                "SIGN IN",
+                const LoginScreen(),
+                themeProvider.isDark ? Colors.white : primaryColors,
+                loadProvider),
           ],
         ),
       ),
@@ -108,29 +98,14 @@ class _GetStartedScreenState extends State<GetStartedScreen>
     return Center(
       child: Container(
         height: 150,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: themeProvider.isDark
-                  ? Colors.indigo.withOpacity(0.5)
-                  : Colors.black38.withOpacity(0.5),
-              blurRadius: 30,
-            ),
-          ],
-        ),
-        child: AnimatedBuilder(
-          animation: _controller,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: Image.asset("assets/images/earth.png"),
+        width: Style.styleWidthDevice(context),
+        decoration: const BoxDecoration(),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.asset(
+            "assets/images/logo.png",
+            fit: BoxFit.cover,
           ),
-          builder: (context, child) {
-            return Transform.rotate(
-              angle: _controller.value * 2.0 * 3.14,
-              child: child,
-            );
-          },
         ),
       ),
     );
@@ -150,11 +125,13 @@ class _GetStartedScreenState extends State<GetStartedScreen>
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            _buildText("Breaking Boundaries with Media", 20, false, themeProvider.isDark),
+            _buildText("Breaking Boundaries with Media", 20, false,
+                themeProvider.isDark),
             const SizedBox(height: 16),
             CarouselSlider.builder(
               itemCount: categories.length,
-              itemBuilder: (context, index, realIndex) => _buildCategoryCard(categories[index]),
+              itemBuilder: (context, index, realIndex) =>
+                  _buildCategoryCard(categories[index]),
               options: CarouselOptions(
                 onPageChanged: (index, reason) {
                   setState(() => activeIndex = index);
@@ -179,7 +156,8 @@ class _GetStartedScreenState extends State<GetStartedScreen>
     );
   }
 
-  Widget _buildButton(ThemeProvider themeProvider, String text, Widget page, Color color) {
+  Widget _buildButton(ThemeProvider themeProvider, String text, Widget page,
+      Color color, LoadingProvider loadProvider) {
     return Center(
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 1000),
@@ -188,35 +166,33 @@ class _GetStartedScreenState extends State<GetStartedScreen>
         child: ElevatedButton(
           style: ButtonStyle(
             backgroundColor: WidgetStatePropertyAll(color),
-            elevation: const WidgetStatePropertyAll(4),
-            shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+            elevation: const WidgetStatePropertyAll(15),
+            animationDuration: const Duration(milliseconds: 500),
+            shape: WidgetStatePropertyAll(loadProvider.isLoading ? const CircleBorder() : RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20))),
           ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              SlidePageRoute(
-                page: page,
-                beginOffset: const Offset(1, 0),
-                endOffset: Offset.zero,
-                duration: const Duration(milliseconds: 1000),
-              ),
-            );
+          onPressed: () async {
+            await loadProvider.loading();
+            Style.navigatorPush(context, page);
           },
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 14,
-              fontFamily: textFontContent,
-              fontWeight: FontWeight.w600,
-              color: themeProvider.isDark ? primaryColors : Colors.white,
-            ),
-          ),
+          child: loadProvider.isLoading
+              ? Style.loading()
+              : Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: textFontContent,
+                    fontWeight: FontWeight.w600,
+                    color: themeProvider.isDark ? primaryColors : Colors.white,
+                  ),
+                ),
         ),
       ),
     );
   }
 
-  Widget _buildText(String message, double size, bool isTitle, bool isDarkTheme) {
+  Widget _buildText(
+      String message, double size, bool isTitle, bool isDarkTheme) {
     return Text(
       message,
       style: TextStyle(

@@ -1,16 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:news_app_flutter/providers/loading_provider.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/screen/details/notification_screen.dart';
 import 'package:news_app_flutter/screen/details/search_screen.dart';
 import 'package:news_app_flutter/service/news_data_api.dart';
 import 'package:news_app_flutter/widget/card/article_category_card_widget.dart';
-import 'package:news_app_flutter/widget/bottom_navbar/bottom_navbar_widget.dart';
 import 'package:news_app_flutter/widget/button/button_category_widget.dart';
 import 'package:news_app_flutter/widget/slide/carousel_slide_widget.dart';
-import 'package:news_app_flutter/widget/route/slide_page_route_widget.dart';
 import '../constant/constant.dart';
 import '../model/article.dart';
 import '../theme/style.dart';
@@ -34,14 +31,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-      articles = APIService().getLatestNews();
-      articles.then(
-            (article) => setState(() {
-          listArticle = article;
-        }),
-      );
+    articles = APIService().getLatestNews();
+    articles.then(
+      (article) => setState(() {
+        listArticle = article;
+      }),
+    );
   }
-
 
   @override
   void dispose() {
@@ -56,21 +52,11 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  _startLoad() async {
-    setState(() {
-      isLoading = true;
-    });
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      isLoading = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-
     //PROVIDER
     final themeProvider = ThemeProvider.of(context);
+    final loadProvider = LoadingProvider.of(context);
 
     return SafeArea(
       child: Scaffold(
@@ -97,34 +83,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                     shape: WidgetStatePropertyAll(
                                         RoundedRectangleBorder(
                                             borderRadius:
-                                            BorderRadius.circular(40))),
+                                                BorderRadius.circular(40))),
                                     fixedSize: const WidgetStatePropertyAll(
                                         Size(double.infinity, 80)),
                                     elevation: const WidgetStatePropertyAll(4),
                                     backgroundColor:
-                                    const WidgetStatePropertyAll(primaryColors)),
+                                        const WidgetStatePropertyAll(
+                                            primaryColors)),
                                 onPressed: () async {
-                                  await _startLoad();
-                                  Style.navigatorPush(context, const SearchScreen());
+                                  await loadProvider.loading();
+                                  Style.navigatorPush(
+                                      context, const SearchScreen());
                                 },
-                                child: isLoading ? Row( mainAxisAlignment: MainAxisAlignment.center,children: [Style.loading()],) : Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.search_outlined,
-                                      color: Colors.white,
-                                    ),
-                                    Style.space(0, 10),
-                                    Style.styleContentOnCard(
-                                        "Search", 18)
-                                  ],
-                                ))),
+                                child: isLoading
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [Style.loading()],
+                                      )
+                                    : Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.search_outlined,
+                                            color: Colors.white,
+                                          ),
+                                          Style.space(0, 10),
+                                          Style.styleContentOnCard("Search", 18)
+                                        ],
+                                      ))),
                         Flexible(
                           flex: 1,
                           child: IconButton(
                             style: const ButtonStyle(
                               elevation: WidgetStatePropertyAll(4),
                               shape: WidgetStatePropertyAll(CircleBorder()),
-                              backgroundColor: WidgetStatePropertyAll(primaryColors),
+                              backgroundColor:
+                                  WidgetStatePropertyAll(primaryColors),
                               fixedSize: WidgetStatePropertyAll(Size(50, 80)),
                             ),
                             onPressed: () {
@@ -153,13 +147,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       Style.styleTitleText("Latest News", 30, themeProvider),
                       TextButton(
                         onPressed: () {
-                          Style.navigatorPush(context, ArticleNotificationCard(articleList: listArticle));
+                          Style.navigatorPush(
+                              context,
+                              ArticleNotificationCard(
+                                  articleList: listArticle));
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Style.styleContentText("See All", 14, themeProvider),
+                            Style.styleContentText(
+                                "See All", 14, themeProvider),
                             Style.space(5, 0),
                             Icon(
                               Icons.arrow_forward,
@@ -195,17 +193,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         .animate()
                         .fade(delay: 800.ms)
                         .slideY(
-                        begin: 1.0,
-                        end: 0,
-                        duration: 800.ms), // Use the ArticleList widget
+                            begin: 1.0,
+                            end: 0,
+                            duration: 800.ms), // Use the ArticleList widget
                   ),
                 ),
               ],
-            ),
-
-            //BOTTOM NAVBAR
-            const BottomNavbarWidget(
-              indexStaying: 0,
             ),
           ],
         ),
@@ -213,4 +206,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-

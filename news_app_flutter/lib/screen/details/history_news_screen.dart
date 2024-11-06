@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:news_app_flutter/providers/favourite_provider.dart';
 import 'package:news_app_flutter/providers/history_provider.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
-import 'package:news_app_flutter/widget/bottom_navbar/bottom_navbar_widget.dart';
 import '../../theme/message_dialog.dart';
 import '../../theme/style.dart';
 import 'news_detail_screen.dart';
@@ -40,17 +39,6 @@ class _FavouriteNewsScreenState extends State<HistoryNewsScreen> {
                 ),
               ),
             ),
-            // Positioned Back Button
-            Positioned(
-              top: 5,
-              left: 5,
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.arrow_back_ios, color: themeProvider.isDark ? Colors.white : Colors.black,),
-              ),
-            ),
             // FutureBuilder for Articles
             Positioned.fill(
               top: 100, // Adjust the top position to avoid overlap with the title
@@ -84,14 +72,8 @@ class _FavouriteNewsScreenState extends State<HistoryNewsScreen> {
 
                               //IMAGE
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  article.urlToImage ??
-                                      'https://cdn.pixabay.com/photo/2016/02/01/00/56/news-1172463_640.jpg',
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                ),
+                                borderRadius: BorderRadius.circular(20),
+                                child: Style.networkImage(article.urlToImage!)
                               ),
                             ),
                           ),
@@ -108,7 +90,7 @@ class _FavouriteNewsScreenState extends State<HistoryNewsScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(20),
                                       color: Colors.black.withOpacity(0.3)
                                   ),
                                   alignment: Alignment.center,
@@ -152,7 +134,6 @@ class _FavouriteNewsScreenState extends State<HistoryNewsScreen> {
                 },
               ),
             ),
-            const BottomNavbarWidget(indexStaying: 2,)
           ],
         ),
       ),

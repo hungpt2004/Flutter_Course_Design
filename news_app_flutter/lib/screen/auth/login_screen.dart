@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:news_app_flutter/constant/constant.dart';
+import 'package:news_app_flutter/providers/loading_provider.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/providers/user_provider.dart';
 import 'package:news_app_flutter/screen/auth/widget/login_social_network.dart';
 import 'package:news_app_flutter/screen/auth/widget/text_input_action.dart';
 import 'package:news_app_flutter/screen/start/get_started_screen.dart';
 import 'package:news_app_flutter/screen/auth/register_screen.dart';
-import 'package:news_app_flutter/widget/route/slide_page_route_widget.dart';
-
+import 'package:news_app_flutter/widget/bottom_navbar/bottom_navbar_widget.dart';
+import '../../theme/message_dialog.dart';
 import '../../theme/style.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -24,7 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordControllerLogin =
       TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool isLoad = false;
 
   @override
   void dispose() {
@@ -33,20 +31,12 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  _startLoad() async {
-    setState(() {
-      isLoad = true;
-    });
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      isLoad = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+
     final themeProvider = ThemeProvider.of(context);
     final userProvider = UserProvider.of(context);
+    final loadProvider = LoadingProvider.of(context);
     final isDarkMode = themeProvider.isDark;
 
     return SafeArea(
@@ -60,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
               IconButton(
                 onPressed: () {
                   Style.navigatorPush(
-                      context, GetStartedScreen(isDark: isDarkMode));
+                      context, const GetStartedScreen());
                 },
                 icon: const Icon(Icons.arrow_back_ios),
               ),
@@ -130,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       Style.space(10, 0),
-                      _loginButton(context, userProvider, themeProvider),
+                      _loginButton(context, userProvider, themeProvider, loadProvider),
                       Style.space(10, 0),
                       _signUpRow(themeProvider),
                     ],
@@ -145,17 +135,24 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _loginButton(BuildContext context, UserProvider userProvider,
-      ThemeProvider themeProvider) {
+      ThemeProvider themeProvider, LoadingProvider loadProvider) {
     return ElevatedButton(
-      style: Style.ButtonStyleLoading(isLoad),
+      style: Style.ButtonStyleLoading(loadProvider.isLoading),
       onPressed: () async {
         if(_formKey.currentState!.validate()){
-          await _startLoad();
-          userProvider.login(context, _usernameControllerLogin.text,
+          await loadProvider.loading();
+          bool check = await userProvider.login(context, _usernameControllerLogin.text,
               _passwordControllerLogin.text);
+          if(check) {
+            await loadProvider.setPageIndex(0);
+            showMessageDialog(context, "Login successfully", true);
+            Style.navigatorPush(context, const BottomNavbarWidget());
+          } else {
+            showMessageDialog(context, "Login failed", false);
+          }
         }
       },
-      child: isLoad
+      child: loadProvider.isLoading
           ? Style.loading()
           : Style.styleContentText("Login", 20, themeProvider),
     );

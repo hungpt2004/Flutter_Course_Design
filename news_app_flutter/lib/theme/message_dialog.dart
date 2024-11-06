@@ -8,7 +8,7 @@ import 'package:news_app_flutter/theme/style.dart';
 import '../constant/constant.dart';
 
 //SHOW MESSAGE DIALOG
-void showMessageDialog(BuildContext context, String message, bool status) {
+Future<void> showMessageDialog(BuildContext context, String message, bool status) async {
   Flushbar(
     messageText: Row(
       children: [

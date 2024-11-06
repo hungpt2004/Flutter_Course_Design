@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/theme/message_dialog.dart';
 import '../../model/article.dart';
@@ -60,14 +57,7 @@ class ArticleNotificationCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.network(
-          article.urlToImage ??
-              'https://cdn.pixabay.com/photo/2016/02/01/00/56/news-1172463_640.jpg',
-          fit: BoxFit.cover,
-        ),
-      ),
+      child: Style.networkImage(article.urlToImage!),
     );
   }
 
@@ -76,7 +66,7 @@ class ArticleNotificationCard extends StatelessWidget {
   }
 
   Widget _buildArticleTitle(Article article, ThemeProvider themeProvider) {
-    return Style.styleContentText(article.title ?? 'Title', 18, themeProvider);
+    return Style.styleContentText(article.title, 18, themeProvider);
   }
 
   Widget _buildArticleDescription(Article article, ThemeProvider themeProvider) {

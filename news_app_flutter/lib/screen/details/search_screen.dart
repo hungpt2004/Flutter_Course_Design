@@ -48,6 +48,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     final themeProvider = ThemeProvider.of(context);
 
     return Scaffold(
@@ -71,7 +72,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         key: _formKey,
                         child: TextFormField(
                           validator: (value) {
-                            if (value == null || value.length == 0) {
+                            if (value == null || value.isEmpty) {
                               return "Search word can't be empty";
                             } else {
                               return null;

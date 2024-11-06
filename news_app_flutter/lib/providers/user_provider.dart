@@ -1,18 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'package:news_app_flutter/screen/auth/login_screen.dart';
-import 'package:news_app_flutter/screen/home_screen.dart';
 import 'package:news_app_flutter/theme/message_dialog.dart';
 import 'package:provider/provider.dart';
-
 import '../model/user.dart';
-import '../theme/style.dart';
 
 class UserProvider extends ChangeNotifier {
-  late User _currentUser;
+  User? _currentUser;
+  bool _isObsecure = false;
 
   //GETTER
-  User get currentUser => _currentUser;
-
+  User? get currentUser => _currentUser;
+  bool get isObsecure => _isObsecure;
 
   final List<User> _users = [
     User("1", "user01", "password01", "Nguyen Van A", "assets/images/user1.jpg",
@@ -41,28 +38,29 @@ class UserProvider extends ChangeNotifier {
   }
 
   //LOGIN
-  void login(BuildContext context, String username, String password) async {
-    User? user = _users.firstWhere((items) => items.username == username && items.password == password);
-    if (user != null) {
+  Future<bool> login(BuildContext context, String username, String password) async {
+    try {
+      User user = _users.firstWhere((items) => items.username == username && items.password == password);
       _currentUser = user;
-      showMessageDialog(context, "Login Successfully", true);
-      await Future.delayed(const Duration(milliseconds: 1000));
-      Style.navigatorPush(context, const HomeScreen());
-    } else if (username != user.username && password != user.password){
-      showMessageDialog(context, "Password or Username Incorrect", false);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      return false;
     }
-    notifyListeners();
   }
 
   //LOGOUT
   void logout(BuildContext context) async {
-    _currentUser == "";
-    await Future.delayed(const Duration(milliseconds: 1000));
-    showMessageDialog(context, "Please wait a few seconds !", true);
-    Style.navigatorPush(context, const LoginScreen());
+    _currentUser = null;
+    notifyListeners();
   }
 
-  //listen true => lang nghe su thay doi
+  // SEE PASSWORD
+  void seePassword() async {
+    _isObsecure = !_isObsecure;
+    notifyListeners();
+  }
+
   static UserProvider of(BuildContext context, {listen = true}) {
     return Provider.of(context, listen: listen);
   }

@@ -23,24 +23,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     final themeProvider = ThemeProvider.of(context);
 
     return FutureBuilder<List<Article>>(
         future: articles,
-        builder: (conext, snapshot) {
+        builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                  child: CircularProgressIndicator());
+              return Style.snapshotLoading(themeProvider);
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text(
-                  "Have no data when fetching data in Notification Screen"),
-            );
+            return Style.snapshotError(themeProvider);
           } else if (snapshot.hasError) {
-            return const Center(
-              child: Text(
-                  "Have an error when fetching data in Notification Screen"),
-            );
+            return Style.snapshotDataNull(themeProvider);
           }
           final List<Article> articleList = snapshot.data!;
           return SafeArea(

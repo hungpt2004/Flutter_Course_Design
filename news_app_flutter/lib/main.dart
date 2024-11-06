@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter/providers/favourite_provider.dart';
 import 'package:news_app_flutter/providers/history_provider.dart';
+import 'package:news_app_flutter/providers/loading_provider.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/providers/user_provider.dart';
 import 'package:news_app_flutter/screen/start/get_started_screen.dart';
@@ -29,6 +30,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FavouriteProvider()),
+        ChangeNotifierProvider(create: (_) => LoadingProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider())
@@ -43,7 +45,7 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             theme: themeData,
             debugShowCheckedModeBanner: false,
-            home: GetStartedScreen(isDark: isDark),
+            home: const GetStartedScreen(),
           );
         },
       ),

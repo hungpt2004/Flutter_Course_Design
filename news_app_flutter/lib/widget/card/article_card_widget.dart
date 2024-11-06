@@ -1,10 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:news_app_flutter/constant/constant.dart';
 import 'package:news_app_flutter/screen/details/news_detail_screen.dart';
-import 'package:news_app_flutter/widget/route/slide_page_route_widget.dart';
-// IMPORT
 import '../../model/article.dart';
 import '../../providers/history_provider.dart';
 import '../../theme/style.dart';
@@ -21,7 +16,6 @@ class ArticleCardWidget extends StatefulWidget {
 class _ArticleCardWidgetState extends State<ArticleCardWidget> {
   @override
   Widget build(BuildContext context) {
-
     //PROVIDER
     final historyProvider = HistoryProvider.of(context);
 
@@ -32,26 +26,34 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
       child: Stack(
         children: [
           //IMAGE
-          _image(article),
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                  50), // Thêm góc bo cho Container
+            ),
+
+            //IMAGE
+            child: ClipRRect(borderRadius: BorderRadius.circular(20),child: Style.networkImage(article.urlToImage!)),
+          ),
 
           // OVERLAY
           GestureDetector(
             onTap: () {
-              setState(() {
-                historyProvider.toggleHistoryNews(article);
-                Style.navigatorPush(
-                  context,
-                  NewsDetails(
-                    articleIndex: article,
-                  ),
-                );
-              });
+              historyProvider.toggleHistoryNews(article);
+              Style.navigatorPush(
+                context,
+                NewsDetails(
+                  articleIndex: article,
+                ),
+              );
             },
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(20),
                 color:
-                    Colors.black.withOpacity(0.5), // Độ trong suốt của màu đen
+                    Colors.black.withOpacity(0.5),
               ),
             ),
           ),
@@ -62,7 +64,8 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
             left: 20,
             child: Column(
               children: [
-                Style.styleContentOnCard("by ${article.author ?? 'Unknown'}", 12)
+                Style.styleContentOnCard(
+                    "by ${article.author ?? 'Unknown'}", 12)
               ],
             ),
           ),
@@ -72,9 +75,7 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
             top: 90,
             left: 20,
             child: SizedBox(
-              width: 300,
-              child: Style.styleTitleOnCard(article.title, 14)
-            ),
+                width: 300, child: Style.styleTitleOnCard(article.title, 14)),
           ),
 
           //CONTENT
@@ -82,28 +83,14 @@ class _ArticleCardWidgetState extends State<ArticleCardWidget> {
             bottom: 15,
             left: 20,
             child: SizedBox(
-              width: 280,
-              child: Style.styleContentOnCard("'${article.content ?? 'No content'}'", 12)
-              ),
-            ),
+                width: 280,
+                child: Style.styleContentOnCard(
+                    "'${article.content ?? 'No content'}'", 12)),
+          ),
         ],
       ),
     );
   }
 }
 
-Widget _image(Article article) {
-  return ClipRRect(
-    borderRadius: BorderRadius.circular(10),
-    child: Image.network(
-      article.urlToImage!,
-      errorBuilder:
-          (BuildContext context, Object error, StackTrace? stackTrace) {
-        return const SizedBox.shrink(); // Ẩn ảnh khi lỗi
-      },
-      fit: BoxFit.cover,
-      width: double.infinity,
-      height: double.infinity,
-    ),
-  );
-}
+

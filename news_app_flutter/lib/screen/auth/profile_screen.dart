@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter/constant/constant.dart';
+import 'package:news_app_flutter/providers/loading_provider.dart';
 import 'package:news_app_flutter/providers/theme_provider.dart';
 import 'package:news_app_flutter/providers/user_provider.dart';
-import 'package:news_app_flutter/screen/home_screen.dart';
 import 'package:news_app_flutter/widget/bottom_navbar/bottom_navbar_widget.dart';
-
 import '../../theme/style.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -16,21 +14,12 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool isLoad = false;
-
-  _startLoad() async {
-    setState(() {
-      isLoad = true;
-    });
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      isLoad = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+
     final themeProvider = ThemeProvider.of(context);
+    final loadProvider = LoadingProvider.of(context);
     final userProvider = UserProvider.of(context);
     final isDarkTheme = themeProvider.isDark;
 
@@ -49,20 +38,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Style.styleTitlePage("Profile", 40, themeProvider)),
               ),
             ),
-            // Positioned Back Button
-            Positioned(
-              top: 10,
-              left: 10,
-              child: IconButton(
-                onPressed: () {
-                  Style.navigatorPush(context, const HomeScreen());
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: themeProvider.isDark ? Colors.white : Colors.black,
-                ),
-              ),
-            ),
             // Use SingleChildScrollView directly without Expanded
             SingleChildScrollView(
               child: Column(
@@ -70,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Style.space(70, 0),
                   _buildProfileImage(userProvider, isDarkTheme),
                   Style.space(30, 0),
-                  _buildUserDetails(context, userProvider, themeProvider),
+                  _buildUserDetails(context, userProvider, themeProvider, loadProvider),
                   Style.space(50, 0),
                 ],
               ),
@@ -91,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: 200,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(userProvider.currentUser.urlImage),
+                image: AssetImage(userProvider.currentUser!.urlImage),
               ),
               shape: BoxShape.circle,
               border: Border.all(
@@ -120,30 +95,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildUserDetails(BuildContext context, UserProvider userProvider,
-      ThemeProvider themeProvider) {
+      ThemeProvider themeProvider, LoadingProvider loadProvider) {
     return Column(
       children: [
         _cardInformation(
           context,
-          userProvider.currentUser.fullName,
+          userProvider.currentUser!.fullName,
           const Icon(Icons.person),
           themeProvider,
         ),
         _cardInformation(
           context,
-          userProvider.currentUser.email,
+          userProvider.currentUser!.email,
           const Icon(Icons.mail),
           themeProvider,
         ),
         _cardInformation(
           context,
-          userProvider.currentUser.country,
+          userProvider.currentUser!.country,
           const Icon(Icons.location_pin),
           themeProvider,
         ),
         _cardInformation(
           context,
-          userProvider.currentUser.phoneNumber,
+          userProvider.currentUser!.phoneNumber,
           const Icon(Icons.phone_enabled),
           themeProvider,
         ),
@@ -155,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onTap: () => userProvider.logout(context),
         ),
         Style.space(20, 0),
-        _backToHomeButton()
+        _backToHomeButton(loadProvider)
       ],
     );
   }
@@ -215,14 +190,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _backToHomeButton() {
+  Widget _backToHomeButton(LoadingProvider loadProvider) {
     return ElevatedButton(
-        style: Style.ButtonStyleLoading(isLoad),
+        style: Style.ButtonStyleLoading(loadProvider.isLoading),
         onPressed: () async {
-          await _startLoad();
-          Style.navigatorPush(context, const HomeScreen());
+          await loadProvider.loading();
+          await loadProvider.setPageIndex(0);
+          Style.navigatorPush(context, const BottomNavbarWidget());
         },
-        child: isLoad
+        child: loadProvider.isLoading
             ? const SizedBox(
                 width: 30,
                 height: 30,
