@@ -20,12 +20,13 @@ void main() async {
   //Khoi tao firebase thich hop voi nen tang mac dinh
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
+  // await FirebaseMessagingService().initNotifications();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
 
   @override
   Widget build(BuildContext context) {

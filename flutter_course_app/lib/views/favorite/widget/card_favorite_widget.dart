@@ -62,7 +62,7 @@ class CardFavoriteWidget extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
                       course.title,
-                      style: TextStyleApp.textStyleForm(14, FontWeight.w700, kPrimaryColor),
+                      style: TextStyleApp.textStyleForm(14, FontWeight.w700, kDefaultColor),
                     ),
                   ),
                   SpaceStyle.boxSpaceHeight(10),

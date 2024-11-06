@@ -92,7 +92,7 @@ Widget cardAdvertisement(String urlImage, BuildContext context) {
             child: Padding(
                 padding: const EdgeInsets.only(left: 15, bottom: 10),
                 child: ButtonStyleApp.normalButton(() {}, "Explore Now",
-                    kCardTitleColor, kPrimaryColor, kPrimaryColor, 15, 12, 15)),
+                    kPrimaryColor, homeBackgroundColor, homeBackgroundColor, 15, 12, 15)),
           )),
     ),
   );
@@ -107,7 +107,7 @@ Widget cardCourse(course, CourseProvider courseProvider, BuildContext context) {
           width: 240,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: kCardTitleColor, // Thêm màu nền cho dễ nhìn
+            color: kPrimaryColor, // Thêm màu nền cho dễ nhìn
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,8 +167,8 @@ Widget cardCourse(course, CourseProvider courseProvider, BuildContext context) {
                                 const Duration(milliseconds: 500), () {
                               Navigator.pushNamed(context, '/detail');
                             });
-                          }, "Join", kPrimaryColor, kCardTitleColor,
-                              kCardTitleColor, 20, 10, 10)
+                          }, "Join", homeBackgroundColor, kPrimaryColor,
+                              kPrimaryColor, 20, 10, 10)
                         ],
                       )
                     ],

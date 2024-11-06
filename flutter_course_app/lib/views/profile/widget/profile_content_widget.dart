@@ -70,7 +70,7 @@ class ProfileContentWidget extends StatelessWidget {
             Future.delayed(const Duration(milliseconds: 300), () {
               Navigator.pushNamed(context, '/auth');
             });
-          }, loadingProvider, "Logout", kCardTitleColor, kPrimaryColor),
+          }, loadingProvider, "Logout", kPrimaryColor, homeBackgroundColor),
         )
       ],
     );
@@ -153,7 +153,7 @@ Widget analysisContainer(String title, String content) {
           Expanded(
             child: Center(
                 child: TextStyleApp.normalText(
-                    "$content courses", 14, FontWeight.w500, kCardTitleColor)),
+                    "$content courses", 14, FontWeight.w500, homeBackgroundColor)),
           )
         ],
       ),

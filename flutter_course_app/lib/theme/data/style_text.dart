@@ -63,7 +63,7 @@ class TextStyleApp {
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10))
       ),
       centerTitle: true,
-      title: TextStyleApp.normalText(text, 30, FontWeight.w500, kCardTitleColor),
+      title: TextStyleApp.normalText(text, 30, FontWeight.w500, homeBackgroundColor),
     );
   }
 

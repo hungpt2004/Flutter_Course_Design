@@ -3,7 +3,6 @@ import 'package:course_app_flutter/models/favorite.dart';
 import 'package:course_app_flutter/repository/auth_repository.dart';
 import 'package:course_app_flutter/theme/data/style_toast.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,11 +20,13 @@ class AuthenticationProvider extends ChangeNotifier {
   String get pin => _pin;
   bool get isObsecure => _isObsecure;
 
+  // LOGIN
   Future<void> credentialLogin(String username, String password) async {
     _currentUser = await authenticationRepository.userCredentialLogin(username, password);
     notifyListeners(); // Chỉ gọi nếu _currentUser thực sự thay đổi
   }
 
+  // REGISTER
   Future<void> credentialRegister(User newUser, BuildContext context) async {
     List<User> listUser = await authenticationRepository.getAllUsers();
     bool existed = listUser.any((user) => user.username == newUser.username || user.email == newUser.email);
@@ -39,16 +40,19 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
+  // LOGOUT
   Future<void> credentialLogout() async {
     _currentUser = null;
     notifyListeners();
   }
 
+  // CHANGE PASSWORD
   Future<void> changePassword(String email, String newPassword) async {
     _currentUser = await authenticationRepository.userChangePassword(email, newPassword);
     notifyListeners();
   }
 
+  // CHECK EMAIL EXISTED
   Future<bool> checkEmailExist(String email) async {
     List<User> listUser = await authenticationRepository.getAllUsers();
     bool existed = listUser.any((user) => user.email == email);
@@ -115,12 +119,14 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // REMOVE FAVORITE
   Future<void> removeFavoriteCourse(String userID, String courseID) async {
     await authenticationRepository.removeFavorite(userID, courseID);
     await getAllFavorite(userID);
     notifyListeners();
   }
 
+  // ALL FAVORITE
   Future<void> getAllFavorite(String userID) async {
     user!.favoriteCourse = await authenticationRepository.getAllFavorites(userID);
     notifyListeners();
