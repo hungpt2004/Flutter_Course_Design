@@ -1,5 +1,6 @@
 import 'package:course_app_flutter/constant/color.dart';
 import 'package:course_app_flutter/provider/bottom_navbar_provider.dart';
+import 'package:course_app_flutter/theme/responsive/style_responsive.dart';
 import 'package:course_app_flutter/views/favorite/favorite_screen.dart';
 import 'package:course_app_flutter/views/home/home_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -34,7 +35,7 @@ class _BottomNavbarWidgetState extends State<BottomNavbarWidget> {
       body: pages[bottomProvider.currentIndex], // Hiển thị trang tương ứng với currentIndex
       backgroundColor: homeBackgroundColor,
       bottomNavigationBar: CurvedNavigationBar(
-        height: 60,
+        height: StyleSize(context).heightPercent(60),
         backgroundColor: homeBackgroundColor,
         color: kPrimaryColor,
         animationDuration: const Duration(milliseconds: 800),
@@ -43,12 +44,20 @@ class _BottomNavbarWidgetState extends State<BottomNavbarWidget> {
           bottomProvider.setPageIndex(index);
         },
         items: [
-          SizedBox(width: 25, height: 25, child: bottomProvider.currentIndex == 0 ? Image.asset("assets/images/home1_click.png") : Image.asset("assets/images/home1.png")),
-          SizedBox(width: 25, height: 25, child: bottomProvider.currentIndex == 1 ? Image.asset("assets/images/save_click.png")  : Image.asset("assets/images/save.png")),
-          SizedBox(width: 25, height: 25, child: bottomProvider.currentIndex == 2 ? Image.asset("assets/images/favorite_click.png")  : Image.asset("assets/images/favorite.png")),
-          SizedBox(width: 25, height: 25, child: bottomProvider.currentIndex == 3 ? Image.asset("assets/images/person_click.png")  : Image.asset("assets/images/person.png")),
+          _buttonNavbar(0, "assets/images/home1_click.png", "assets/images/home1.png", bottomProvider, context),
+          _buttonNavbar(1, "assets/images/save_click.png", "assets/images/save.png", bottomProvider, context),
+          _buttonNavbar(2, "assets/images/favorite_click.png", "assets/images/favorite.png", bottomProvider, context),
+          _buttonNavbar(3, "assets/images/person_click.png", "assets/images/person.png", bottomProvider, context),
         ],
       ),
     );
   }
+}
+
+Widget _buttonNavbar(int index, String urlAction, String urlNonAction, BottomNavbarProvider bottomProvider, BuildContext context){
+  return SizedBox(
+    width: StyleSize(context).widthPercent(25),
+    height: StyleSize(context).heightPercent(25),
+    child: bottomProvider.currentIndex == index ? Image.asset(urlAction) : Image.asset(urlNonAction),
+  );
 }

@@ -41,7 +41,7 @@ class _TabBarPageState extends State<AuthenticationScreen>
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
-                SpaceStyle.boxSpaceHeight(80),
+                SpaceStyle.boxSpaceHeight(80,context),
                 Container(
                   width: MediaQuery.of(context).size.height,
                   decoration: BoxDecoration(
@@ -52,7 +52,7 @@ class _TabBarPageState extends State<AuthenticationScreen>
                       Padding(
                         padding: const EdgeInsets.all(5),
                         child: TabBar(
-                          unselectedLabelColor: Colors.white, // Màu văn bản khi không chọn
+                          unselectedLabelColor: kCardTitleColor, // Màu văn bản khi không chọn
                           labelColor: kPrimaryColor,
                           indicator: BoxDecoration(
                             color: Colors.white,

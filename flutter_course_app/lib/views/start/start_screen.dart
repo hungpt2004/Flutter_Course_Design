@@ -1,5 +1,8 @@
 import 'package:course_app_flutter/constant/color.dart';
 import 'package:course_app_flutter/provider/loading_provider.dart';
+import 'package:course_app_flutter/routes/animation_routes.dart';
+import 'package:course_app_flutter/theme/data/style_toast.dart';
+import 'package:course_app_flutter/views/form/auth_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../theme/data/space_style.dart';
@@ -42,7 +45,7 @@ class StartPage extends StatelessWidget {
                             FontWeight.w700, kDefaultColor),
                         200,
                         64),
-                    SpaceStyle.boxSpaceHeight(16),
+                    SpaceStyle.boxSpaceHeight(16,context),
                     _containerText(
                         TextStyleApp.normalText(
                             'Learn with 100% coding lesson, at your own pace, and 100% updated content',
@@ -51,9 +54,9 @@ class StartPage extends StatelessWidget {
                             kDefaultColor),
                         250,
                         70),
-                    SpaceStyle.boxSpaceHeight(16),
-                    _buttonGetStarted(loadProvider),
-                    SpaceStyle.boxSpaceHeight(24),
+                    SpaceStyle.boxSpaceHeight(16,context),
+                    _buttonGetStarted(loadProvider,context),
+                    SpaceStyle.boxSpaceHeight(24,context),
                     _containerText(
                         Row(
                           children: [
@@ -65,7 +68,7 @@ class StartPage extends StatelessWidget {
                             ),
                             TextButton(onPressed: (){
                               _goToAuthPage(context);
-                            }, child: TextStyleApp.normalText("Log in", 16, FontWeight.w500, kSecondColor))
+                            }, child: TextStyleApp.normalText("Log in", 16, FontWeight.w500, kPrimaryColor))
                           ],
                         ),
                         250,
@@ -89,7 +92,7 @@ Widget _containerText(Widget widget, double w, double h) {
   );
 }
 
-Widget _buttonGetStarted(LoadingProvider loadProvider){
+Widget _buttonGetStarted(LoadingProvider loadProvider, BuildContext context){
   return ElevatedButton(
       style: ButtonStyle(
           elevation: const WidgetStatePropertyAll(4),
@@ -106,6 +109,10 @@ Widget _buttonGetStarted(LoadingProvider loadProvider){
   );
 }
 
+// _goToAuthPage(BuildContext context){
+//   return Navigator.pushNamed(context, "/auth");
+// }
+
 _goToAuthPage(BuildContext context){
-  return Navigator.pushNamed(context, "/auth");
+  Navigator.of(context).push(Transitions.scaleTransition(const AuthenticationScreen()));
 }

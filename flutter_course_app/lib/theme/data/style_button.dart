@@ -2,7 +2,6 @@ import 'package:course_app_flutter/theme/data/space_style.dart';
 import 'package:course_app_flutter/theme/data/style_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../constant/color.dart';
 import '../../provider/loading_provider.dart';
 
@@ -56,7 +55,6 @@ class ButtonStyleApp {
                 ]
               : [
                   TextStyleApp.normalText(text, 18, FontWeight.w700, textColor),
-                  SpaceStyle.boxSpaceWidth(10),
                 ],
         ));
   }
@@ -97,5 +95,6 @@ class ButtonStyleApp {
       ],
     );
   }
-  
+
+
 }

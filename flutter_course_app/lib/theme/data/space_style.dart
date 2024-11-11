@@ -1,16 +1,17 @@
+import 'package:course_app_flutter/theme/responsive/style_responsive.dart';
 import 'package:flutter/cupertino.dart';
 
 class SpaceStyle {
 
-  static SizedBox boxSpaceWidth(double w){
+  static SizedBox boxSpaceWidth(double w, BuildContext context){
     return SizedBox(
-      width: w,
+      width: StyleSize(context).widthPercent(w),
     );
   }
 
-  static SizedBox boxSpaceHeight(double h){
+  static SizedBox boxSpaceHeight(double h, BuildContext context){
     return SizedBox(
-      height: h,
+      height: StyleSize(context).heightPercent(h),
     );
   }
 

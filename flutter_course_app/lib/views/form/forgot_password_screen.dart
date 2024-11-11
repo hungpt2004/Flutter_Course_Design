@@ -39,14 +39,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
-            SpaceStyle.boxSpaceHeight(50),
+            SpaceStyle.boxSpaceHeight(50,context),
             Row(
               children: [ButtonStyleApp.backButton(context)],
             ),
-            SpaceStyle.boxSpaceHeight(30),
+            SpaceStyle.boxSpaceHeight(30,context),
             TextStyleApp.normalText(
                 "Reset Your Password", 33, FontWeight.w700, kPrimaryColor),
-            SpaceStyle.boxSpaceHeight(30),
+            SpaceStyle.boxSpaceHeight(30,context),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -111,7 +111,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                         ),
                       ),
-                      SpaceStyle.boxSpaceHeight(30),
+                      SpaceStyle.boxSpaceHeight(30,context),
                       ButtonStyleApp.customerButton(() async {
                         if (_formKey.currentState!.validate()) {
                           await loadingProvider.loading();
@@ -119,7 +119,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               _emailController.text);
                         }
                       }, loadingProvider, "Send Email", kPrimaryColor, kDefaultColor),
-                      SpaceStyle.boxSpaceHeight(30),
+                      SpaceStyle.boxSpaceHeight(30,context),
                       ButtonStyleApp.normalButton(() async {
                         if (_formKey.currentState!.validate()) {
                           bool check = await authProvider.checkEmailExist(_emailController.text);

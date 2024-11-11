@@ -53,7 +53,7 @@ class DescriptionWidget extends StatelessWidget {
                   ))
             ],
           ),
-          SpaceStyle.boxSpaceHeight(10),
+          SpaceStyle.boxSpaceHeight(10,context),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -66,7 +66,7 @@ class DescriptionWidget extends StatelessWidget {
                   "🕔 ${course.time}", 14, FontWeight.w500, Colors.white60),
             ],
           ),
-          SpaceStyle.boxSpaceHeight(10),
+          SpaceStyle.boxSpaceHeight(10,context),
           Row(
             children: [
               Expanded(

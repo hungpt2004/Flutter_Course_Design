@@ -1,12 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:course_app_flutter/repository/auth_repository.dart';
 import 'package:course_app_flutter/repository/course_repository.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
-
 import '../models/course.dart';
-import '../models/video.dart';
 
 class CourseProvider extends ChangeNotifier {
 

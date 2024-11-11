@@ -3,6 +3,7 @@ import 'package:course_app_flutter/provider/loading_provider.dart';
 import 'package:course_app_flutter/theme/data/space_style.dart';
 import 'package:course_app_flutter/theme/data/style_button.dart';
 import 'package:course_app_flutter/theme/data/style_image.dart';
+import 'package:course_app_flutter/theme/responsive/style_responsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
@@ -21,54 +22,50 @@ class ProfileContentWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SpaceStyle.boxSpaceHeight(30),
-        Center(
-          child: SizedBox(
-              width: 200,
-              height: 180,
-              child: AdvancedAvatar(
-                statusAlignment: Alignment.bottomRight,
-                statusColor: Colors.green,
-                statusSize: 20,
-                size: 180,
-                animated: true,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: ImageNetworkStyle.networkImage(
-                      authProvider.user?.url ?? 'assets/images/profile.png'),
-                ),
-              )),
-        ),
-        SpaceStyle.boxSpaceHeight(20),
+        SpaceStyle.boxSpaceHeight(30, context),
+        _circleAvatar(authProvider,loadingProvider,context),
+        SpaceStyle.boxSpaceHeight(20, context),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              analysisContainer("Enrolling",
+              _analysisContainer("Enrolling",
                   "${authProvider.user?.enrollCourse.length ?? 0}"),
-              analysisContainer("Favorites",
+              _analysisContainer("Favorites",
                   "${authProvider.user?.favoriteCourse.length ?? 0}")
             ],
           ),
         ),
-        SpaceStyle.boxSpaceHeight(30),
-        informationText(
-            "Username", authProvider.user?.username ?? 'Unknown', context),
-        SpaceStyle.boxSpaceHeight(20),
-        informationText(
-            "Email", authProvider.user?.email ?? 'Unknown', context),
-        SpaceStyle.boxSpaceHeight(20),
-        informationText(
-            "Password", authProvider.user?.password ?? 'Unknown', context),
-        SpaceStyle.boxSpaceHeight(40),
+        SpaceStyle.boxSpaceHeight(30, context),
+        // _informationText(
+        //     "Username", authProvider.user?.username ?? 'Unknown', context),
+        // SpaceStyle.boxSpaceHeight(20, context),
+        // _informationText(
+        //     "Email", authProvider.user?.email ?? 'Unknown', context),
+        // SpaceStyle.boxSpaceHeight(20, context),
+        // _informationText(
+        //     "Password", authProvider.user?.password ?? 'Unknown', context),
+        _informationText(
+            "Username", 'Unknown', context),
+        SpaceStyle.boxSpaceHeight(20, context),
+        _informationText(
+            "Email", 'Unknown', context),
+        SpaceStyle.boxSpaceHeight(20, context),
+        _informationText(
+            "Password", 'Unknown', context),
+        SpaceStyle.boxSpaceHeight(40, context),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 80),
           child: ButtonStyleApp.customerButton(() async {
             await loadingProvider.loading();
             await authProvider.credentialLogout();
             Future.delayed(const Duration(milliseconds: 300), () {
-              Navigator.pushNamed(context, '/auth');
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/auth',
+                (Route<dynamic> route) => false,
+              );
             });
           }, loadingProvider, "Logout", kPrimaryColor, homeBackgroundColor),
         )
@@ -77,7 +74,7 @@ class ProfileContentWidget extends StatelessWidget {
   }
 }
 
-Widget informationText(String title, String text, BuildContext context) {
+Widget _informationText(String title, String text, BuildContext context) {
   return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Container(
@@ -117,7 +114,7 @@ Widget informationText(String title, String text, BuildContext context) {
                   ),
                 )),
             Expanded(
-              flex: 1,
+                flex: 1,
                 child: IconButton(
                     onPressed: () {}, icon: Icon(CupertinoIcons.pen)))
           ],
@@ -125,7 +122,7 @@ Widget informationText(String title, String text, BuildContext context) {
       ));
 }
 
-Widget analysisContainer(String title, String content) {
+Widget _analysisContainer(String title, String content) {
   return Card(
     elevation: 10,
     child: Container(
@@ -152,11 +149,39 @@ Widget analysisContainer(String title, String content) {
           ),
           Expanded(
             child: Center(
-                child: TextStyleApp.normalText(
-                    "$content courses", 14, FontWeight.w500, homeBackgroundColor)),
+                child: TextStyleApp.normalText("$content courses", 14,
+                    FontWeight.w500, homeBackgroundColor)),
           )
         ],
       ),
     ),
+  );
+}
+
+Widget _circleAvatar(AuthenticationProvider authProvider, LoadingProvider loadProvider, BuildContext context) {
+  return Center(
+    child: SizedBox(
+        width: StyleSize(context).widthPercent(200),
+        height: 200,
+        child: Column(
+          children: [
+            AdvancedAvatar(
+              statusAlignment: Alignment.bottomRight,
+              statusColor: Colors.green,
+              statusSize: 20,
+              size: 150,
+              animated: true,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                // child: ImageNetworkStyle.networkImage(
+                //     authProvider.user?.url ?? 'assets/images/profile.png'),
+                child: ImageNetworkStyle.networkImage(
+                    'assets/images/profile.png'),
+              ),
+            ),
+            SpaceStyle.boxSpaceHeight(10, context),
+            ButtonStyleApp.normalButton((){}, 'Upload', kPrimaryColor, homeBackgroundColor, homeBackgroundColor, 10, 10, 10)
+          ],
+        )),
   );
 }

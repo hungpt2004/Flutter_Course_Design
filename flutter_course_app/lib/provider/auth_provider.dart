@@ -15,10 +15,13 @@ class AuthenticationProvider extends ChangeNotifier {
   User? _currentUser;
   String _pin = '';
   bool _isObsecure = false;
+  String _buttonText = 'Enroll';
+
 
   User? get user => _currentUser;
   String get pin => _pin;
   bool get isObsecure => _isObsecure;
+  String get buttonText => _buttonText;
 
   // LOGIN
   Future<void> credentialLogin(String username, String password) async {
@@ -105,8 +108,10 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   // CHECK STATUS ENROLL
-  Future<bool> checkStatusEnroll(String userID, String courseID) async {
-    return await authenticationRepository.statusEnroll(userID, courseID);
+  Future<void> checkStatusEnroll(String userID, String courseID) async {
+    bool isEnrolled = await authenticationRepository.statusEnroll(userID, courseID);
+    _buttonText = isEnrolled ? "Enroll" : "Leave";
+    notifyListeners();
   }
 
 

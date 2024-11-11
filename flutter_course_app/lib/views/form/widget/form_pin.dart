@@ -48,14 +48,14 @@ class _FormPinWidgetState extends State<FormPinWidget> {
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
-            SpaceStyle.boxSpaceHeight(50),
+            SpaceStyle.boxSpaceHeight(50,context),
             Row(
               children: [ButtonStyleApp.backButton(context)],
             ),
-            SpaceStyle.boxSpaceHeight(20),
+            SpaceStyle.boxSpaceHeight(20,context),
             TextStyleApp.normalText(
                 "Verification code", 33, FontWeight.w700, kPrimaryColor),
-            SpaceStyle.boxSpaceHeight(20),
+            SpaceStyle.boxSpaceHeight(20,context),
             Row(children: [
               Expanded(
                 child: TextStyleApp.normalText(
@@ -82,7 +82,7 @@ class _FormPinWidgetState extends State<FormPinWidget> {
                 )
               ],
             ),
-            SpaceStyle.boxSpaceHeight(20),
+            SpaceStyle.boxSpaceHeight(20,context),
             Form(
               key: _formKey,
               child: Column(children: [
@@ -95,7 +95,7 @@ class _FormPinWidgetState extends State<FormPinWidget> {
                     inputField(context, 4),
                   ],
                 ),
-                SpaceStyle.boxSpaceHeight(20),
+                SpaceStyle.boxSpaceHeight(20,context),
                 Row(
                   children: [
                     Expanded(
@@ -127,7 +127,7 @@ class _FormPinWidgetState extends State<FormPinWidget> {
   void formChangePassword(BuildContext context, TextEditingController passwordController, VoidCallback? function, LoadingProvider loadProvider) {
     showModalBottomSheet(
         backgroundColor: kPrimaryColor,
-        elevation: 4,
+        elevation: 15,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
         sheetAnimationStyle: AnimationStyle(
@@ -141,7 +141,7 @@ class _FormPinWidgetState extends State<FormPinWidget> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                SpaceStyle.boxSpaceHeight(15),
+                SpaceStyle.boxSpaceHeight(15,context),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -155,9 +155,9 @@ class _FormPinWidgetState extends State<FormPinWidget> {
                     )
                   ],
                 ),
-                SpaceStyle.boxSpaceHeight(15),
+                SpaceStyle.boxSpaceHeight(15,context),
                 inputPassword(passwordController),
-                SpaceStyle.boxSpaceHeight(20),
+                SpaceStyle.boxSpaceHeight(20,context),
                 ButtonStyleApp.customerButton(function, loadProvider, "Change Password", kDefaultColor, kPrimaryColor)
               ],
             ),

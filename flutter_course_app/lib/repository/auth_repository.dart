@@ -234,11 +234,7 @@ class AuthenticationRepository {
   // CHECK STATUS ENROLL
   Future<bool> statusEnroll(String userID, courseID) async {
     List<Enrollment> enrollmentList = await getAllEnrollments(userID);
-    bool check = enrollmentList.any((items) => items.courseID == courseID);
-    if(check) {
-      return true;
-    }
-    return false;
+    return enrollmentList.any((items) => items.courseID == courseID);
   }
 
 

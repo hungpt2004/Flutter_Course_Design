@@ -19,6 +19,7 @@ class TextStyleApp {
 
   static Widget underlineText(String content, double size, FontWeight weight, Color color){
     return SelectableText(
+      maxLines: 1,
       content,
       textAlign: TextAlign.center,
       style: TextStyle(
@@ -40,7 +41,7 @@ class TextStyleApp {
         fontSize: size,
         fontWeight: weight,
         fontFamily: textFont,
-        color: Colors.white60
+        color: kPrimaryColor
       ),
     );
   }

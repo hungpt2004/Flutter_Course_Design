@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:course_app_flutter/constant/color.dart';
 import 'package:course_app_flutter/provider/course_provider.dart';
 import 'package:course_app_flutter/theme/data/style_image.dart';
+import 'package:course_app_flutter/theme/responsive/style_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../theme/data/space_style.dart';
@@ -37,8 +38,6 @@ class _SlideAdvertisementState extends State<SlideHome> {
         ? FutureBuilder<void>(
             future: courseProvider.fetchAllCourses(),
             builder: (context, snapshot) {
-                debugPrint(
-                    "LENGTH COURSE PROVIDER: ${courseProvider.courses.length}");
                 return ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: courseProvider.courses.length,
@@ -70,7 +69,7 @@ class _SlideAdvertisementState extends State<SlideHome> {
                   autoPlayAnimationDuration: const Duration(seconds: 1),
                   height: 160),
             ),
-            SpaceStyle.boxSpaceHeight(10),
+            SpaceStyle.boxSpaceHeight(10,context),
             dotSlide(currentIndex, urlImage)
           ]);
   }
@@ -82,7 +81,7 @@ Widget cardAdvertisement(String urlImage, BuildContext context) {
     child: Card(
       elevation: 3,
       child: Container(
-          width: 327,
+          width: StyleSize(context).widthPercent(327),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
@@ -104,7 +103,7 @@ Widget cardCourse(course, CourseProvider courseProvider, BuildContext context) {
     child: Card(
       elevation: 5,
       child: Container(
-          width: 240,
+          width: StyleSize(context).widthPercent(240),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             color: kPrimaryColor, // Thêm màu nền cho dễ nhìn
@@ -114,7 +113,7 @@ Widget cardCourse(course, CourseProvider courseProvider, BuildContext context) {
             children: [
               Container(
                 width: double.infinity,
-                height: 130,
+                height: StyleSize(context).heightPercent(130),
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                       topRight: Radius.circular(12),
@@ -128,7 +127,7 @@ Widget cardCourse(course, CourseProvider courseProvider, BuildContext context) {
                 ),
               ),
               SizedBox(
-                height: 150,
+                height: StyleSize(context).heightPercent(150),
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -152,7 +151,7 @@ Widget cardCourse(course, CourseProvider courseProvider, BuildContext context) {
                           ),
                         ],
                       ),
-                      SpaceStyle.boxSpaceHeight(8),
+                      SpaceStyle.boxSpaceHeight(8,context),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

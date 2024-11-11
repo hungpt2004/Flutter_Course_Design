@@ -4,6 +4,7 @@ import 'package:course_app_flutter/provider/auth_provider.dart';
 import 'package:course_app_flutter/provider/course_provider.dart';
 import 'package:course_app_flutter/theme/data/space_style.dart';
 import 'package:course_app_flutter/theme/data/style_button.dart';
+import 'package:course_app_flutter/theme/responsive/style_responsive.dart';
 import 'package:course_app_flutter/views/details/widget/content_widget.dart';
 import 'package:course_app_flutter/views/details/widget/description_widget.dart';
 import 'package:course_app_flutter/views/details/widget/video_widget.dart';
@@ -18,10 +19,10 @@ class CourseDetailScreen extends StatefulWidget {
 }
 
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
-  String buttonText = 'Enroll';
 
   @override
   Widget build(BuildContext context) {
+
     final courseProvider = CourseProvider.stateCourseManagement(context);
     final authProvider = AuthenticationProvider.stateAuthenticationProvider(context);
     final loadingProvider = LoadingProvider.stateLoadingProvider(context);
@@ -35,22 +36,29 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
               // VIDEO
               VideoPlayWidget(course: courseProvider.currentCourse),
               // DESCRIPTION
-              SpaceStyle.boxSpaceHeight(20),
+              SpaceStyle.boxSpaceHeight(20,context),
               DescriptionWidget(course: courseProvider.currentCourse),
-              SpaceStyle.boxSpaceHeight(20),
+              SpaceStyle.boxSpaceHeight(20,context),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.32,
+                height: StyleSize(context).heightPercent(StyleSize(context).figmaHeight * 0.32),
                 child: const Padding(
                   padding: EdgeInsets.only(bottom: 20),
                   child: ContentWidget(),
                 ),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
+                width: StyleSize(context).widthPercent(StyleSize(context).figmaWidth * 0.5),
                 child: ButtonStyleApp.customerButton(() async {
                   await loadingProvider.loading();
 
-                  if (buttonText == 'Enroll') {
+                  await authProvider.checkStatusEnroll(
+                    authProvider.user!.userId,
+                    courseProvider.currentCourse.courseId,
+                  );
+
+                  print(authProvider.buttonText);
+
+                  if (authProvider.buttonText == 'Enroll') {
                     // Attempt to enroll
                     await authProvider.joinCourse(
                       authProvider.user!.userId,
@@ -64,15 +72,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     );
                   }
 
-                  // Update button text based on enrollment status
-                  bool isEnrolled = await authProvider.checkStatusEnroll(
-                    authProvider.user!.userId,
-                    courseProvider.currentCourse.courseId,
-                  );
-                  setState(() {
-                    buttonText = isEnrolled ? 'Leave' : 'Enroll';
-                  });
-                }, loadingProvider, buttonText, kDefaultColor, kPrimaryColor),
+                }, loadingProvider, authProvider.buttonText, kDefaultColor, kPrimaryColor),
               ),
             ],
           ),

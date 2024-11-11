@@ -49,20 +49,20 @@ class _FormRegiterWidgetState extends State<FormRegisterWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SpaceStyle.boxSpaceHeight(20),
+              SpaceStyle.boxSpaceHeight(20,context),
               TextStyleApp.normalText(
                   "Explore Now !", 33, FontWeight.w700, kPrimaryColor),
-              SpaceStyle.boxSpaceHeight(10),
+              SpaceStyle.boxSpaceHeight(10,context),
               Row(
                 children: [
                   Expanded(child: googleLogin(() {})),
                 ],
               ),
-              SpaceStyle.boxSpaceHeight(10),
+              SpaceStyle.boxSpaceHeight(10,context),
               Row(
                 children: [Expanded(child: facebookLogin(() {}))],
               ),
-              SpaceStyle.boxSpaceHeight(15),
+              SpaceStyle.boxSpaceHeight(15,context),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,7 +86,7 @@ class _FormRegiterWidgetState extends State<FormRegisterWidget> {
                       )),
                 ],
               ),
-              SpaceStyle.boxSpaceHeight(15),
+              SpaceStyle.boxSpaceHeight(15,context),
               Expanded(
                 child: Form(
                   key: _formKey,
@@ -117,7 +117,7 @@ class _FormRegiterWidgetState extends State<FormRegisterWidget> {
                                     width: 1,
                                     style: BorderStyle.solid))),
                       ),
-                      SpaceStyle.boxSpaceHeight(10),
+                      SpaceStyle.boxSpaceHeight(10,context),
                       TextFormField(
                         controller: _passwordController,
                         validator: (value) {
@@ -144,7 +144,7 @@ class _FormRegiterWidgetState extends State<FormRegisterWidget> {
                                     width: 1,
                                     style: BorderStyle.solid))),
                       ),
-                      SpaceStyle.boxSpaceHeight(10),
+                      SpaceStyle.boxSpaceHeight(10,context),
                       TextFormField(
                         controller: _emailController,
                         validator: (value) {
@@ -170,18 +170,18 @@ class _FormRegiterWidgetState extends State<FormRegisterWidget> {
                                     width: 1,
                                     style: BorderStyle.solid))),
                       ),
-                      SpaceStyle.boxSpaceHeight(10),
+                      SpaceStyle.boxSpaceHeight(10,context),
                       Row(
                         children: [Expanded(child: forgotPassword(() {}))],
                       ),
-                      SpaceStyle.boxSpaceHeight(10),
+                      SpaceStyle.boxSpaceHeight(10,context),
                       loginButton(() async {
                         if(_formKey.currentState!.validate()){
                           await loadProvider.loading();
                           await authProvider.credentialRegister(User(userId: '', username: _usernameController.text, email: _emailController.text, password: _passwordController.text, createdAt: DateTime.now(), url: 'https://scontent.fdad1-4.fna.fbcdn.net/v/t39.30808-6/358129614_1333611757220509_5875824185090542378_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=qh7DK9fbl1UQ7kNvgFrtD9q&_nc_zt=23&_nc_ht=scontent.fdad1-4.fna&_nc_gid=AnbojAXZfO6qj4nTSdIWjRr&oh=00_AYANaOktRM2BwvX2rWMh9IRIMvE-cbhEv2QqsqA9mTxi9g&oe=67268354'), context);
                           refresh();
                         }
-                      }, loadProvider),
+                      }, loadProvider,context),
                       backToLogin(context)
                     ],
                   ),
@@ -216,7 +216,7 @@ Widget forgotPassword(VoidCallback? function) {
   );
 }
 
-Widget loginButton(VoidCallback? function, LoadingProvider loadProvider) {
+Widget loginButton(VoidCallback? function, LoadingProvider loadProvider, BuildContext context) {
   return ElevatedButton(
       onPressed:function,
       style: ButtonStyle(
@@ -233,7 +233,7 @@ Widget loginButton(VoidCallback? function, LoadingProvider loadProvider) {
         ] : [
           TextStyleApp.normalText(
               "Sign Up", 18, FontWeight.w700, kDefaultColor),
-          SpaceStyle.boxSpaceWidth(10),
+          SpaceStyle.boxSpaceWidth(10,context),
           const Icon(CupertinoIcons.arrow_right,color: kDefaultColor,size: 20,)
         ],
       ));

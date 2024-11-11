@@ -2,6 +2,7 @@ import 'package:course_app_flutter/provider/document_provider.dart';
 import 'package:course_app_flutter/provider/loading_provider.dart';
 import 'package:course_app_flutter/theme/data/style_button.dart';
 import 'package:course_app_flutter/theme/data/style_image.dart';
+import 'package:course_app_flutter/theme/responsive/style_responsive.dart';
 import 'package:course_app_flutter/views/document/widget/document_content_widget.dart';
 import 'package:flutter/material.dart';
 import '../../constant/color.dart';
@@ -28,7 +29,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
           future: documentProvider.getAllDocuments(),
           builder: (context, snapshot) {
             return SizedBox(
-              height: MediaQuery.of(context).size.height,
+              height: StyleSize(context).figmaHeight,
               child: ListView.builder(
                 itemCount: documentProvider.documents.length,
                 itemBuilder: (context, index) {
@@ -44,7 +45,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: ListTile(
                                 leading: Container(
-                                  width: 90,
+                                  width: StyleSize(context).widthPercent(90),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
@@ -58,7 +59,8 @@ class _DocumentScreenState extends State<DocumentScreen> {
                                   style: TextStyleApp.textStyleForm(
                                       16, FontWeight.w700, index % 2 == 0 ? kPrimaryColor : kDefaultColor),
                                 ),
-                                trailing: IconButton(onPressed: (){
+                                trailing: IconButton(onPressed: () async {
+                                  await documentProvider.toggleDocument(cardIndex);
                                   loadingProvider.toggleExpanded(index);
                                 }, icon: loadingProvider.currentIndex == index ? const Icon(Icons.keyboard_arrow_down) : const Icon(Icons.keyboard_arrow_up) ),
                               ),
@@ -67,7 +69,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
                               duration: const Duration(milliseconds: 500),
                               height: loadingProvider.currentIndex == index ? (70.0 * cardIndex.contents.length) : 0,
                               child: loadingProvider.currentIndex == index
-                                  ? CardDocument(contents: cardIndex.contents,)
+                                  ? CardDocument(contents: cardIndex.contents,bigIndex: index,)
                                   : null,
                             )
                           ],

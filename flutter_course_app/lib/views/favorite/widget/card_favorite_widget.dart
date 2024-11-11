@@ -6,6 +6,7 @@ import 'package:course_app_flutter/provider/loading_provider.dart';
 import 'package:course_app_flutter/theme/data/space_style.dart';
 import 'package:course_app_flutter/theme/data/style_image.dart';
 import 'package:course_app_flutter/theme/data/style_text.dart';
+import 'package:course_app_flutter/theme/responsive/style_responsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,6 @@ class CardFavoriteWidget extends StatelessWidget {
 
     final courseProvider = CourseProvider.stateCourseManagement(context);
     final loadingProvider = LoadingProvider.stateLoadingProvider(context);
-    final authProvider = AuthenticationProvider.stateAuthenticationProvider(context);
 
     return FutureBuilder<Course?>(
       future: courseProvider.getCourseByID(courseID),
@@ -50,14 +50,14 @@ class CardFavoriteWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       width: double.infinity,
-                      height: 80,
+                      height: StyleSize(context).heightPercent(80),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: ImageNetworkStyle.networkImage(course.logo),
                       ),
                     ),
                   ),
-                  SpaceStyle.boxSpaceHeight(10),
+                  SpaceStyle.boxSpaceHeight(10,context),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
@@ -65,7 +65,7 @@ class CardFavoriteWidget extends StatelessWidget {
                       style: TextStyleApp.textStyleForm(14, FontWeight.w700, kDefaultColor),
                     ),
                   ),
-                  SpaceStyle.boxSpaceHeight(10),
+                  SpaceStyle.boxSpaceHeight(10,context),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
@@ -73,7 +73,7 @@ class CardFavoriteWidget extends StatelessWidget {
                       style: TextStyleApp.textStyleForm(14, FontWeight.w500, kDefaultColor),
                     ),
                   ),
-                  SpaceStyle.boxSpaceHeight(10),
+                  SpaceStyle.boxSpaceHeight(10,context),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(

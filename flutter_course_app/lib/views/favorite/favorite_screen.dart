@@ -15,9 +15,6 @@ class FavoriteCourseScreen extends StatefulWidget {
 class _FavoriteCourseScreenState extends State<FavoriteCourseScreen> {
   @override
   Widget build(BuildContext context) {
-
-    final authProvider = AuthenticationProvider.stateAuthenticationProvider(context);
-
     return Scaffold(
       backgroundColor: homeBackgroundColor,
       appBar: TextStyleApp.appbarStyle("Favorite Courses"),

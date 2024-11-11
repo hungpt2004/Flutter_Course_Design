@@ -46,20 +46,20 @@ class _FormLoginState extends State<FormLoginWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SpaceStyle.boxSpaceHeight(20),
+              SpaceStyle.boxSpaceHeight(20,context),
               TextStyleApp.normalText(
                   "Welcome to HPLearn", 33, FontWeight.w700, kPrimaryColor),
-              SpaceStyle.boxSpaceHeight(10),
+              SpaceStyle.boxSpaceHeight(10,context),
               Row(
                 children: [
                   Expanded(child: googleLogin(() {})),
                 ],
               ),
-              SpaceStyle.boxSpaceHeight(10),
+              SpaceStyle.boxSpaceHeight(10,context),
               Row(
                 children: [Expanded(child: facebookLogin(() {}))],
               ),
-              SpaceStyle.boxSpaceHeight(15),
+              SpaceStyle.boxSpaceHeight(15,context),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -83,7 +83,7 @@ class _FormLoginState extends State<FormLoginWidget> {
                   )),
                 ],
               ),
-              SpaceStyle.boxSpaceHeight(15),
+              SpaceStyle.boxSpaceHeight(15,context),
               Expanded(
                 child: Form(
                   key: _formKey,
@@ -140,7 +140,7 @@ class _FormLoginState extends State<FormLoginWidget> {
                           ),
                         ),
                       ),
-                      SpaceStyle.boxSpaceHeight(10),
+                      SpaceStyle.boxSpaceHeight(10,context),
                       TextFormField(
                         controller: _passwordController,
                         style: TextStyleApp.textStyleForm(16, FontWeight.w500, Colors.black),
@@ -151,7 +151,7 @@ class _FormLoginState extends State<FormLoginWidget> {
                             return null;
                           }
                         },
-                        obscureText: authProvider.isObsecure,
+                        obscureText: !authProvider.isObsecure,
                         decoration: InputDecoration(
                           labelText: 'Password',
                           labelStyle: TextStyleApp.textStyleForm(16, FontWeight.w300, kPrimaryColor),
@@ -163,7 +163,7 @@ class _FormLoginState extends State<FormLoginWidget> {
                             onPressed: () {
                               authProvider.seePassword();
                             },
-                            icon: Icon(authProvider.isObsecure ? CupertinoIcons.eye_slash : CupertinoIcons.eye),
+                            icon: Icon(!authProvider.isObsecure ? CupertinoIcons.eye_slash : CupertinoIcons.eye),
                           ),
                           // Đặt màu cho các trạng thái khác nhau của border
                           focusedBorder: OutlineInputBorder(
@@ -196,11 +196,11 @@ class _FormLoginState extends State<FormLoginWidget> {
                           ),
                         ),
                       ),
-                      SpaceStyle.boxSpaceHeight(10),
+                      SpaceStyle.boxSpaceHeight(10,context),
                       Row(
                         children: [Expanded(child: forgotPassword(context))],
                       ),
-                      SpaceStyle.boxSpaceHeight(10),
+                      SpaceStyle.boxSpaceHeight(10,context),
                       loginButton(() async {
                         if(_formKey.currentState!.validate()){
                           await loadProvider.loading();
@@ -211,7 +211,7 @@ class _FormLoginState extends State<FormLoginWidget> {
                           await bottomProvider.setPageIndex(0);
                           Navigator.pushNamed(context, "/bottom");
                         }
-                      }, loadProvider),
+                      }, loadProvider,context),
                     ],
                   ),
                 ),
@@ -247,7 +247,7 @@ Widget forgotPassword(BuildContext context) {
   );
 }
 
-Widget loginButton(VoidCallback? function, LoadingProvider loadProvider) {
+Widget loginButton(VoidCallback? function, LoadingProvider loadProvider, BuildContext context) {
   return ElevatedButton(
       onPressed:function,
       style: ButtonStyle(
@@ -264,7 +264,7 @@ Widget loginButton(VoidCallback? function, LoadingProvider loadProvider) {
         ] : [
           TextStyleApp.normalText(
               "Sign In", 18, FontWeight.w700, kDefaultColor),
-          SpaceStyle.boxSpaceWidth(10),
+          SpaceStyle.boxSpaceWidth(10,context),
           const Icon(CupertinoIcons.arrow_right,color: kDefaultColor,size: 20,)
         ],
       ));

@@ -1,5 +1,6 @@
 import 'package:course_app_flutter/constant/color.dart';
 import 'package:course_app_flutter/theme/data/style_image.dart';
+import 'package:course_app_flutter/theme/responsive/style_responsive.dart';
 import 'package:course_app_flutter/views/home/widget/header.dart';
 import 'package:course_app_flutter/views/home/widget/home_slide.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+
     final courseProvider = CourseProvider.stateCourseManagement(context);
 
     return SafeArea(
@@ -43,10 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        // SpaceStyle.boxSpaceHeight(size.height * 0.1),
-                        SpaceStyle.boxSpaceHeight(20),
+                        SpaceStyle.boxSpaceHeight(20,context),
                         const HeaderWidget(),
-                        SpaceStyle.boxSpaceHeight(20),
+                        SpaceStyle.boxSpaceHeight(20,context),
                         TextFormField(
                           controller: _searchController,
                           keyboardType: TextInputType.text,
@@ -89,8 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         if (courseProvider.suggestionCourse.isNotEmpty)
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            height: 180,
+                            width: StyleSize(context).widthPercent(StyleSize(context).figmaWidth * 0.75),
+                            height: StyleSize(context).heightPercent(180),
                             child: ListView.builder(
                                 itemCount:
                                     courseProvider.suggestionCourse.length,
@@ -104,8 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       focusColor: kPrimaryColor,
                                       style: ListTileStyle.drawer,
                                       leading: SizedBox(
-                                        width: 80,
-                                        height: 40,
+                                        width: StyleSize(context).widthPercent(80),
+                                        height: StyleSize(context).heightPercent(40),
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(10),
                                             child:
@@ -125,22 +125,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 }),
                           ),
-                        SpaceStyle.boxSpaceHeight(30),
+                        SpaceStyle.boxSpaceHeight(30,context),
                         SizedBox(
-                          height: size.height * 0.25,
+                          height: StyleSize(context).heightPercent(StyleSize(context).figmaHeight * 0.25),
                           child: const SlideHome(isBanner: false),
                         ),
-                        SpaceStyle.boxSpaceHeight(10),
+                        SpaceStyle.boxSpaceHeight(10,context),
                         ButtonStyleApp.rowButton("Trending Courses"),
-                        SpaceStyle.boxSpaceHeight(30),
+                        SpaceStyle.boxSpaceHeight(30,context),
                         SizedBox(
-                          height: size.height * 0.33,
+                          height: StyleSize(context).heightPercent(StyleSize(context).figmaHeight * 0.33),
                           child: const SlideHome(isBanner: true),
                         ),
-                        SpaceStyle.boxSpaceHeight(20),
+                        SpaceStyle.boxSpaceHeight(20,context),
                         SizedBox(
-                          height: size.height *
-                              0.15, // Đặt chiều cao cố định cho Container chứa hình ảnh
+                          height: StyleSize(context).heightPercent(StyleSize(context).figmaHeight * 0.15), // Đặt chiều cao cố định cho Container chứa hình ảnh
                           child: Row(
                             children: [
                               Expanded(
