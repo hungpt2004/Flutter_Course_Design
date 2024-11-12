@@ -9,9 +9,9 @@ Function: [ Login, Register, ForgetPassword, ChangePassword, Search Course, Enro
 # Screenshots Demo 
 ![Splash Screen](https://github.com/user-attachments/assets/61fb3af0-f950-40c2-aa1f-5b0534d533f4)
 ![Start Screen](https://github.com/user-attachments/assets/b34daf3e-2cc8-4874-9e79-bbd01ef77c67)
-![Login Screen](https://github.com/user-attachments/assets/e70a671e-0cda-4520-b3d9-d35d0a07b6e4)
-![Register Screen](https://github.com/user-attachments/assets/86609b05-5029-4fcd-b20e-9092467c3ed6)
-![Forgot Pasword Screen](https://github.com/user-attachments/assets/062c2e8a-e327-4c49-932d-7e244109b3c7)
+![Login Screen](https://github.com/user-attachments/assets/6e3b69a1-7365-49f6-9cd6-d705560bc285)
+![Register Screen](https://github.com/user-attachments/assets/74c70ed6-92b5-4983-9d2a-454cd60dc2b7)
+![Forgot Password Screen](https://github.com/user-attachments/assets/50ca1ee1-f4c0-42ac-8cc5-7b7d04ee935e)
 ![Home Screen](https://github.com/user-attachments/assets/a5bdca77-96ed-4839-be2d-74f36d6a1abd)
 ![Favorite Screen](https://github.com/user-attachments/assets/775c39d4-9e35-4b69-aba0-23618b786b4b)
 ![Document Screen](https://github.com/user-attachments/assets/3a36367f-e93c-417d-972b-64b70d85f6e2)
