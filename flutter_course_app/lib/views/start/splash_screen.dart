@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
 
     _controller = AnimationController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
       vsync: this,
     );
 
@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen>
       });
 
     // Chỉ bắt đầu hiệu ứng fade sau 3 giây
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 4), () {
       _controller.forward();
       setState(() {
         isExpanded = !isExpanded;
@@ -55,11 +55,23 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color],
-      body: Center(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child:  Lottie.asset('assets/animation/animation.json'),
+      body: Container(
+        height: StyleSize(context).screenHeight,
+        width: StyleSize(context).screenWidth,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [
+            kPrimaryColor,homeBackgroundColor,
+          ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            transform: GradientRotation(BorderSide.strokeAlignInside)
+          )
+        ),
+        child: Center(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child:  Lottie.asset('assets/animation/animation.json'),
+          ),
         ),
       ),
     );
