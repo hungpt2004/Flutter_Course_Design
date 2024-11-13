@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-
-  //Khoi tao firebase thich hop voi nen tang mac dinh
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // await FirebaseMessagingService().initNotifications();
@@ -25,7 +23,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         routes: AppRoutes.getAppRoutes(context),
-        initialRoute: "/profile",
+        initialRoute: "/splash",
       ),
     );
   }

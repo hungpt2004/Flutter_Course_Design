@@ -34,7 +34,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final loadingProvider = LoadingProvider.stateLoadingProvider(context);
 
     return Scaffold(
-      backgroundColor: kDefaultColor,
+      backgroundColor: homeBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
@@ -71,10 +71,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           hoverColor: Colors.blue,
                           labelText: 'Email',
                           labelStyle: TextStyleApp.textStyleForm(
-                              16, FontWeight.w300, kPrimaryColor),
+                              16, FontWeight.w300, kCardTitleColor),
                           hintText: 'Enter email ...',
                           hintStyle: TextStyleApp.textStyleForm(
-                              16, FontWeight.w300, kPrimaryColor),
+                              16, FontWeight.w300, kCardTitleColor),
                           errorMaxLines: 1,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 15, vertical: 10),
@@ -82,7 +82,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(
                               color:
-                                  kPrimaryColor, // Màu khi trường đang được chọn
+                                  kCardTitleColor, // Màu khi trường đang được chọn
                               width: 2, // Có thể điều chỉnh độ dày
                             ),
                           ),
@@ -90,7 +90,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(
                               color:
-                                  kPrimaryColor, // Màu khi trường được kích hoạt
+                              kCardTitleColor, // Màu khi trường được kích hoạt
                               width: 1,
                             ),
                           ),

@@ -37,10 +37,10 @@ class _FormLoginState extends State<FormLoginWidget> {
 
     final loadProvider = LoadingProvider.stateLoadingProvider(context);
     final authProvider = AuthenticationProvider.stateAuthenticationProvider(context);
-    final bottomProvider = BottomNavbarProvider.bottomStateMangement(context);
+    final bottomProvider = BottomNavbarProvider.bottomStateManagement(context);
 
     return Scaffold(
-        backgroundColor: kDefaultColor,
+        backgroundColor: homeBackgroundColor,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
@@ -91,7 +91,7 @@ class _FormLoginState extends State<FormLoginWidget> {
                     children: [
                       TextFormField(
                         controller: _usernameController,
-                        style: TextStyleApp.textStyleForm(16, FontWeight.w500, Colors.black),
+                        style: TextStyleApp.textStyleForm(16, FontWeight.w500, kCardTitleColor),
                         validator: (value) {
                           if (value == null || value.length < 3) {
                             return "Username can't be empty or less than 3 character!";
@@ -104,23 +104,25 @@ class _FormLoginState extends State<FormLoginWidget> {
                         decoration: InputDecoration(
                             hoverColor: Colors.blue,
                             labelText: 'Username',
-                            labelStyle: TextStyleApp.textStyleForm(16, FontWeight.w300, kPrimaryColor),
+                            labelStyle: TextStyleApp.textStyleForm(16, FontWeight.w300, kCardTitleColor),
                             hintText: 'Enter username ...',
-                            hintStyle: TextStyleApp.textStyleForm(16, FontWeight.w300, kPrimaryColor),
+                            hintStyle: TextStyleApp.textStyleForm(16, FontWeight.w300, kCardTitleColor),
                             errorMaxLines: 1,
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 10),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(
-                              color: kPrimaryColor, // Màu khi trường đang được chọn
+                              color:
+                              kCardTitleColor, // Màu khi trường đang được chọn
                               width: 2, // Có thể điều chỉnh độ dày
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(
-                              color: kPrimaryColor, // Màu khi trường được kích hoạt
+                              color:
+                              kCardTitleColor, // Màu khi trường được kích hoạt
                               width: 1,
                             ),
                           ),
@@ -134,7 +136,8 @@ class _FormLoginState extends State<FormLoginWidget> {
                           focusedErrorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(
-                              color: Colors.redAccent, // Màu khi trường lỗi và được chọn
+                              color: Colors
+                                  .redAccent, // Màu khi trường lỗi và được chọn
                               width: 2,
                             ),
                           ),
@@ -143,7 +146,7 @@ class _FormLoginState extends State<FormLoginWidget> {
                       SpaceStyle.boxSpaceHeight(10,context),
                       TextFormField(
                         controller: _passwordController,
-                        style: TextStyleApp.textStyleForm(16, FontWeight.w500, Colors.black),
+                        style: TextStyleApp.textStyleForm(16, FontWeight.w500, kCardTitleColor),
                         validator: (value) {
                           if (value == null || value.length < 3) {
                             return "Password can't be empty or less than 3 character!";
@@ -154,9 +157,9 @@ class _FormLoginState extends State<FormLoginWidget> {
                         obscureText: !authProvider.isObsecure,
                         decoration: InputDecoration(
                           labelText: 'Password',
-                          labelStyle: TextStyleApp.textStyleForm(16, FontWeight.w300, kPrimaryColor),
+                          labelStyle: TextStyleApp.textStyleForm(16, FontWeight.w300, kCardTitleColor),
                           hintText: 'Enter password ...',
-                          hintStyle: TextStyleApp.textStyleForm(16, FontWeight.w300, kPrimaryColor),
+                          hintStyle: TextStyleApp.textStyleForm(16, FontWeight.w300, kCardTitleColor),
                           errorMaxLines: 1,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 15),
                           suffixIcon: IconButton(
@@ -165,18 +168,19 @@ class _FormLoginState extends State<FormLoginWidget> {
                             },
                             icon: Icon(!authProvider.isObsecure ? CupertinoIcons.eye_slash : CupertinoIcons.eye),
                           ),
-                          // Đặt màu cho các trạng thái khác nhau của border
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(
-                              color: kPrimaryColor, // Màu khi trường đang được chọn
+                              color:
+                              kCardTitleColor, // Màu khi trường đang được chọn
                               width: 2, // Có thể điều chỉnh độ dày
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(
-                              color: kPrimaryColor, // Màu khi trường được kích hoạt
+                              color:
+                              kCardTitleColor, // Màu khi trường được kích hoạt
                               width: 1,
                             ),
                           ),
@@ -190,7 +194,8 @@ class _FormLoginState extends State<FormLoginWidget> {
                           focusedErrorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: const BorderSide(
-                              color: Colors.redAccent, // Màu khi trường lỗi và được chọn
+                              color: Colors
+                                  .redAccent, // Màu khi trường lỗi và được chọn
                               width: 2,
                             ),
                           ),
@@ -238,7 +243,7 @@ Widget facebookLogin(VoidCallback? function) {
 }
 
 Widget forgotPassword(BuildContext context) {
-  return TextButton(
+  return MaterialButton(
     onPressed: (){
       Navigator.pushNamed(context, "/forgot");
     },

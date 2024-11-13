@@ -59,13 +59,7 @@ class AuthenticationRepository {
   // UPDATE PASSWORD
   Future<User?> userChangePassword(String email, String newPassword) async {
     List<User> listUser = await getAllUsers();
-    User? currentUser;
-    for(User user in listUser){
-      if(user.email == email){
-        currentUser = user;
-        break;
-      }
-    }
+    User? currentUser = await findUserByEmail(email, listUser);
     if(currentUser == null){
       ToastStyle.toastFail("Email is not existed!");
       return null;
@@ -84,6 +78,16 @@ class AuthenticationRepository {
       return null;
     }
     return currentUser;
+  }
+
+  // FIND USER BY EMAIL
+  Future<User?> findUserByEmail(String email, List<User> listUser) async {
+    for(User user in listUser){
+      if(user.email == email){
+        return user;
+      }
+    }
+    return null;
   }
 
   // GET ALL USER
@@ -148,7 +152,7 @@ class AuthenticationRepository {
         return true;
 
       } else {
-        ToastStyle.toastFail("Already request pin");
+        ToastStyle.toastFail("Already request PIN in Email");
         return false;
       }
     } else {
@@ -191,7 +195,6 @@ class AuthenticationRepository {
     QuerySnapshot querySnapshot = await firebaseFireStore.collection('pins').get();
     return querySnapshot.docs.map((QueryDocumentSnapshot doc) => Pin.fromFirebase(doc.data() as Map<String, dynamic>)).toList();
   }
-
 
 
   //================================================== SAVE ENROLLMENT =============================================

@@ -29,10 +29,10 @@ class _BottomNavbarWidgetState extends State<BottomNavbarWidget> {
   @override
   Widget build(BuildContext context) {
 
-    final bottomProvider = BottomNavbarProvider.bottomStateMangement(context);
+    final bottomProvider = BottomNavbarProvider.bottomStateManagement(context);
 
     return Scaffold(
-      body: pages[bottomProvider.currentIndex], // Hiển thị trang tương ứng với currentIndex
+      body: pages[bottomProvider.currentIndex],
       backgroundColor: homeBackgroundColor,
       bottomNavigationBar: CurvedNavigationBar(
         height: StyleSize(context).heightPercent(60),

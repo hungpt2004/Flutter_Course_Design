@@ -29,7 +29,7 @@ class _FavoriteCourseScreenState extends State<FavoriteCourseScreen> {
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisSpacing: 10,
-                  mainAxisExtent: 250,
+                  mainAxisExtent: 250, //Height of card
                   childAspectRatio: 3/2,
                   mainAxisSpacing: 10,
                   crossAxisCount: 2,

@@ -33,7 +33,7 @@ class _TabBarPageState extends State<AuthenticationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: homeBackgroundColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -41,7 +41,7 @@ class _TabBarPageState extends State<AuthenticationScreen>
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
-                SpaceStyle.boxSpaceHeight(80,context),
+                SpaceStyle.boxSpaceHeight(80, context),
                 Container(
                   width: MediaQuery.of(context).size.height,
                   decoration: BoxDecoration(
@@ -52,7 +52,8 @@ class _TabBarPageState extends State<AuthenticationScreen>
                       Padding(
                         padding: const EdgeInsets.all(5),
                         child: TabBar(
-                          unselectedLabelColor: kCardTitleColor, // Màu văn bản khi không chọn
+                          unselectedLabelColor:
+                              kCardTitleColor, // Màu văn bản khi không chọn
                           labelColor: kPrimaryColor,
                           indicator: BoxDecoration(
                             color: Colors.white,
@@ -64,15 +65,15 @@ class _TabBarPageState extends State<AuthenticationScreen>
                             Tab(
                               child: SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.8,
-                                child: TextStyleApp.tabviewText("Sign In", 16,
-                                    FontWeight.w700),
+                                child: TextStyleApp.tabviewText(
+                                    "Sign In", 16, FontWeight.w700),
                               ),
                             ),
                             Tab(
                               child: SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.8,
-                                child: TextStyleApp.tabviewText("Sign Up", 16,
-                                    FontWeight.w700),
+                                child: TextStyleApp.tabviewText(
+                                    "Sign Up", 16, FontWeight.w700),
                               ),
                             ),
                           ],

@@ -88,9 +88,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         if (courseProvider.suggestionCourse.isNotEmpty)
-                          SizedBox(
+                          Container(
                             width: StyleSize(context).widthPercent(StyleSize(context).figmaWidth * 0.75),
                             height: StyleSize(context).heightPercent(180),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(bottomRight: Radius.circular(10),bottomLeft: Radius.circular(10)),
+                              color: Colors.grey.withOpacity(0.5)
+                            ),
                             child: ListView.builder(
                                 itemCount:
                                     courseProvider.suggestionCourse.length,

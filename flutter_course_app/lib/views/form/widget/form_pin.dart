@@ -43,7 +43,7 @@ class _FormPinWidgetState extends State<FormPinWidget> {
         AuthenticationProvider.stateAuthenticationProvider(context);
 
     return Scaffold(
-      backgroundColor: kDefaultColor,
+      backgroundColor: homeBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(

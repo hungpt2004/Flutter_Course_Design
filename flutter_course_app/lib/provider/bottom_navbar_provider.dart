@@ -14,7 +14,7 @@ class BottomNavbarProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  static BottomNavbarProvider bottomStateMangement(BuildContext context, {listen = true}) {
+  static BottomNavbarProvider bottomStateManagement(BuildContext context, {listen = true}) {
     return Provider.of<BottomNavbarProvider>(context, listen: listen);
   }
 

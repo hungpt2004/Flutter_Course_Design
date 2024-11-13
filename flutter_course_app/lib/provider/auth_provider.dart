@@ -15,18 +15,26 @@ class AuthenticationProvider extends ChangeNotifier {
   User? _currentUser;
   String _pin = '';
   bool _isObsecure = false;
+  bool _readOnly = false;
   String _buttonText = 'Enroll';
 
 
   User? get user => _currentUser;
   String get pin => _pin;
   bool get isObsecure => _isObsecure;
+  bool get readOnly => _readOnly;
   String get buttonText => _buttonText;
+
+  void setUser(User user){
+    _currentUser = user;
+    notifyListeners();
+  }
+
 
   // LOGIN
   Future<void> credentialLogin(String username, String password) async {
     _currentUser = await authenticationRepository.userCredentialLogin(username, password);
-    notifyListeners(); // Chỉ gọi nếu _currentUser thực sự thay đổi
+    notifyListeners();
   }
 
   // REGISTER
@@ -39,7 +47,7 @@ class AuthenticationProvider extends ChangeNotifier {
     } else {
       await authenticationRepository.userCredentialRegister(newUser);
       ToastStyle.toastSuccess("User registered successfully");
-      notifyListeners(); // Gọi khi có đăng ký thành công
+      notifyListeners();
     }
   }
 
@@ -79,8 +87,13 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   // OBSECURE TEXT
-  void seePassword() async {
+  Future<void> seePassword() async {
     _isObsecure = !_isObsecure;
+    notifyListeners();
+  }
+
+  Future<void> changeInformation() async {
+    _readOnly = !_readOnly;
     notifyListeners();
   }
 
