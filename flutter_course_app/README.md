@@ -13,9 +13,11 @@ Function: [ Login, Register, ForgetPassword, ChangePassword, Search Course, Enro
 ![Register Screen](https://github.com/user-attachments/assets/74c70ed6-92b5-4983-9d2a-454cd60dc2b7)
 ![Forgot Password Screen](https://github.com/user-attachments/assets/50ca1ee1-f4c0-42ac-8cc5-7b7d04ee935e)
 ![Home Screen](https://github.com/user-attachments/assets/a5bdca77-96ed-4839-be2d-74f36d6a1abd)
+![Search](https://github.com/user-attachments/assets/2ea3afa8-701d-4e8f-a98c-18c654b3790f)
 ![Favorite Screen](https://github.com/user-attachments/assets/775c39d4-9e35-4b69-aba0-23618b786b4b)
 ![Document Screen](https://github.com/user-attachments/assets/3a36367f-e93c-417d-972b-64b70d85f6e2)
-![Profile Screen](https://github.com/user-attachments/assets/7cdf2bda-876f-4d86-90a0-f6ef56ac31d4)
+![Profile Screen](https://github.com/user-attachments/assets/ea31ab87-56b9-42c3-9764-a70e2cb698cd)
+![Setting Profile Screen](https://github.com/user-attachments/assets/33d43648-c2b4-4b2a-a386-0efb22349972)
 ![Course Detail Screen](https://github.com/user-attachments/assets/7509ea56-3fce-4391-9289-8304879951df)
 ![Documnet Detail Screen](https://github.com/user-attachments/assets/905d2419-40a4-43a4-bf98-dd5149cf5b50)
 
