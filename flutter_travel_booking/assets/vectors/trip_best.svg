@@ -1,0 +1,12 @@
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
+<svg fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" id="medal" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line">
+<g id="SVGRepo_bgCarrier" stroke-width="0"/>
+<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+<g id="SVGRepo_iconCarrier">
+<path id="secondary" d="M12,8a6,6,0,1,0,6,6A6,6,0,0,0,12,8Zm1.24,7.75L12,15.15l-1.24.6L11,14.48l-1-.89,1.38-.19L12,12.25l.62,1.15,1.38.19-1,.89Z" style="fill: #4994e4; stroke-width: 2;"/>
+<polyline id="primary" points="15.57 9.06 18 3 14 3 12.04 7.91" style="fill: none; stroke: #2c5a96; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+<polyline id="primary-2" data-name="primary" points="11.96 7.91 10 3 6 3 8.43 9.06" style="fill: none; stroke: #2c5a96; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+<path id="primary-3" data-name="primary" d="M12,12.25l.62,1.15,1.38.19-1,.89.24,1.27L12,15.15l-1.24.6L11,14.48l-1-.89,1.38-.19ZM18,14a6,6,0,1,0-6,6A6,6,0,0,0,18,14Z" style="fill: none; stroke: #2c5a96; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+</g>
+</svg>

@@ -1,6 +1,4 @@
 import 'package:course_app_flutter/constant/color.dart';
-import 'package:course_app_flutter/theme/data/space_style.dart';
-import 'package:course_app_flutter/theme/data/style_text.dart';
 import 'package:course_app_flutter/theme/responsive/style_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -21,7 +19,6 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
@@ -58,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen>
       body: Container(
         height: StyleSize(context).screenHeight,
         width: StyleSize(context).screenWidth,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(colors: [
             kPrimaryColor,homeBackgroundColor,
           ],
