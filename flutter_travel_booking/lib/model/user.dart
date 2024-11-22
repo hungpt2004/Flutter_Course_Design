@@ -53,7 +53,7 @@ List<User> usersList = [
     dob: '1992-05-15',
     posts: postsList.where((p) => p.userId == 2).toList(),
     memberType: 'Standard',
-    avatar: 'https://sm.ign.com/ign_ap/cover/a/avatar-gen/avatar-generations_hugw.jpg',
+    avatar: 'https://th.bing.com/th/id/OIP.AlIScK6urTegkZ178dAAGgHaHa?rs=1&pid=ImgDetMain',
   ),
   User(
     id: 3,
@@ -66,7 +66,7 @@ List<User> usersList = [
     dob: '1985-11-20',
     posts: postsList.where((p) => p.userId == 3).toList(),
     memberType: 'Standard',
-    avatar: 'https://sm.ign.com/ign_ap/cover/a/avatar-gen/avatar-generations_hugw.jpg',
+    avatar: 'https://1.bp.blogspot.com/-VG6a-pAEqIg/X01ai59phRI/AAAAAAAAFbQ/zJK2ijP1v-omInveW2MhHs9sU0qprBkpgCLcBGAsYHQ/s1600/Biodata%2Bdan%2BProfil%2BMaria%2BOzawa%2B2.jpg',
   ),
   User(
     id: 4,

@@ -6,6 +6,7 @@ class UserRepository {
 
   List<User> users = usersList;
 
+  // S I G N -- I N
   Future<User?> signInWithUsernamePassword(String username, String password) async {
     User? currentUser;
     for(User u in users) {
@@ -23,6 +24,16 @@ class UserRepository {
     }
     debugPrint("Login successfully");
     return currentUser;
+  }
+
+  // G E T -- U S E R -- ID
+  User? getUserByUserID(int userID) {
+    for(User u in users) {
+      if(u.id == userID) {
+        return u;
+      }
+    }
+    return null;
   }
 
 }

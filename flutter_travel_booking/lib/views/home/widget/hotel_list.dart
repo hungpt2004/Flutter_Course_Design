@@ -169,7 +169,7 @@ class _HotelGridViewWidgetState extends ConsumerState<HotelGridViewWidget> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisExtent: StyleSize(context).heightPercent(255), // Điều chỉnh chiều cao của card
-            mainAxisSpacing: 8,
+            mainAxisSpacing: 10,
             crossAxisSpacing: 10,
             childAspectRatio: 16 / 9,
           ),

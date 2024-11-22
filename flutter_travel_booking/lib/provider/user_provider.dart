@@ -17,7 +17,6 @@ class UserProvider extends StateNotifier<User?> {
   }
 
 
-
 }
 
 //Khai bao river_pod

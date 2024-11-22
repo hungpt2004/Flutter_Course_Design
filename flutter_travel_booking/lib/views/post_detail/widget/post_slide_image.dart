@@ -6,6 +6,7 @@ import 'package:flutter_travel_booking/provider/post_provider.dart';
 import 'package:flutter_travel_booking/theme/color/color.dart';
 import 'package:flutter_travel_booking/theme/image/network_image.dart';
 import 'package:flutter_travel_booking/theme/response/response_size.dart';
+import 'package:flutter_travel_booking/theme/space/space.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class PostSlideWidget extends ConsumerStatefulWidget {
@@ -21,11 +22,12 @@ class _PostSlideWidgetState extends ConsumerState<PostSlideWidget> {
   Widget build(BuildContext context) {
     final readPost = ref.read(postProvider.notifier).currentPost;
     final networkImage = NetworkImageWidget();
+    final boxSpace = BoxSpace();
     return CarouselSlider.builder(
         itemCount: readPost!.images!.length,
         itemBuilder: (context, index, realIndex) {
           final imageIndex = readPost.images![index];
-          return _showPostImage(imageIndex.url!, networkImage, readPost.images!.length, index);
+          return _showPostImage(imageIndex.url!, networkImage, readPost.images!.length, index, boxSpace);
         },
         options: CarouselOptions(
             onPageChanged: (index, reason) {
@@ -41,7 +43,7 @@ class _PostSlideWidgetState extends ConsumerState<PostSlideWidget> {
         ));
   }
 
-  Widget _showPostImage(String url, NetworkImageWidget networkImage, int length, int index){
+  Widget _showPostImage(String url, NetworkImageWidget networkImage, int length, int index, BoxSpace boxSpace){
     return Container(
       width: StyleSize(context).screenWidth,
       child: Column(
@@ -72,7 +74,7 @@ class _PostSlideWidgetState extends ConsumerState<PostSlideWidget> {
               ),
             ],
           ),
-          SizedBox(height: 15,),
+          boxSpace.spaceHeight(15, context),
           dotSlide(currentIndex, length)
         ],
       ),

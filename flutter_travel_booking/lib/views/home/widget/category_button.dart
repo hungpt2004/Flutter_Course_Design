@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_travel_booking/theme/space/space.dart';
 import 'package:flutter_travel_booking/theme/text/text_style.dart';
-
 import '../../../theme/color/color.dart';
-import '../../../theme/response/response_size.dart';
 
 class ButtonEventWidget extends StatelessWidget {
   ButtonEventWidget({super.key, required this.url, required this.text, required this.function});
@@ -14,12 +11,13 @@ class ButtonEventWidget extends StatelessWidget {
   String text;
 
   final TextStyleCustom textStyleCustom = TextStyleCustom();
+
   final BoxSpace boxSpace = BoxSpace();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 20),
+      margin: const EdgeInsets.only(right: 20),
       child: Column(
         children: [
           Card(
@@ -28,7 +26,7 @@ class ButtonEventWidget extends StatelessWidget {
             child: Container(
               width: 50,
               height: 50,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: white
               ),

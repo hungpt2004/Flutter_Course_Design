@@ -12,9 +12,27 @@ class Post {
   List<Comment>? comments;
   List<PostImage>? images;
   int? viewAmount;
+  int likes; // Số lượt thích
+  int shares; // Số lượt chia sẻ
+  int favoritesCount; // Số lượng yêu thích
+  bool isFavorite; // Đã được yêu thích bởi người dùng chưa
+  int get commentCount => comments?.length ?? 0; // Tự động tính số bình luận
 
-  Post({required this.userId,this.id, this.title, this.content, this.hashtag, this.createdAt, this.comments,this.images, this.viewAmount});
-
+  Post({
+    required this.userId,
+    this.id,
+    this.title,
+    this.content,
+    this.hashtag,
+    this.createdAt,
+    this.comments,
+    this.images,
+    this.viewAmount,
+    this.likes = 0,
+    this.shares = 0,
+    this.favoritesCount = 0,
+    this.isFavorite = false,
+  });
 }
 
 
@@ -24,121 +42,261 @@ List<Post> postsList = [
     id: 1,
     title: 'My Travel Experience 🏔️',
     content: '''
-      I had an amazing time visiting the Alps last summer. The scenery was nothing short of breathtaking. From the towering snow-capped mountains to the serene alpine lakes, every moment felt like a postcard come to life. I hiked through winding trails that offered panoramic views of lush green valleys and majestic peaks. Each step I took brought me closer to nature, and the fresh mountain air rejuvenated my senses.
+      Last summer, I had the chance to visit the majestic Alps, and it was an experience of a lifetime. The crisp mountain air, the towering peaks, and the serene blue lakes all combined to create a magical atmosphere. 
+      
+      Each day, I would hike through lush green meadows, where wildflowers bloomed in every color imaginable. At night, the sky was so clear that I could see the Milky Way stretching across the heavens. 🌌
 
-      I spent a few days in a quaint mountain village, where I had the chance to interact with locals who shared fascinating stories about the region's rich history and culture. The hospitality was overwhelming, and I was introduced to traditional alpine dishes, such as cheese fondue and hearty stews, which warmed me up after long hikes.
+      One of the highlights of my trip was visiting a quaint little village nestled in the valley. The locals were incredibly welcoming, and I even got to try traditional cheese fondue, which was absolutely delicious. 🧀 
 
-      One of the most memorable experiences was reaching the summit of a challenging trail. Standing at the top, I felt on top of the world, surrounded by the vastness of nature. The feeling of accomplishment was immense, and I couldn’t help but feel grateful for such an unforgettable experience.
-
-      The Alps truly hold a special place in my heart, and I can't wait to return someday to explore even more of its hidden gems. Whether you're an avid hiker or someone who simply appreciates beautiful landscapes, the Alps are a destination that should be on your bucket list.
+      The Alps taught me the value of slowing down and appreciating nature's beauty. If you ever get the chance, I highly recommend adding the Alps to your travel bucket list! ✈️🌍
     ''',
     hashtag: '#travel #Alps #mountains #adventure',
     createdAt: DateTime.now().subtract(Duration(days: 2)),
-    comments: comments.where((c) => c.postID == 'post1').toList(),
+    comments: commentsList.where((c) => c.postID == 1).toList(),
     images: postImages,
     viewAmount: 12000,
+    likes: 250,
+    shares: 120,
+    favoritesCount: 150,
+    isFavorite: true,
   ),
   Post(
     userId: 1,
     id: 2,
-    title: 'Delicious Food in Italy 🍕',
+    title: 'Ẩm thực tuyệt vời ở Ý 🍕',
     content: '''
-      My trip to Italy was a culinary journey like no other. The moment I landed in Rome, I could smell the aroma of fresh basil, garlic, and simmering tomatoes wafting through the air. Italy is truly a paradise for food lovers, and every meal was an experience in itself. I was fortunate enough to enjoy authentic Italian pasta and pizza in various regions, each with its own unique twist.
+      Chuyến đi Ý vừa qua là một hành trình ẩm thực không thể quên. Từ những chiếc pizza giòn rụm tại Naples, đến các món pasta đặc sắc ở Rome, tất cả đều khiến tôi phải kinh ngạc. 🍝
 
-      In Rome, I visited traditional trattorias, where I savored rich pasta dishes like carbonara and cacio e pepe. The pasta was always cooked to perfection, and the sauce, made with the freshest ingredients, was absolutely divine. The pizza in Italy was unlike anything I've ever had. Thin, crispy crusts topped with simple yet delicious ingredients like buffalo mozzarella, fresh tomatoes, and aromatic herbs.
-
-      I also ventured to Naples, the birthplace of pizza, where I had the chance to taste a true Neapolitan pizza. The simplicity of the ingredients—just dough, mozzarella, tomato, and a drizzle of olive oil—made for the most flavorful pizza I've ever eaten. It was the epitome of perfection in simplicity.
-
-      Beyond the food, Italy's culture and history added depth to the experience. While enjoying meals, I learned about the origins of these dishes and their importance in Italian culture. It’s safe to say that Italy’s food culture is an integral part of its charm, and I would recommend anyone with a love for food to experience it firsthand.
+      Một ngày nọ, tôi ghé thăm một nhà hàng nhỏ bên bờ sông Florence. Chủ nhà hàng là một đầu bếp địa phương đã truyền cảm hứng qua từng món ăn. Ông kể về cách chọn nguyên liệu tươi và quy trình làm thủ công. 
+      
+      Món tiramisu tráng miệng cuối cùng khiến tôi ngây ngất, mỗi lớp bánh mềm mịn và hương vị cà phê quyện với cacao rất hoàn hảo. ☕✨
+      
+      Ý không chỉ là một đất nước xinh đẹp, mà còn là thiên đường ẩm thực đáng để bạn khám phá. Nếu có cơ hội, bạn nhất định phải ghé qua! ❤️🇮🇹
     ''',
     hashtag: '#food #Italy #Rome #pizza #pasta #travel',
-    createdAt: DateTime.now().subtract(const Duration(days: 5)),
-    comments: comments.where((c) => c.postID == 'post2').toList(),
-    images: [postImages[1]],
+    createdAt: DateTime.now().subtract(Duration(days: 5)),
+    comments: commentsList.where((c) => c.postID == 2).toList(),
+    images: [postImages[1],postImages[2],postImages[3]],
     viewAmount: 24000,
+    likes: 340,
+    shares: 210,
+    favoritesCount: 220,
+    isFavorite: false,
   ),
   Post(
     userId: 3,
     id: 3,
-    title: 'Hiking Adventure in Nepal 🥾',
+    title: 'ネパールの冒険 🥾',
     content: '''
-      Nepal is a haven for hikers, and my recent adventure there was one I will never forget. From the moment I arrived in Kathmandu, I knew this trip would be extraordinary. The bustling streets, the ancient temples, and the majestic Himalayas looming in the distance set the stage for an unforgettable experience.
+      ネパールの山々をハイキングするのは、一生に一度の素晴らしい経験でした。エベレストの麓に立ち、周囲の雄大な自然に圧倒されました。🏔️ 
 
-      I trekked through the Annapurna Circuit, one of the most famous hiking trails in Nepal. The trail took me through lush forests, charming villages, and over high-altitude passes. The views were absolutely stunning—snow-capped peaks, serene rivers, and terraced fields stretching as far as the eye could see.
+      途中で、地元の村に立ち寄り、伝統的な料理であるダルバートを楽しみました。その香り豊かなカレーとライスは、疲れた体を癒してくれる最高のエネルギー補給でした。 🍛
 
-      One of the highlights of the trek was crossing Thorong La Pass, the highest point of the circuit. At 5,416 meters (17,769 feet), the air was thin, and every step felt like a challenge, but the view from the top was more than worth it. I was surrounded by towering peaks that seemed to touch the sky, and I felt a sense of awe and accomplishment that I can hardly put into words.
+      トレッキング中に見た朝焼けは、言葉では言い表せないほど美しく、感動的でした。それは自然が見せてくれる最高の芸術です。 🌄
 
-      The people I met along the way made the journey even more special. The Nepalese are incredibly warm and hospitable, and their stories about the mountains and their way of life were fascinating. I also had the opportunity to experience the local cuisine, which was simple yet flavorful—dal bhat, momo, and yak cheese were some of my favorite dishes.
-
-      Hiking in Nepal was more than just a physical challenge—it was a spiritual journey. The mountains have a certain serenity that calms the mind, and I felt connected to something greater than myself. If you're an avid hiker or simply someone looking for an adventure, Nepal should be on your list.
+      ネパールは冒険好きな人にとって理想的な場所です。自然の力を感じ、心身ともにリフレッシュできる素晴らしい旅でした。🎒🌏
     ''',
     hashtag: '#hiking #Nepal #adventure #trekking #mountains',
-    createdAt: DateTime.now().subtract(const Duration(days: 10)),
-    comments: comments.where((c) => c.postID == 'post3').toList(),
-    images: [postImages[2], postImages[3]],
-    viewAmount: 18000,
-  ),
-  Post(
-    userId: 1,
-    id: 4,
-    title: 'Underwater Wonders in Bali 🐠',
-    content: '''
-      Bali is renowned for its beautiful beaches, but there is an entirely different world beneath the waves that is equally enchanting. I had the chance to go scuba diving off the coast of Bali, and it was an experience like no other. The underwater landscape was a vibrant kaleidoscope of coral reefs, schools of fish, and sea turtles gliding gracefully through the water.
-
-      I dived at several spots around the island, including Tulamben, where the famous USS Liberty wreck is located. The wreck is covered in colorful coral and has become a thriving ecosystem for marine life. Swimming around the wreck, I felt like I had stepped into another world—one where time seemed to stand still.
-
-      Another dive site that took my breath away was Nusa Penida, where I swam with the majestic manta rays. These gentle giants were absolutely mesmerizing as they glided through the water, and I felt incredibly fortunate to be in their presence. The visibility in the waters of Bali was exceptional, allowing me to fully appreciate the beauty of the underwater world.
-
-      Beyond the diving, Bali’s marine life and coral reefs are vital to the health of the ocean, and it was humbling to witness the delicate balance of this ecosystem. I left Bali with a deep respect for the ocean and its wonders, and I can't wait to return for more underwater adventures.
-    ''',
-    hashtag: '#diving #Bali #underwater #ocean #travel',
-    createdAt: DateTime.now().subtract(const Duration(days: 7)),
-    comments: comments.where((c) => c.postID == 'post4').toList(),
-    images: [postImages[4]],
+    createdAt: DateTime.now().subtract(Duration(days: 10)),
+    comments: commentsList.where((c) => c.postID == 3).toList(),
+    images: [postImages[3],postImages[4],postImages[7]],
     viewAmount: 15000,
+    likes: 200,
+    shares: 90,
+    favoritesCount: 180,
+    isFavorite: true,
   ),
   Post(
     userId: 4,
-    id: 5,
-    title: 'Chùa Linh Ứng 🐠',
+    id: 4,
+    title: 'Exploring the Streets of Tokyo 🇯🇵',
     content: '''
-    Chùa Linh Ứng, nằm ở bán đảo Sơn Trà, Đà Nẵng, là một trong những ngôi chùa nổi tiếng nhất của Việt Nam. Với vị trí tuyệt đẹp trên đỉnh núi Sơn Trà, nơi đây không chỉ là địa điểm tâm linh mà còn là một điểm du lịch hấp dẫn, thu hút hàng nghìn du khách trong và ngoài nước. Chùa Linh Ứng nổi bật với bức tượng Phật Bà Quan Âm cao nhất Việt Nam, tượng trưng cho sự từ bi, nhân hậu và bảo vệ bình an cho tất cả chúng sinh.
+      Tokyo is a vibrant city where tradition and modernity blend seamlessly. From the serene temples of Asakusa to the neon lights of Shibuya, there is always something to explore. 🚶‍♂️
 
-    Lối vào chùa là một con đường uốn lượn, dẫn lối lên đỉnh núi Sơn Trà, từ đây du khách có thể chiêm ngưỡng toàn cảnh thành phố Đà Nẵng và biển Đông xanh ngắt. Không khí tại đây rất trong lành và thanh tịnh, giúp du khách cảm nhận được sự yên bình và tĩnh lặng giữa thiên nhiên hùng vĩ.
+      My favorite moment was strolling through the Tsukiji Fish Market and sampling fresh sushi. The quality of seafood here is unlike anywhere else in the world. 🍣
 
-    Chùa Linh Ứng còn có một khuôn viên rộng lớn với những cây cổ thụ, hồ nước, và các công trình kiến trúc độc đáo, mang đậm nét văn hóa Phật giáo. Đặc biệt, khu vực quanh bức tượng Phật Bà Quan Âm được thiết kế rất trang nghiêm và thanh tịnh, nơi đây thu hút không chỉ những tín đồ Phật giáo mà còn là điểm đến cho những ai yêu thích vẻ đẹp của thiên nhiên và muốn tìm lại sự bình an trong tâm hồn.
-
-    Một trong những điểm đáng chú ý khác là tượng Phật Bà Quan Âm được xây dựng với chiều cao lên đến 67 mét, tạo nên một hình ảnh rất ấn tượng và tôn kính. Dưới chân tượng, có một không gian rộng rãi để khách hành hương và du khách có thể dâng hương, cầu nguyện và tham quan. Ngoài ra, trong khuôn viên chùa còn có những bức tranh tường, những tượng Phật khác, và các công trình phụ trợ thể hiện sự trang nghiêm và tôn kính của Phật giáo.
-
-    Chùa Linh Ứng không chỉ là nơi tôn thờ Phật, mà còn là biểu tượng của sự phát triển và sự bảo vệ của thành phố Đà Nẵng. Khi đến đây, du khách không chỉ được chiêm bái Phật, mà còn có thể tận hưởng những giây phút thư giãn và hòa mình vào không gian tĩnh lặng của thiên nhiên, để tìm lại sự thanh thản trong tâm hồn.
-
-    Với tất cả những nét đặc sắc đó, Chùa Linh Ứng là một địa điểm không thể bỏ qua đối với những ai yêu thích du lịch tâm linh cũng như muốn khám phá vẻ đẹp của Đà Nẵng từ một góc nhìn khác.
-  ''',
-    hashtag: '#ChuaLinhUng #DaNang #PhatGiao #Travel #Vietnam #SơnTra',
-    createdAt: DateTime.now().subtract(const Duration(days: 7)),
-    comments: comments.where((c) => c.postID == 'post4').toList(),
-    images: [postImages[4]],
-    viewAmount: 15000,
+      Tokyo's energy is contagious, and it's a city that never sleeps. Whether you're enjoying a quiet tea ceremony or admiring the cherry blossoms in full bloom, Tokyo has something special for everyone. 🌸
+    ''',
+    hashtag: '#Tokyo #Japan #travel #sushi #citylife',
+    createdAt: DateTime.now().subtract(Duration(days: 12)),
+    comments: commentsList.where((c) => c.postID == 4).toList(),
+    images: [postImages[5],postImages[6],postImages[3],postImages[4]],
+    viewAmount: 8000,
+    likes: 150,
+    shares: 60,
+    favoritesCount: 80,
+    isFavorite: false,
   ),
   Post(
     userId: 5,
-    id: 6,
-    title: '東京の魅力を探索する 🇯🇵',
+    id: 5,
+    title: 'Safari in Kenya 🦁',
     content: '''
-    日本の首都、東京は、古代と現代が見事に融合した街です。賑やかな街並みにネオンライトが輝き、静かな寺院や公園が点在し、東京はあらゆる旅行者にユニークな体験を提供します。
+      Last year, I had the opportunity to go on a safari in Kenya, and it was an unforgettable experience. I had the chance to see the "Big Five" in their natural habitat: lions, elephants, leopards, buffalo, and rhinos. 🐘🐆
 
-    東京で訪れるべきランドマークの一つは、浅草にある有名な浅草寺です。活気に満ちた仲見世通りを歩きながら、様々な伝統的な店でお土産や美味しい屋台料理を見かけました。浅草寺自体は、伝統的な日本建築の見事な例であり、地元の人々が祈る姿を目の当たりにするのは感動的でした。
+      The thrill of watching a lioness hunt was something I'll never forget. The vast savannas, the golden sunsets, and the sounds of nature were incredibly peaceful yet exhilarating at the same time. 🌅
 
-    もう一つの東京のハイライトは、原宿に近い緑豊かな森に囲まれた明治神宮です。明治天皇と昭憲皇太后に捧げられたこの神社は、街の喧騒から逃れる平穏な場所です。大きな鳥居や木々に囲まれた美しい散歩道が静かな雰囲気を作り出し、世界でも最も忙しい都市の一つにいることを忘れさせてくれます。
+      Kenya is truly a wild adventure waiting to be explored. If you're an animal lover, this is a must-visit destination. 🦓
+    ''',
+    hashtag: '#Kenya #safari #wildlife #adventure #Africa',
+    createdAt: DateTime.now().subtract(Duration(days: 7)),
+    comments: commentsList.where((c) => c.postID == 5).toList(),
+    images: [postImages[6],postImages[11],postImages[9]],
+    viewAmount: 5000,
+    likes: 120,
+    shares: 40,
+    favoritesCount: 60,
+    isFavorite: true,
+  ),
+  Post(
+    userId: 6,
+    id: 6,
+    title: 'Paris: A City of Romance 💖',
+    content: '''
+      Paris, the city of love, stole my heart. From the iconic Eiffel Tower to the charming streets of Montmartre, there is no shortage of beauty around every corner. 🗼
 
-    東京はまた、最先端のテクノロジーとポップカルチャーでも有名です。秋葉原の訪問は、まさに異次元の体験でした。この地区は、電子機器やアニメの聖地であり、明るい看板や多層の電気店、アニメグッズであふれています。
-  ''',
-    hashtag: '#東京 #旅行 #文化 #日本 #アニメ #テクノロジー',
-    createdAt: DateTime.now().subtract(const Duration(days: 7)),
-    comments: comments.where((c) => c.postID == 'post6').toList(),
-    images: [postImages[5]],
-    viewAmount: 12000,
-  )
+      I spent hours wandering through art museums, sipping coffee at quaint cafés, and watching the world go by. The food here is absolutely divine, and I highly recommend trying the croissants and escargot. 🥐🦗
+
+      Paris is more than just a city; it's a feeling. Every time I visit, I discover something new that makes me fall deeper in love with it. 🌹
+    ''',
+    hashtag: '#Paris #romance #travel #cityoflove #France',
+    createdAt: DateTime.now().subtract(Duration(days: 14)),
+    comments: commentsList.where((c) => c.postID == 6).toList(),
+    images: [postImages[7],postImages[8],postImages[13]],
+    viewAmount: 11000,
+    likes: 280,
+    shares: 130,
+    favoritesCount: 190,
+    isFavorite: false,
+  ),
+  Post(
+    userId: 7,
+    id: 7,
+    title: 'Bali: Paradise on Earth 🌴',
+    content: '''
+      Bali is one of the most beautiful places I’ve ever visited. The island's serene beaches, lush jungles, and spiritual temples make it a paradise for nature lovers and adventurers alike. 🌺
+
+      I had the chance to visit Ubud, known for its art and culture. The rice terraces there were breathtaking, and the locals' kindness made the experience even more memorable. 🥥
+
+      Whether you're looking to relax on the beach or hike up Mount Batur for a stunning sunrise, Bali offers something for everyone. 🌅
+    ''',
+    hashtag: '#Bali #paradise #Indonesia #travel #beaches',
+    createdAt: DateTime.now().subtract(Duration(days: 16)),
+    comments: commentsList.where((c) => c.postID == 7).toList(),
+    images: [postImages[8]],
+    viewAmount: 14000,
+    likes: 310,
+    shares: 150,
+    favoritesCount: 250,
+    isFavorite: true,
+  ),
+  Post(
+    userId: 8,
+    id: 8,
+    title: 'Discovering the Great Wall of China 🏯',
+    content: '''
+      Visiting the Great Wall of China was one of the most awe-inspiring experiences of my life. The wall stretches for miles, and standing atop it, surrounded by the stunning mountains, left me speechless. 🏔️
+
+      The history of the Great Wall is as vast as the wall itself, and each section tells a different story. I spent hours walking along the path, learning about its significance and admiring the craftsmanship of the ancient builders. 🏰
+
+      If you're a history buff or simply someone who loves breathtaking landscapes, the Great Wall is a must-see destination. 🧭
+    ''',
+    hashtag: '#China #GreatWall #history #travel #landmarks',
+    createdAt: DateTime.now().subtract(Duration(days: 20)),
+    comments: commentsList.where((c) => c.postID == 8).toList(),
+    images: [postImages[9]],
+    viewAmount: 16000,
+    likes: 400,
+    shares: 180,
+    favoritesCount: 210,
+    isFavorite: false,
+  ),
+  Post(
+    userId: 9,
+    id: 9,
+    title: 'A Relaxing Escape in the Maldives 🏝️',
+    content: '''
+      The Maldives is the perfect place for a relaxing getaway. Picture-perfect beaches with clear turquoise waters, luxurious resorts, and plenty of opportunities to snorkel and scuba dive. 🐠
+
+      I spent my days lounging by the beach, reading books, and enjoying freshly prepared seafood. The underwater life was a true highlight – I even swam with a school of colorful fish! 🐟
+
+      If you're looking for peace and tranquility, the Maldives is the ultimate destination. 🏖️
+    ''',
+    hashtag: '#Maldives #beach #vacation #travel #luxury',
+    createdAt: DateTime.now().subtract(Duration(days: 25)),
+    comments: commentsList.where((c) => c.postID == 9).toList(),
+    images: [postImages[10]],
+    viewAmount: 13000,
+    likes: 330,
+    shares: 140,
+    favoritesCount: 170,
+    isFavorite: true,
+  ),
+  Post(
+    userId: 10,
+    id: 10,
+    title: 'Trekking Through Patagonia 🏞️',
+    content: '''
+      Patagonia is a trekkers' paradise, with its vast glaciers, rugged mountains, and sprawling national parks. I had the chance to hike through Torres del Paine, and the views were nothing short of spectacular. 🌄
+
+      The terrain was challenging, but the reward was worth it. From standing in front of massive glaciers to watching condors soar above the peaks, every moment felt like a scene from a nature documentary. 🦅
+
+      Patagonia's untouched beauty is a reminder of the power and splendor of nature. It's a must-visit for anyone who loves the outdoors. 🏕️
+    ''',
+    hashtag: '#Patagonia #trekking #nature #travel #mountains',
+    createdAt: DateTime.now().subtract(Duration(days: 30)),
+    comments: commentsList.where((c) => c.postID == 10).toList(),
+    images: [postImages[11],],
+    viewAmount: 9000,
+    likes: 210,
+    shares: 100,
+    favoritesCount: 120,
+    isFavorite: false,
+  ),
+  Post(
+    userId: 11,
+    id: 11,
+    title: 'Sunsets in Santorini 🌅',
+    content: '''
+      Santorini, with its whitewashed buildings and blue-domed churches, is one of the most picturesque places I've ever visited. The sunsets here are truly magical, and I couldn't help but be in awe as the sun dipped below the horizon. 🌞
+
+      I spent my time exploring the charming streets, enjoying local delicacies, and watching the world-famous sunsets that draw tourists from all over the globe. 🍷
+
+      Santorini is a place that will steal your heart, and I highly recommend visiting if you're ever in Greece. 🇬🇷
+    ''',
+    hashtag: '#Santorini #Greece #sunset #travel #islands',
+    createdAt: DateTime.now().subtract(Duration(days: 35)),
+    comments: commentsList.where((c) => c.postID == 11).toList(),
+    images: [postImages[12],postImages[10]],
+    viewAmount: 15000,
+    likes: 370,
+    shares: 200,
+    favoritesCount: 230,
+    isFavorite: true,
+  ),
+  Post(
+    userId: 12,
+    id: 12,
+    title: 'Exploring New Zealand’s Natural Wonders 🏞️',
+    content: '''
+      New Zealand is a country of incredible natural beauty, from its rolling hills to its stunning fjords. I had the chance to visit Milford Sound, and it was one of the most awe-inspiring places I’ve ever been. 🏞️
+
+      The crystal-clear waters, towering cliffs, and lush greenery made it feel like I was stepping into a movie set. I also explored the geothermal wonders of Rotorua and hiked through Tongariro National Park. 🌋
+
+      If you're looking for outdoor adventure, New Zealand should be at the top of your list. 🌍
+    ''',
+    hashtag: '#NewZealand #adventure #travel #nature #fjords',
+    createdAt: DateTime.now().subtract(Duration(days: 40)),
+    comments: commentsList.where((c) => c.postID == 12).toList(),
+    images: [postImages[13]],
+    viewAmount: 17000,
+    likes: 440,
+    shares: 220,
+    favoritesCount: 270,
+    isFavorite: false,
+  ),
 ];
+
+
 
 
