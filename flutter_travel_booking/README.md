@@ -1,16 +1,23 @@
-# flutter_travel_booking
-
-Flutter app travelink & riverpod
+# Project name: Flutter app travelink & riverpod
 
 ## Getting Started
+This project clone UI from Trip.com and manage state of app by Provider/Riverpod
 
-This project is a starting point for a Flutter application.
+## Function
+- Login/Logout/Register
+- Create post to upload to app
+- Read post detail
 
-A few resources to get you started if this is your first Flutter project:
+## Screenshot
+1.HomeScreen
+![HomeScreen_1](https://github.com/user-attachments/assets/77ed372c-901e-45d1-bf5f-48202d170a73)
+![HomeScreen_2](https://github.com/user-attachments/assets/76244e2d-de1a-40ad-bd24-bb2698bd147a)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+2.Post Detail
+![Post Detail 1](https://github.com/user-attachments/assets/5221759b-6d0f-486b-ad68-1cbd82afd802)
+![Post Detail 2](https://github.com/user-attachments/assets/f8f81075-1c5e-4507-8e7a-c4ce5d618717)
+![Post Detail 3](https://github.com/user-attachments/assets/7acc5a82-b74b-4d3e-af9b-7b7a3d014b04)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+
