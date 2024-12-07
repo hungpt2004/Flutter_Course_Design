@@ -40,7 +40,7 @@ class ButtonEventWidget extends StatelessWidget {
             ),
           ),
           boxSpace.spaceHeight(5, context),
-          Text(text,textAlign:TextAlign.center,style: textStyleCustom.textStyleForm(12, FontWeight.w400, Colors.black),)
+          Text(text,textAlign:TextAlign.center,style: textStyleCustom.textStyleForm(10, FontWeight.w400, Colors.black),)
         ],
       ),
     );

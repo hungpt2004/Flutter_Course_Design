@@ -8,7 +8,7 @@ class TextStyleCustom{
 
   //TEXT STYLE CUSTOM
   textStyleForm (double size,FontWeight weight, Color color) {
-    return GoogleFonts.poppins(
+    return GoogleFonts.openSans(
       fontSize: size,
       fontWeight: weight,
       color: color

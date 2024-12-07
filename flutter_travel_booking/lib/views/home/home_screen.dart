@@ -1,18 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_travel_booking/provider/user_provider.dart';
 import 'package:flutter_travel_booking/theme/color/color.dart';
 import 'package:flutter_travel_booking/theme/response/response_size.dart';
 import 'package:flutter_travel_booking/theme/space/space.dart';
-import 'package:flutter_travel_booking/theme/text/font_size.dart';
 import 'package:flutter_travel_booking/theme/text/text_style.dart';
 import 'package:flutter_travel_booking/views/home/widget/category_button.dart';
 import 'package:flutter_travel_booking/views/home/widget/discount.dart';
 import 'package:flutter_travel_booking/views/home/widget/hotel_list.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -54,7 +49,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 //hieu ung khi bi thu gon
                 collapseMode: CollapseMode.parallax,
                 //hieu ung khi keo xuong qua gioi han
-                stretchModes: [
+                stretchModes: const [
                   StretchMode.zoomBackground,
                 ],
                 background: Container(
@@ -87,7 +82,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               child: Text(
                                 "Awaken Da Nang Hotel",
                                 style: textStyleCustom.textStyleForm(
-                                  10,
+                                  8,
                                   FontWeight.w300,
                                   Colors.black,
                                 ),
@@ -138,21 +133,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      buttonBanner(() {}, "Hotels", 'hotel.svg',
+                                      _buttonBanner(() {}, "Hotels", 'hotel.svg',
                                           textStyleCustom, context),
-                                      buttonBanner(
+                                      _buttonBanner(
                                           () {},
                                           "Flights",
                                           'plane.svg',
                                           textStyleCustom,
                                           context),
-                                      buttonBanner(
+                                      _buttonBanner(
                                           () {},
                                           "Restaurant",
                                           'restaurant.svg',
                                           textStyleCustom,
                                           context),
-                                      buttonBanner(() {}, "Trains", 'train.svg',
+                                      _buttonBanner(() {}, "Trains", 'train.svg',
                                           textStyleCustom, context),
                                     ],
                                   ),
@@ -160,17 +155,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      buttonBanner(() {}, "Attractions & Tours",
+                                      _buttonBanner(() {}, "Attractions & Tours",
                                           'tour.svg', textStyleCustom, context),
-                                      buttonBanner(
+                                      _buttonBanner(
                                           () {},
                                           "Airport Transfers",
                                           'airport.svg',
                                           textStyleCustom,
                                           context),
-                                      buttonBanner(() {}, "Car Rentals",
+                                      _buttonBanner(() {}, "Car Rentals",
                                           'car.svg', textStyleCustom, context),
-                                      buttonBanner(() {
+                                      _buttonBanner(() {
                                         setState(() {
                                           isExpanded = !isExpanded;
                                         });
@@ -211,9 +206,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-Widget buttonBanner(VoidCallback function, String text, String url,
+Widget _buttonBanner(VoidCallback function, String text, String url,
     TextStyleCustom textStyle, BuildContext context) {
-  return Container(
+  return SizedBox(
     width: StyleSize(context).widthPercent(70),
     height: StyleSize(context).heightPercent(70),
     child: Column(
@@ -222,14 +217,14 @@ Widget buttonBanner(VoidCallback function, String text, String url,
           onTap: function,
           child: SvgPicture.asset(
             'assets/vectors/$url',
-            width: 30,
-            height: 30,
+            width: StyleSize(context).widthPercent(25),
+            height: StyleSize(context).heightPercent(25),
           ),
         ),
         Text(
           text,
           textAlign: TextAlign.center,
-          style: textStyle.textStyleForm(12, FontWeight.w500, Colors.black),
+          style: textStyle.textStyleForm(10, FontWeight.w500, Colors.black),
         )
       ],
     ),
@@ -246,7 +241,7 @@ Widget _expandBanner(TextStyleCustom textStyleCustom, BuildContext context) {
         Card(
           elevation: 15,
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10), color: white),
@@ -254,9 +249,9 @@ Widget _expandBanner(TextStyleCustom textStyleCustom, BuildContext context) {
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 children: [
-                  buttonBanner(() {}, "Partnership", 'hand.svg',
+                  _buttonBanner(() {}, "Partnership", 'hand.svg',
                       textStyleCustom, context),
-                  buttonBanner(() {}, "About Trip.com", 'infor.svg',
+                  _buttonBanner(() {}, "About Trip.com", 'infor.svg',
                       textStyleCustom, context),
                 ],
               ),
@@ -296,7 +291,7 @@ Widget _discount(BuildContext context, TextStyleCustom textStyle) {
       elevation: 15,
       child: Container(
           width: StyleSize(context).screenWidth,
-          height: StyleSize(context).heightPercent(120),
+          height: StyleSize(context).heightPercent(130),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               gradient: LinearGradient(
@@ -313,8 +308,7 @@ Widget _discount(BuildContext context, TextStyleCustom textStyle) {
                   Expanded(
                       flex: 1,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 2),
+                        padding: const EdgeInsets.symmetric(vertical: 1),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -326,26 +320,28 @@ Widget _discount(BuildContext context, TextStyleCustom textStyle) {
                               style: textStyle.textStyleForm(
                                   12, FontWeight.w600, Colors.black),
                             ),
-                            MaterialButton(
-                                shape: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: lightBlue),
+                            GestureDetector(
+                              onTap: (){},
+                              child: Container(
+                                width: 60,
+                                height: 25,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: lightBlue,
                                 ),
-                                color: lightBlue,
-                                elevation: 10,
-                                highlightElevation: 2,
-                                onPressed: () {},
                                 child: Center(
                                   child: Text(
                                     "Claim All",
-                                    style: GoogleFonts.montserrat(
-                                        color: white,
-                                        fontSize: StyleSize(context).scale(10)),
+                                    style: textStyle.textStyleForm(
+                                        10, FontWeight.w500, white),
                                   ),
-                                ))
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       )),
-                  Expanded(
+                  const Expanded(
                     flex: 2,
                     child: DiscountWidget(),
                   ),
@@ -362,53 +358,49 @@ Widget _location(VoidCallback function, String text, TextStyleCustom textStyle,
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Container(
-        child: Row(
-          children: [
-            Text(
-              text,
-              textAlign: TextAlign.center,
-              style: textStyle.textStyleForm(14, FontWeight.w700, Colors.black),
+      Row(
+        children: [
+          Text(
+            text,
+            textAlign: TextAlign.center,
+            style: textStyle.textStyleForm(14, FontWeight.w700, Colors.black),
+          ),
+          boxSpace.spaceWidth(10, context),
+          Chip(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: const BorderSide(color: Colors.white),
             ),
-            boxSpace.spaceWidth(10, context),
-            Chip(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: const BorderSide(color: Colors.white),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 2),
-              elevation: 10,
-              deleteIcon: const Icon(
-                Icons.arrow_drop_down_circle,
-                color: Colors.black,
-              ),
-              label: Text(
-                "World",
-                style:
-                    textStyle.textStyleForm(12, FontWeight.w500, Colors.black),
-              ),
-              onDeleted: () {},
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            elevation: 10,
+            deleteIcon: const Icon(
+              Icons.arrow_drop_down_circle,
+              color: Colors.black,
             ),
-          ],
-        ),
+            label: Text(
+              "World",
+              style:
+                  textStyle.textStyleForm(12, FontWeight.w500, Colors.black),
+            ),
+            onDeleted: () {},
+          ),
+        ],
       ),
-      Container(
-        child: Row(
-          children: [
-            SvgPicture.asset(
-              'assets/vectors/map.svg',
-              width: 20,
-              height: 20,
-            ),
-            Text("Map",
-                style: textStyle.textStyleForm(14, FontWeight.w500, lightBlue))
-          ],
-        ),
+      Row(
+        children: [
+          SvgPicture.asset(
+            'assets/vectors/map.svg',
+            width: 20,
+            height: 20,
+          ),
+          Text("Map",
+              style: textStyle.textStyleForm(14, FontWeight.w500, lightBlue))
+        ],
       )
     ],
   );
 }
 
 Widget _post(BuildContext context) {
-  return HotelGridViewWidget();
+  return const HotelGridViewWidget();
 }

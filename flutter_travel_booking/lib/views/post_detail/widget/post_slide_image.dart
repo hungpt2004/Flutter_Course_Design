@@ -82,20 +82,17 @@ class _PostSlideWidgetState extends ConsumerState<PostSlideWidget> {
   }
 
   Widget dotSlide(currentIndex, int length) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: AnimatedSmoothIndicator(
-        duration: const Duration(milliseconds: 800),
-        activeIndex: currentIndex,
-        count: length,
-        effect: const ExpandingDotsEffect(
-          radius: 60,
-          spacing: 7,
-          activeDotColor: lightBlue,
-          expansionFactor: 2,
-          dotHeight: 6,
-          dotWidth: 6,
-        ),
+    return AnimatedSmoothIndicator(
+      duration: const Duration(milliseconds: 800),
+      activeIndex: currentIndex,
+      count: length,
+      effect: const ExpandingDotsEffect(
+        radius: 60,
+        spacing: 7,
+        activeDotColor: lightBlue,
+        expansionFactor: 2,
+        dotHeight: 6,
+        dotWidth: 6,
       ),
     );
   }

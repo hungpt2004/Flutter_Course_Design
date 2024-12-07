@@ -80,12 +80,12 @@ class _DiscountWidgetState extends State<DiscountWidget> {
                     ticketIndex.title,
                     maxLines: 1,
                     style: textStyleCustom.textStyleForm(
-                        12, FontWeight.w400, Colors.redAccent),
+                        10, FontWeight.w400, Colors.redAccent),
                   ),
                   Text(ticketIndex.content,
                       maxLines: 1,
                       style: textStyleCustom.textStyleForm(
-                          14, FontWeight.w600, Colors.redAccent))
+                          12, FontWeight.w600, Colors.redAccent))
                 ],
               )
             ],

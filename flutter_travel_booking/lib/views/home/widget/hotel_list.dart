@@ -86,7 +86,7 @@ class _HotelGridViewWidgetState extends ConsumerState<HotelGridViewWidget> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 post.title!,
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis, // Hiển thị dấu ba chấm nếu tiêu đề quá dài
                 style: textStyle.textStyleForm(12, FontWeight.w500, Colors.black),
               ),
@@ -119,7 +119,7 @@ class _HotelGridViewWidgetState extends ConsumerState<HotelGridViewWidget> {
             child: networkImage.networkImage(avatar),
           ),
         ),
-        boxSpace.spaceWidth(5, context),
+        boxSpace.spaceWidth(2, context),
         Text(
           author,
           maxLines: 1,
@@ -133,7 +133,7 @@ class _HotelGridViewWidgetState extends ConsumerState<HotelGridViewWidget> {
     return Row(
       children: [
         SvgPicture.asset(avatar,width: 20,height: 20,),
-        boxSpace.spaceWidth(5, context),
+        boxSpace.spaceWidth(2, context),
         Text(
           '${_convertView(double.parse(view.toString()))}',
           style: textStyle.textStyleForm(10, FontWeight.w300, Colors.black),
@@ -168,9 +168,9 @@ class _HotelGridViewWidgetState extends ConsumerState<HotelGridViewWidget> {
         child: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            mainAxisExtent: StyleSize(context).heightPercent(255), // Điều chỉnh chiều cao của card
+            mainAxisExtent: StyleSize(context).heightPercent(280), // Điều chỉnh chiều cao của card
             mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
+            crossAxisSpacing: 9,
             childAspectRatio: 16 / 9,
           ),
           itemCount: allPosts.length,
