@@ -104,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
   Widget _header(User user, NetworkImageWidget networkImage, TextStyleCustom textStyle) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

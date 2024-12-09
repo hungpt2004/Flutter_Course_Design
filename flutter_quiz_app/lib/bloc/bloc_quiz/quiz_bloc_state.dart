@@ -5,6 +5,16 @@ class QuizAddSuccess extends QuizState {
   QuizAddSuccess(this.success);
 }
 
+class QuizAddSubjectSuccess extends QuizState {
+  String success;
+  QuizAddSubjectSuccess(this.success);
+}
+
+class QuizAddSubjectFailure extends QuizState {
+  String error;
+  QuizAddSubjectFailure(this.error);
+}
+
 class QuizDeleteSuccess extends QuizState {
   String successMessage;
   QuizDeleteSuccess(this.successMessage);

@@ -6,8 +6,11 @@ import 'package:flutter_quiz_app/views/authentication/pin_code/pin_screen.dart';
 import 'package:flutter_quiz_app/views/authentication/register/register_screen.dart';
 import 'package:flutter_quiz_app/views/bottom/bottom_navbar_screen.dart';
 import 'package:flutter_quiz_app/views/exam_quiz/add_quiz/add_quiz_form.dart';
+import 'package:flutter_quiz_app/views/exam_quiz/add_subject/add_subject_form.dart';
 import 'package:flutter_quiz_app/views/exam_quiz/do_quiz/do_quiz_screen.dart';
+import 'package:flutter_quiz_app/views/exam_quiz/success_quiz/submit_success_screen.dart';
 import 'package:flutter_quiz_app/views/home/home_screen.dart';
+import 'package:flutter_quiz_app/views/test_page.dart';
 
 import 'animation_routes.dart';
 
@@ -22,7 +25,10 @@ class AppRoutes {
       '/password':(context) => ChangePasswordScreen(emailUser: ModalRoute.of(context)!.settings.arguments as String),
       '/home': (context) => const HomeScreen(),
       '/addQuiz':(context) => const AddQuizForm(),
-      '/doQuiz':(context) => const DoQuizScreen(),
+      '/doQuiz':(context) => DoQuizScreen(quizId: ModalRoute.of(context)!.settings.arguments as int),
+      '/success':(context) => SubmitSuccessScreen(amountCorrectAnswer: 4, totalAnswer: 4, score: 4, totalTime: 12),
+      '/test':(context) => TestDatabase(),
+      '/addSubject':(context) => AddSubjectForm(),
       '/': (context) => const BottomNavbarScreen()
     };
   }

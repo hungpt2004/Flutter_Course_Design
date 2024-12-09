@@ -104,6 +104,14 @@ class _AddQuizFormState extends State<AddQuizForm> {
                                 FontWeight.w500, Colors.black),
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            '* You can upload image for quiz from Gallery or by Camera ',
+                            style: textStyle.contentTextStyle(
+                                FontWeight.w500, Colors.deepPurple),
+                          ),
+                        ),
                         const BoxHeight(h: 20),
                         InputTextField(
                             controller: _titleController,
@@ -153,35 +161,44 @@ class _AddQuizFormState extends State<AddQuizForm> {
                             } else if (snapshot.hasError || !snapshot.hasData) {
                               return const Text('Error when fetch data');
                             }
-                            return DropdownButton<int>(
-                              elevation: 15,
-                              iconSize: 30,
-                              style: textStyle.contentTextStyle(
-                                  FontWeight.w500, Colors.white),
-                              menuWidth: 200,
-                              menuMaxHeight: 200,
-                              hint: Text(
-                                'Select a subject',
-                                style: textStyle.contentTextStyle(
-                                    FontWeight.w500, Colors.black),
+                            return Container(
+                              width: 200,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(10)
                               ),
-                              dropdownColor: secondaryColor,
-                              borderRadius: BorderRadius.circular(15),
-                              items: snapshot.data!.map((option) {
-                                return DropdownMenuItem<int>(
-                                  value: option['id'],
-                                  child: Text(option['name']),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedSubjectId = value;
-                                });
-                              },
+                              child: Center(
+                                child: DropdownButton<int>(
+                                  elevation: 15,
+                                  iconSize: 30,
+                                  style: textStyle.contentTextStyle(
+                                      FontWeight.w500, Colors.white),
+                                  menuWidth: 200,
+                                  menuMaxHeight: 200,
+                                  hint: Text(
+                                    'Select a subject',
+                                    style: textStyle.contentTextStyle(
+                                        FontWeight.w500, Colors.black),
+                                  ),
+                                  dropdownColor: secondaryColor,
+                                  borderRadius: BorderRadius.circular(15),
+                                  items: snapshot.data!.map((option) {
+                                    return DropdownMenuItem<int>(
+                                      value: option['id'],
+                                      child: Text(option['name']),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedSubjectId = value;
+                                    });
+                                  },
+                                ),
+                              ),
                             );
                           },
                         ),
-
+                        BoxHeight(h: 5),
                         // T Y P E
                         FutureBuilder(
                           future: DBHelper.instance
@@ -213,29 +230,38 @@ class _AddQuizFormState extends State<AddQuizForm> {
                             } else if (snapshot.hasError || !snapshot.hasData) {
                               return const Text('Error when fetch data');
                             }
-                            return DropdownButton<int>(
-                              elevation: 15,
-                              iconSize: 30,
-                              style: textStyle.contentTextStyle(
-                                  FontWeight.w500, Colors.white),
-                              hint: Text(
-                                'Select a type',
-                                style: textStyle.contentTextStyle(
-                                    FontWeight.w500, Colors.black),
+                            return Container(
+                              width: 200,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(10)
                               ),
-                              dropdownColor: secondaryColor,
-                              borderRadius: BorderRadius.circular(15),
-                              items: snapshot.data!.map((option) {
-                                return DropdownMenuItem<int>(
-                                  value: option['id'],
-                                  child: Text(option['name']),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedTypeId = value;
-                                });
-                              },
+                              child: Center(
+                                child: DropdownButton<int>(
+                                  elevation: 15,
+                                  iconSize: 30,
+                                  style: textStyle.contentTextStyle(
+                                      FontWeight.w500, Colors.white),
+                                  hint: Text(
+                                    'Select a type',
+                                    style: textStyle.contentTextStyle(
+                                        FontWeight.w500, Colors.black),
+                                  ),
+                                  dropdownColor: secondaryColor,
+                                  borderRadius: BorderRadius.circular(15),
+                                  items: snapshot.data!.map((option) {
+                                    return DropdownMenuItem<int>(
+                                      value: option['id'],
+                                      child: Text(option['name']),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedTypeId = value;
+                                    });
+                                  },
+                                ),
+                              ),
                             );
                           },
                         ),

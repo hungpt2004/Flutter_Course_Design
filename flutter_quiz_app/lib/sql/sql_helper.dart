@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_quiz_app/model/completed_quiz.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../model/favorite.dart';
 import '../model/pin.dart';
+import '../model/question.dart';
 import '../model/quiz.dart';
 import '../model/rank.dart';
 import '../model/subject.dart';
@@ -160,7 +162,7 @@ class DBHelper {
   //Create name database
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDatabase('DatabaseVIP.db');
+    _database = await _initDatabase('DatabaseBoi.db');
     return _database!;
   }
 
@@ -647,6 +649,25 @@ class DBHelper {
     return db.insert('USER', user.toMap(),conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
+  Future<int> updateRankByScore(int score, int userId) async {
+    final db = await instance.database;
+    final rankList = await getAllRank();
+    int newRankId = 0;
+
+    for(var r in rankList) {
+      if(score > r['min_score']) {
+        newRankId = r['id'];
+      } else {
+        break;
+      }
+    }
+
+    if(newRankId != 0) {
+      return db.update('USER', {'rank_id': newRankId},where: 'id = ?', whereArgs: [userId]);
+    }
+    return 0;
+  }
+
   // U P D A T E -- U S E R
   Future<int> updateUser(User user) async {
     final db = await instance.database;
@@ -664,11 +685,29 @@ class DBHelper {
     return db.update('USER', {'password':newPassword}, where: 'id = ?',whereArgs: [user!.id]);
   }
 
+
+  Future<int> updateUserTotalScore(int score, int userId) async {
+    final db = await instance.database;
+    try {
+      return await db.update('USER', {'total_score':score}, where: 'id = ?', whereArgs: [userId]);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+
   // G E T - A L L - U S E R
   Future<List<Map<String,dynamic>>> getAllUser() async {
     final db = await instance.database;
     return db.query('USER');
   }
+
+  // G E T - A L L - U S E R - DESC
+  Future<List<Map<String,dynamic>>> getAllUserByDesc() async {
+    final db = await instance.database;
+    return db.query('USER',orderBy: 'total_score DESC');
+  }
+
 
   // G E T - U S E R - B Y - N A M E
   Future<User?> getUserByUsername(String username) async {
@@ -776,6 +815,7 @@ class DBHelper {
   }
 
 
+
   // [ R A N K ]
   Future<Rank?> getRankByRankId(int rankID) async {
     final db = await instance.database;
@@ -790,12 +830,27 @@ class DBHelper {
     return null;
   }
 
+  Future<List<Map<String,dynamic>>> getAllRank() async {
+    final db = await instance.database;
+    return db.query('RANK');
+  }
 
 
   // [ S U B J E C T]
   Future<List<Map<String,dynamic>>> getAllSubjects() async {
     final db = await DBHelper.instance.database;
     return db.query('SUBJECT');
+  }
+
+  Future<int> addNewSubject(Subject subject) async {
+    final db = await instance.database;
+    final listSubjects = await getAllSubjects();
+    bool check = listSubjects.any((items) => items['name'] == subject.name);
+    if(check){
+      throw Exception('Subject already exist');
+    } else {
+      return db.insert('SUBJECT', subject.toMap());
+    }
   }
 
   Future<Subject?> getSubjectById(int id) async {
@@ -813,6 +868,8 @@ class DBHelper {
 
 
   // [ Q U I Z ]
+
+  //Add Quiz
   Future<int> addNewQuiz(Quiz quiz, int userId) async {
     final db = await DBHelper.instance.database;
     final ownQuiz = await getQuizByUserId(userId);
@@ -824,28 +881,46 @@ class DBHelper {
     }
   }
 
+  //Update Quiz
+  Future<int> updateQuiz(Quiz quiz, int userId) async {
+    final db = await instance.database;
+    final ownQuiz = await getQuizByUserId(userId);
+    final checkAny = ownQuiz.any((items) => items['id'] == quiz.id && items['user_id'] == userId);
+    if(checkAny) {
+      return db.update('QUIZ', quiz.toMap());
+    } else {
+      throw Exception('Quiz not found! Try again');
+    }
+  }
+
+  //Delete Quiz
   Future<void> deleteQuizById(int id) async {
-    final db = await DBHelper.instance.database;
+    final db = await instance.database;
     db.delete('QUIZ',where: 'id = ?', whereArgs: [id]);
   }
 
+  //Get All Quiz
   Future<List<Map<String,dynamic>>> getAllQuiz() async {
-    final db = await DBHelper.instance.database;
+    final db = await instance.database;
     return db.query('QUIZ');
   }
 
+  //Get Quiz By Subject Id
   Future<List<Map<String,dynamic>>> getQuizBySubjectId(int subjectId) async {
-    final db = await DBHelper.instance.database;
+    final db = await instance.database;
     return db.query('QUIZ',where: 'subject_id = ?', whereArgs: [subjectId]);
   }
 
+
+  //Get Quiz By User Id
   Future<List<Map<String,dynamic>>> getQuizByUserId(int userId) async {
-    final db = await DBHelper.instance.database;
+    final db = await instance.database;
     return db.query('QUIZ',where: 'user_id = ?', whereArgs: [userId]);
   }
 
+  //Update Quiz Favorite Status
   Future<int> updateIsFavorite(int quizId, int status) async {
-    final db = await DBHelper.instance.database;
+    final db = await instance.database;
     return db.update(
       'QUIZ',
       {'isFavorite': status}, // Giá trị cần cập nhật
@@ -854,9 +929,9 @@ class DBHelper {
     );
   }
 
-
+  //Get Quiz By Id
   Future<Quiz?> getQuizById(int quizId) async {
-    final db = await DBHelper.instance.database;
+    final db = await instance.database;
     final List<Map<String, dynamic>> quizs = await db.query('QUIZ',where: 'id = ?',whereArgs: [quizId]);
     if(quizs.isNotEmpty){
       return Quiz.fromMap(quizs.first);
@@ -886,6 +961,19 @@ class DBHelper {
   Future<List<Map<String,dynamic>>> getQuestionListByQuizId(int quizId) async {
     final db = await DBHelper.instance.database;
     return db.query('QUESTION',where: 'quiz_id=?',whereArgs: [quizId]);
+  }
+
+  Future<Question?> getQuestionById(int questionId) async {
+    final db = await DBHelper.instance.database;
+    final List<Map<String,dynamic>> questions = await db.query(
+        'QUESTION',
+        where: 'id = ?',
+        whereArgs: [questionId]
+    );
+    if(questions.isNotEmpty) {
+      return Question.fromMap(questions.first);
+    }
+    return null;
   }
 
 
@@ -939,9 +1027,71 @@ class DBHelper {
     return null;
   }
 
+  Future<List<Map<String,dynamic>>> getAllFavoriteByUserId(int userId) async {
+    final db = await DBHelper.instance.database;
+    return db.query('FAVORITE',where: 'user_id=?',whereArgs: [userId]);
+  }
+
   Future<List<Map<String,dynamic>>> getAllFavorite() async {
     final db = await DBHelper.instance.database;
     return db.query('FAVORITE');
+  }
+
+
+  // [ C O M P L E T E - Q U I Z ]
+  Future<int> createNewCompleteQuiz(CompletedQuiz complete, int userId) async {
+    final db = await DBHelper.instance.database;
+    final completeList = await DBHelper.instance.getAllCompleteQuizByUserId(userId);
+    bool check = completeList.any((items) => items['quiz_id'] == complete.quizId);
+    if(check){
+      throw Exception('Quiz already join');
+    } else {
+      return db.insert('COMPLETED_QUIZ', complete.toMap());
+    }
+  }
+
+  Future<int> updateCompleteQuiz(int score, int userId, int quizId, DateTime dateTime) async {
+    final db = await DBHelper.instance.database;
+    // final complete = await DBHelper.instance.getCompleteQuizByQuizIdAndUserId(userId);
+    // final listComplete = await DBHelper.instance.getAllCompleteQuizByUserId(3);
+    // print('DO DAI ${listComplete.length}');
+    // bool check = listComplete.any((items) => items['user_id'] == 3 && items['quiz_id'] == 1);
+      print('Score SQL: $score');
+      print('Complete_at SQL: ${dateTime.toIso8601String()}');
+      return db.update(
+        'COMPLETED_QUIZ',
+        {
+          'score': score,
+          'completed_at': dateTime.toIso8601String()
+        },
+        where: 'user_id = ? AND quiz_id = ?',
+        whereArgs: [userId, quizId],
+      );
+    }
+
+    Future<void>deleteCompleteQuiz(int userId, int quizId) async {
+      final db = await instance.database;
+      await db.delete('COMPLETED_QUIZ',where: 'user_id=? AND quiz_id=?',whereArgs: [userId,quizId]);
+    }
+
+  Future<List<Map<String,dynamic>>> getAllCompleteQuizByUserId(int userId) async {
+    final db = await DBHelper.instance.database;
+    return db.query('COMPLETED_QUIZ',where: 'user_id=?',whereArgs: [userId]);
+  }
+
+
+  Future<CompletedQuiz?> getCompleteQuizByQuizIdAndUserId(int userId) async {
+    final db = await DBHelper.instance.database;
+    final List<Map<String,dynamic>> completes = await db.query(
+        'COMPLETED_QUIZ',
+        where: 'user_id = ?',
+        whereArgs: [userId]
+    );
+    print('Complete cua user');
+    if(completes.isNotEmpty) {
+      return CompletedQuiz.fromMap(completes.first);
+    }
+    return null;
   }
 
 }

@@ -47,4 +47,10 @@ class LocalSaveData {
       return null;
     }
   }
+
+  //Logout
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
 }

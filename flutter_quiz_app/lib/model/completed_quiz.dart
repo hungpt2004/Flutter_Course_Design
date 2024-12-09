@@ -1,14 +1,14 @@
 class CompletedQuiz {
   final int userId;
   final int quizId;
-  final int score;
+  final int? score;
   final DateTime? completedAt;  // Thay đổi từ String thành DateTime
   final DateTime? paidAt;  // Thay đổi từ String thành DateTime
 
   CompletedQuiz({
     required this.userId,
     required this.quizId,
-    required this.score,
+    this.score = 0,
     this.completedAt,  // Cập nhật kiểu DateTime
     this.paidAt,  // Cập nhật kiểu DateTime
   });
@@ -19,8 +19,8 @@ class CompletedQuiz {
       userId: map['user_id'],
       quizId: map['quiz_id'],
       score: map['score'],
-      completedAt: DateTime.parse(map['completed_at']),  // Chuyển từ String thành DateTime
-      paidAt: DateTime.parse(map['paid_at']),  // Chuyển từ String thành DateTime
+      completedAt: DateTime.tryParse(map['completed_at']) ?? DateTime.now(),  // Chuyển từ String thành DateTime
+      paidAt: DateTime.tryParse(map['paid_at']) ?? DateTime.now(),  // Chuyển từ String thành DateTime
     );
   }
 
@@ -30,8 +30,8 @@ class CompletedQuiz {
       'user_id': userId,
       'quiz_id': quizId,
       'score': score,
-      'completed_at': completedAt!.toIso8601String(),  // Chuyển từ DateTime thành String
-      'paid_at': paidAt!.toIso8601String(),  // Chuyển từ DateTime thành String
+      'completed_at': completedAt?.toIso8601String(),  // Chuyển từ DateTime thành String
+      'paid_at': paidAt?.toIso8601String(),  // Chuyển từ DateTime thành String
     };
   }
 }

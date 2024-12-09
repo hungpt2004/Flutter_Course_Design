@@ -10,6 +10,7 @@ import 'package:flutter_quiz_app/theme/text_style.dart';
 import 'package:flutter_quiz_app/views/exam_quiz/exam_quiz_screen.dart';
 import 'package:flutter_quiz_app/views/favorite/favorite_screen.dart';
 import 'package:flutter_quiz_app/views/home/home_screen.dart';
+import 'package:flutter_quiz_app/views/profile/profile_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
 class BottomNavbarScreen extends StatefulWidget {
@@ -37,11 +38,7 @@ class _BottomNavbarScreenState extends State<BottomNavbarScreen> {
       ),
     ),
     const FavoriteScreen(),
-    const Scaffold(
-      body: Center(
-        child: Text('Account Setting'),
-      ),
-    ),
+    const ProfileScreen()
   ];
 
   @override

@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quiz_app/bloc/bloc_answer/answer_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_auth/auth_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_category/category_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_favorite/favorite_bloc.dart';
@@ -9,11 +9,9 @@ import 'package:flutter_quiz_app/bloc/bloc_pin/pin_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_question/question_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_quiz/quiz_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_send_email/email_bloc.dart';
-import 'package:flutter_quiz_app/service/shared_preferences/local_data_save.dart';
 import 'package:flutter_quiz_app/service/shared_preferences/singleton_user_manage.dart';
 import 'package:flutter_quiz_app/sql/sql_helper.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-
 import 'components/routes/app_routes.dart';
 import 'constant/payment_key.dart';
 
@@ -22,14 +20,15 @@ void main() async {
   await UserManager().loadUser();
   runApp(
     MultiBlocProvider(providers: [
-      BlocProvider(create: (context) => AuthBloc()),
-      BlocProvider(create: (context) => EmailBloc()),
-      BlocProvider(create: (context) => PinBloc()),
-      BlocProvider(create: (context) => CategoryBloc()),
-      BlocProvider(create: (context) => QuizBloc()),
-      BlocProvider(create: (context) => QuestionBloc()),
-      BlocProvider(create: (context) => OwnQuizBloc()),
-      BlocProvider(create: (context) => FavoriteBloc())
+      BlocProvider(create: (_) => AuthBloc()),
+      BlocProvider(create: (_) => EmailBloc()),
+      BlocProvider(create: (_) => PinBloc()),
+      BlocProvider(create: (_) => CategoryBloc()),
+      BlocProvider(create: (_) => QuizBloc()),
+      BlocProvider(create: (_) => QuestionBloc()),
+      BlocProvider(create: (_) => OwnQuizBloc()),
+      BlocProvider(create: (_) => FavoriteBloc()),
+      BlocProvider(create: (_) => AnswerBloc())
     ], child: const MyApp())
   );
 }

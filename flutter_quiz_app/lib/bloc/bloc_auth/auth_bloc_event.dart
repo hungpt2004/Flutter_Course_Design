@@ -20,3 +20,7 @@ class ChangePasswordOnPressed extends AuthEvent {
   String newPassword;
   ChangePasswordOnPressed({required this.email, required this.newPassword});
 }
+
+class UpdateOnPressed extends AuthEvent {
+
+}

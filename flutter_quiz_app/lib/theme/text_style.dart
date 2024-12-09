@@ -38,7 +38,7 @@ class TextStyleCustom {
 
   TextStyle questionTextStyle( FontWeight weight, Color color) {
     return GoogleFonts.quicksand(
-        fontSize: heading5.toDouble(),
+        fontSize: heading1_5.toDouble(),
         fontWeight: weight,
         color: color
     );
