@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_answer/answer_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_answer/answer_bloc_state.dart';
@@ -17,6 +18,8 @@ import 'package:flutter_quiz_app/sql/sql_helper.dart';
 import 'package:flutter_quiz_app/theme/color.dart';
 import 'package:flutter_quiz_app/theme/responsive_size.dart';
 import 'package:flutter_quiz_app/theme/text_style.dart';
+import 'package:lottie/lottie.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../../bloc/bloc_auth/auth_bloc.dart';
 import '../../../model/user.dart';
@@ -35,6 +38,96 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
   final textStyle = TextStyleCustom();
   User? user = UserManager().currentUser;
 
+
+  _submit() async {
+    await DBHelper.instance.updateCompleteQuiz(AnswerBloc.score, user!.id!, widget.quizId, DateTime.now());
+    await DBHelper.instance.updateUserTotalScore((user!.totalScore! + AnswerBloc.score), user!.id!);
+    await DBHelper.instance.updateRankByScore(AnswerBloc.score, user!.id!);
+    await DBHelper.instance.updateStatusDid(widget.quizId, user!.id!);
+    await DBHelper.instance.updateNumberCorrectAnswer(AnswerBloc.correctAnswerCount[widget.quizId]!, user!.id!, widget.quizId);
+  }
+
+  _alertComplete(int totalQuestion) {
+    final correctAnswerCount = AnswerBloc.correctAnswerCount[widget.quizId] ?? 0;
+    final percent = correctAnswerCount / totalQuestion;
+    final percentString = (percent * 100).toStringAsFixed(2); // Chuyển thành chuỗi và giới hạn 2 chữ số thập phân
+    final twoDigits = percentString.split('.')[0]; // Lấy phần nguyên (2 chữ số đầu)
+
+    showGeneralDialog(
+      //Nhan ra ngoai de dong
+      barrierDismissible: true,
+      barrierLabel: 'DIALOG',
+      context: context,
+      transitionDuration: const Duration(milliseconds: 300), // Thời gian hiệu ứng
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60), color: Colors.white,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Stack(
+                  children: [
+                    Positioned.fill(child: Lottie.asset('assets/animation/success.json',width: double.infinity)),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Center(
+                            child: CircularPercentIndicator(
+                              animation: true,
+                              curve: Curves.fastOutSlowIn,
+                              animateToInitialPercent: true,
+                              radius: 80,
+                              lineWidth: 25,
+                              percent: percent.clamp(0.0, 1.0),
+                              progressBorderColor: Colors.deepPurpleAccent,
+                              backgroundColor: Colors.deepPurpleAccent.withOpacity(0.2),
+                              progressColor: Colors.deepPurpleAccent,
+                              circularStrokeCap: CircularStrokeCap.round,
+                              center: Text('$twoDigits%',style: textStyle.questionTextStyle(FontWeight.w500, Colors.black),),
+                            ),
+                          ),
+                        ),
+                        const BoxHeight(h: 10),
+                        Material(color: fullColor,child: Text('Your answer : $correctAnswerCount / $totalQuestion',style: textStyle.questionTextStyle(FontWeight.w500, Colors.black),)),
+                        const BoxHeight(h: 10),
+                        if(correctAnswerCount < totalQuestion~/2)
+                          Material(color: fullColor,child: Text('You need to practice more 😢',style: textStyle.questionTextStyle(FontWeight.w500, Colors.black),)),
+                        if(correctAnswerCount > totalQuestion~/2)
+                          Material(color: fullColor,child: Text('Just a little bit more 💪',style: textStyle.questionTextStyle(FontWeight.w500, Colors.black),)),
+                        if(correctAnswerCount == totalQuestion)
+                          Material(color: fullColor,child: Text('Congrats, keep pushing! 🙌💥',style: textStyle.questionTextStyle(FontWeight.w500, Colors.black),)),
+                        if(correctAnswerCount == 1)
+                          Material(color: fullColor,child: Text('Progress has been made! 💪✨',style: textStyle.questionTextStyle(FontWeight.w500, Colors.black),)),
+                        const BoxHeight(h: 20),
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: CurvedAnimation(
+            parent: animation,
+            curve: Curves.fastEaseInToSlowEaseOut,
+          ),
+          child: child,
+        );
+      },
+    );
+    DBHelper.instance.updateCompleteQuizProgress(int.parse(twoDigits), user!.id!, widget.quizId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +135,7 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
         body: BlocBuilder<QuizBloc, QuizState>(
           builder: (context, state) {
             if (state is EnjoyQuizSuccess) {
+              print('QUIZ ID : ${state.quizId}');
               return FutureBuilder(
                 future: DBHelper.instance.getQuestionListByQuizId(state.quizId),
                 builder: (context, snapshot) {
@@ -56,18 +150,22 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
                       SizedBox(
                         height: 500,
                         child: PageView.builder(
-                          // physics: const NeverScrollableScrollPhysics(),
+                            // physics: const NeverScrollableScrollPhysics(),
                             controller: _pageController,
                             onPageChanged: (index) {
-                              Future.delayed(const Duration(milliseconds: 50),(){QuestionBloc.changePage(context, index);});
+                              Future.delayed(const Duration(milliseconds: 50),
+                                  () {
+                                QuestionBloc.changePage(context, index);
+                              });
                             },
                             itemCount: questionList.length,
                             itemBuilder: (context, index) {
                               // options.add(questionList[index]['answer${index}']);
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 20),
-                                child: _bodyOfPageView(questionList[index], questionList.length),
+                                    horizontal: 20, vertical: 20),
+                                child: _bodyOfPageView(
+                                    questionList[index], questionList.length),
                               );
                             }),
                       ),
@@ -86,6 +184,7 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
     return Column(
       children: [
         Card(
+          color: fullColor,
           elevation: 10,
           child: Container(
             width: StyleSize(context).screenWidth,
@@ -114,14 +213,14 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _cardAnswer(
-                        question['answer1'], 1, question['id'], length, question),
-                    _cardAnswer(
-                        question['answer2'], 2, question['id'], length, question),
-                    _cardAnswer(
-                        question['answer3'], 3, question['id'], length, question),
-                    _cardAnswer(
-                        question['answer4'], 4, question['id'], length, question),
+                    _cardAnswer(question['answer1'], 1, question['id'], length,
+                        question),
+                    _cardAnswer(question['answer2'], 2, question['id'], length,
+                        question),
+                    _cardAnswer(question['answer3'], 3, question['id'], length,
+                        question),
+                    _cardAnswer(question['answer4'], 4, question['id'], length,
+                        question),
                   ],
                 ),
               ],
@@ -132,59 +231,63 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
     );
   }
 
-  Widget _cardAnswer(String answer, int index, int questionId, int totalQuestion, Map<String,dynamic> question) {
-    return GestureDetector(onTap: () async {
-      await AnswerBloc.selectAnswer(context, index, questionId, totalQuestion, question);
-      print('Da chon cau tra loi');
-    }, child: BlocBuilder<AnswerBloc, AnswerState>(
+  Widget _cardAnswer(String answer, int index, int questionId, int totalQuestion, Map<String, dynamic> question) {
+    return BlocBuilder<AnswerBloc, AnswerState>(
       builder: (context, state) {
         bool isSelected = false;
 
-        //Kiem tra dieu kien phu hop
+        // Check if the answer is selected
         if (state is AnswerSelectedSuccess &&
             state.selectedAnswer.containsKey(questionId) &&
             state.selectedAnswer[questionId] == index) {
           isSelected = true;
         }
 
-        print('State hiện tại: $state');
-        print('isSelected = $isSelected');
+        if (state is AnsweredAllQuestion) {
+          // Nếu tất cả câu hỏi đã được trả lời, không cho phép chọn câu trả lời nữa
+          if (state.selectedAnswer.containsKey(questionId) &&
+              state.selectedAnswer[questionId] == index) {
+            isSelected = true; // Câu trả lời đã chọn vẫn sẽ được giữ
+          }
+        }
 
-        return BlocListener<AnswerBloc, AnswerState>(
-          listener: (context, state) {
-            if (state is AnswerSelectedSuccess && state.questionId == questionId) {
-              print(questionId);
-              print('state question = ${state.questionId}');
-            } else if (state is AnsweredAllQuestion) {
-              AnswerBloc.currentQuestionIndex = 0;
-              AnswerBloc.score = 0;
-              AnswerBloc.amountCorrectAnswer = 0;
-            } else if (state is AnswerSubmitSuccess) {
-              ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(context, state.text, textStyle);
-            } else if (state is AnswerSubmitFailure) {
-              ShowScaffoldMessenger.showScaffoldMessengerUnsuccessfully(context, state.text, textStyle);
-            }
-          },
-          child: Card(
-            elevation: 5,
-            color: isSelected ? primaryColor : Colors.white,
-            shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-            child: SizedBox(
-              width: StyleSize(context).widthPercent(300),
-              height: StyleSize(context).heightPercent(50),
-              child: Center(
-                child: Text(
-                  answer,
-                  style:
-                  textStyle.contentTextStyle(FontWeight.w600, isSelected ? Colors.white : Colors.black),
-                ),
-              ),
+
+        print('State hien tai : $state');
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: RadioListTile<int>(
+            dense: false,
+            toggleable: false,
+            value:
+                index, // the value of the radio button (corresponds to the index of the answer)
+            groupValue: isSelected
+                ? index
+                : null, // controls which radio button is selected
+            onChanged:  (int? value) async {
+              if (value != null) {
+                // Gọi phương thức chọn câu trả lời nếu câu trả lời chưa được hoàn thành
+                await AnswerBloc.selectAnswer(context, value, questionId, totalQuestion,question['quiz_id'],question);
+                // print('Answer selected: $value');
+              }
+            },
+            title: Text(
+              answer,
+              style: textStyle.contentTextStyle(
+                  FontWeight.w600, isSelected ? primaryColor : Colors.black),
             ),
+            tileColor: isSelected
+                ? primaryColor
+                : Colors.white, // sets the background color when selected
+            activeColor: isSelected
+                ? primaryColor
+                : Colors.black, // sets the color when active
+            selected: isSelected, // indicates whether the answer is selected
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           ),
         );
       },
-    ));
+    );
   }
 
   Widget _btn(int length) {
@@ -207,19 +310,16 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
                     );
                   },
                 ),
-              if (currentPage == length - 1) // Only show 'Submit' button on the last page
+              if (currentPage ==
+                  length - 1) // Only show 'Submit' button on the last page
                 ButtonField(
                   text: 'Submit',
                   function: () async {
-                    print(user!.id!);
-                    print( widget.quizId);
-                    print(AnswerBloc.score);
-                    await DBHelper.instance.updateCompleteQuiz(AnswerBloc.score, user!.id!, widget.quizId, DateTime.now());
-                    await DBHelper.instance.updateUserTotalScore((user!.totalScore! + AnswerBloc.score), user!.id!);
-                    await DBHelper.instance.updateRankByScore(AnswerBloc.score, user!.id!);
+                    await _submit();
+                    await _alertComplete(length);
+                    print('DA HOAN THANH');
+                    //reset
                     // go to success certificate
-
-                    // await AnswerBloc.submitAnswer(context, user!.id!, widget.quizId, AnswerBloc.score,(user!.totalScore!+AnswerBloc.score));
                   },
                 ),
               if (currentPage < length - 1)

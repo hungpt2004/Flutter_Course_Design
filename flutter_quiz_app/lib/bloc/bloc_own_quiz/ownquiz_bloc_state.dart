@@ -4,9 +4,10 @@ abstract class OwnQuizState {}
 
 class OwnQuizLoadingSuccess extends OwnQuizState {
   List<Map<String,dynamic>> quizzes;
+  List<List<Map<String,dynamic>>> questionList;
   List<Map<String,dynamic>> completeQuiz;
   List<Quiz?> quiz;
-  OwnQuizLoadingSuccess({required this.quizzes, required this.completeQuiz,required this.quiz});
+  OwnQuizLoadingSuccess({required this.quizzes, required this.completeQuiz,required this.quiz,required this.questionList});
 }
 
 class OwnQuizLoadingFavorite extends OwnQuizState {

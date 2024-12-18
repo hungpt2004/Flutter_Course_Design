@@ -13,6 +13,10 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
     on<LoginOnPressed>(_login);
     on<RegisterOnPressed>(_register);
     on<ChangePasswordOnPressed>(_changePassword);
+    on<UpdateOnPressed>(_update);
+    on<UpdateAvatarOnPressed>(_updateAvatar);
+    on<UpdateNameOnPressed>(_updateName);
+    on<UpdateDobOnPressed>(_updateDob);
   }
 
   void _login(LoginOnPressed event, Emitter<AuthState> emit) async {
@@ -32,10 +36,6 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
       }
     } catch (e) {
       emit(LoginFailure(error: e.toString()));
-    } finally {
-      if(state is! LoginSuccess){
-        emit(LoginLoading(isLoading: false));
-      }
     }
   }
 
@@ -55,12 +55,49 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
     try {
       emit(ResetPasswordLoading(isLoading: true)); // Bắt đầu loading
       await DBHelper.instance.updatePasswordUser(event.email, event.newPassword);
-
-      emit(ResetPasswordSuccess(success: 'Change Password Successfully')); // Thành công
+      User? user = await DBHelper.instance.getUserByEmail(event.email);
+      emit(ResetPasswordSuccess(success: 'Change Password Successfully',user: user)); // Thành công
     } catch (e) {
-      emit(ResetPasswordFailure(error: e.toString())); // Lỗi
-    } finally {
-      emit(ResetPasswordLoading(isLoading: false)); // Kết thúc loading
+      User? user = await DBHelper.instance.getUserByEmail(event.email);
+      emit(ResetPasswordFailure(error: e.toString(), user: user)); // Lỗi
+    }
+  }
+
+  void _update(UpdateOnPressed event, Emitter<AuthState> emit) async {
+    try {
+      await DBHelper.instance.updateUser(event.user, event.user.id!);
+    } catch (e) {
+      emit(LoginFailure(error: e.toString()));
+    }
+  }
+
+  void _updateAvatar(UpdateAvatarOnPressed event, Emitter<AuthState> emit) async {
+    try {
+      await DBHelper.instance.updateAvatar(event.url, event.userId);
+      User? user = await DBHelper.instance.getUserById(event.userId);
+      emit(UpdateAvatarSuccess('Update avatar successfully',user!));
+    } catch (e) {
+      emit(UpdateAvatarFailure(e.toString()));
+    }
+  }
+
+  void _updateName(UpdateNameOnPressed event, Emitter<AuthState> emit) async {
+    try {
+      await DBHelper.instance.updateName(event.name, event.userId);
+      User? user = await DBHelper.instance.getUserById(event.userId);
+      emit(UpdateNameSuccess('Update name successfully',user!));
+    } catch (e) {
+      emit(UpdateNameFailure(e.toString()));
+    }
+  }
+
+  void _updateDob(UpdateDobOnPressed event, Emitter<AuthState> emit) async {
+    try {
+      await DBHelper.instance.updateDob(event.dob, event.userId);
+      User? user = await DBHelper.instance.getUserById(event.userId);
+      emit(UpdateDOBSuccess('Update dob successfully',user!));
+    } catch (e) {
+      emit(UpdateDOBFailure(e.toString()));
     }
   }
 
@@ -76,6 +113,22 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
 
   static Future<void> changePassword(BuildContext context, String email, String newPassword) async {
     context.read<AuthBloc>().add(ChangePasswordOnPressed(email: email, newPassword: newPassword));
+  }
+
+  static Future<void> update(BuildContext context, User user) async {
+    context.read<AuthBloc>().add(UpdateOnPressed(user));
+  }
+
+  static Future<void> updateAvatar(BuildContext context, String url, int userId) async {
+    context.read<AuthBloc>().add(UpdateAvatarOnPressed(url,userId));
+  }
+
+  static Future<void> updateName(BuildContext context, String name, int userId) async {
+    context.read<AuthBloc>().add(UpdateNameOnPressed(name,userId));
+  }
+
+  static Future<void> updateDob(BuildContext context, String dob, int userId) async {
+    context.read<AuthBloc>().add(UpdateDobOnPressed(dob,userId));
   }
 
 }

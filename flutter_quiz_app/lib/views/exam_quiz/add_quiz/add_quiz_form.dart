@@ -64,7 +64,6 @@ class _AddQuizFormState extends State<AddQuizForm> {
     _titleController.dispose();
     _descriptionController.dispose();
     _priceController.dispose();
-
     super.dispose();
   }
 

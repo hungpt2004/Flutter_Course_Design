@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quiz_app/bloc/bloc_answer/answer_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_auth/auth_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_auth/auth_bloc_state.dart';
 import 'package:flutter_quiz_app/bloc/bloc_own_quiz/ownquiz_bloc.dart';
@@ -44,6 +45,13 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
   final networkImage = NetworkImageWidget();
   User? user = UserManager().currentUser;
 
+
+  @override
+  void initState() {
+    OwnQuizBloc.loadingQuiz(context, user!.id!);
+    super.initState();
+  }
+
   _showModalSheetDelete(Map<String, dynamic> quiz) {
     showDialog(
       context: context,
@@ -84,15 +92,11 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     //Khi khoi tao ham build se chay ham loadOwnQuiz!
-    OwnQuizBloc.loadingQuiz(context, user!.id!);
+    // OwnQuizBloc.loadingQuiz(context, user!.id!);
     print('USER HIEN TAI : ${user!.username}');
 
-    return Scaffold(
-      backgroundColor: fullColor,
-      body: _body(textStyle)
-    );
+    return Scaffold(backgroundColor: fullColor, body: _body(textStyle));
   }
 
   Widget _body(TextStyleCustom textStyle) {
@@ -125,14 +129,22 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ButtonIcon(text: 'Filter', icon: Icons.search, function: () {}),
-        const BoxWidth(w: 10),
-        ButtonIcon(text: 'Add Subject', icon: Icons.subject_outlined, function: () {
-          Navigator.pushNamed(context, '/addSubject');
-        }),
+        ButtonIcon(
+            text: 'Question',
+            icon: Icons.question_answer,
+            function: () {
+              Navigator.pushNamed(context, '/addQuestion');
+            }),
         const BoxWidth(w: 10),
         ButtonIcon(
-            text: 'Add Quiz',
+            text: 'Subject',
+            icon: Icons.subject_outlined,
+            function: () {
+              Navigator.pushNamed(context, '/addSubject');
+            }),
+        const BoxWidth(w: 10),
+        ButtonIcon(
+            text: 'Quiz',
             icon: Icons.add_circle_outline,
             function: () {
               Navigator.pushNamed(context, '/addQuiz');
@@ -144,9 +156,10 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
   Widget _processingQuiz(NetworkImageWidget networkImage) {
     return BlocBuilder<OwnQuizBloc, OwnQuizState>(
       builder: (context, state) {
-        if(state is OwnQuizLoadingSuccess) {
+        if (state is OwnQuizLoadingSuccess) {
           final completeQuiz = state.completeQuiz;
           final quizList = state.quiz;
+          final questionList = state.questionList;
           return ListView.builder(
             padding: const EdgeInsets.symmetric(vertical: 10),
             shrinkWrap: true,
@@ -154,7 +167,10 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
             itemCount: completeQuiz.length,
             itemBuilder: (context, index) {
               final completeQuizIndex = completeQuiz[index];
-              return _cardCompleteQuiz(completeQuizIndex, quizList[index]!, networkImage, textStyle);
+              final questions = questionList[index];
+              print(completeQuizIndex.toString());
+              print('DO DAI LIST CAU HOI ${questions.length}');
+              return _cardCompleteQuiz(completeQuizIndex, quizList[index]!, networkImage, textStyle, questions.length);
             },
           );
         } else if (state is OwnQuizLoadingFailure) {
@@ -178,12 +194,19 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
               return BlocListener<QuizBloc, QuizState>(
                 //Child cua BlocListener khong tu dong render
                 //Su dung BlocBuiler boc ben ngoai de render
-                child: quizList.isEmpty ? const NotYetNoti(label: 'Add',image: 'assets/svg/add.svg',) : _listOwnQuiz(quizList),
+                child: quizList.isEmpty
+                    ? const NotYetNoti(
+                        label: 'Add',
+                        image: 'assets/svg/add.svg',
+                      )
+                    : _listOwnQuiz(quizList),
                 listener: (context, state) {
                   if (state is QuizDeleteSuccess) {
                     ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(
                         context, state.successMessage, textStyle);
-                    Future.delayed(const Duration(milliseconds: 100),(){Navigator.pop(context);});
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      Navigator.pop(context);
+                    });
                   } else if (state is QuizAddSuccess) {
                     ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(
                         context, state.success, textStyle);
@@ -221,33 +244,35 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
     );
   }
 
-  Widget _cardCompleteQuiz(Map<String,dynamic> completeIndex, Quiz quiz, NetworkImageWidget networkImage, TextStyleCustom textStyle) {
+  Widget _cardCompleteQuiz(
+      Map<String, dynamic> completeIndex,
+      Quiz quiz,
+      NetworkImageWidget networkImage,
+      TextStyleCustom textStyle,
+      int totalQuestion) {
     return Slidable(
       key: ValueKey(quiz.id),
-      endActionPane: ActionPane(
-          motion: ScrollMotion(),
-          children: [
-            SlidableAction(
-              onPressed: (context) {
-                // Xử lý cập nhật
-              },
-              padding: EdgeInsets.all(0),
-              foregroundColor: primaryColor,
-              icon: Icons.edit,
-              label: 'Edit',
-            ),
-            SlidableAction(
-              onPressed: (context) async {
-                // Xử lý xóa
-                await DBHelper.instance.deleteCompleteQuiz(user!.id!, quiz.id!);
-              },
-              padding: EdgeInsets.all(0),
-              foregroundColor: primaryColor,
-              icon: Icons.delete,
-              label: 'Delete',
-            ),
-          ]
-      ),
+      endActionPane: ActionPane(motion: ScrollMotion(), children: [
+        SlidableAction(
+          onPressed: (context) {
+            // Xử lý cập nhật
+          },
+          padding: EdgeInsets.all(0),
+          foregroundColor: primaryColor,
+          icon: Icons.edit,
+          label: 'Edit',
+        ),
+        SlidableAction(
+          onPressed: (context) async {
+            // Xử lý xóa
+            await DBHelper.instance.deleteCompleteQuiz(user!.id!, quiz.id!);
+          },
+          padding: EdgeInsets.all(0),
+          foregroundColor: primaryColor,
+          icon: Icons.delete,
+          label: 'Delete',
+        ),
+      ]),
       child: Card(
         color: fullColor,
         elevation: 5,
@@ -262,9 +287,9 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
                 child: !quiz.url.toString().startsWith('/data/')
                     ? networkImage.networkImage(quiz.url)
                     : Image.file(
-                  File(quiz.url),
-                  fit: BoxFit.cover,
-                ),
+                        File(quiz.url),
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             title: Column(
@@ -273,28 +298,41 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
                 Text(
                   quiz.title,
                   style:
-                  textStyle.contentTextStyle(FontWeight.w500, Colors.black),
+                      textStyle.contentTextStyle(FontWeight.w500, Colors.black),
                 ),
                 const BoxHeight(h: 2),
-                Text('Paid at : ${textStyle.formatDateFromText(DateTime.parse(completeIndex['paid_at']))}',style: textStyle.superSmallTextStyle(
-                    FontWeight.w500, Colors.black),
+                Text(
+                  'Paid at : ${textStyle.formatDateFromText(DateTime.parse(completeIndex['paid_at']))}',
+                  style: textStyle.superSmallTextStyle(
+                      FontWeight.w500, Colors.black),
                 ),
                 const BoxHeight(h: 5),
 
                 //progressbar
-                //100% / question.length = r
-                //if choose answer => percentage += r
-                CustomProgressbar(width: StyleSize(context).widthPercent(180), height: 15, progress: 1)
+                // //100% / question.length = r
+                // //if choose answer => percentage += r
+                // Text('Tong so cau hoi ${totalQuestion}'),
+                // Text('Cau tra loi dung :${AnswerBloc.correctAnswerCount[quiz.id]}'),
+                CustomProgressbar(
+                    width: StyleSize(context).widthPercent(180),
+                    height: 15,
+                  progress: ((completeIndex['number_correct'] / totalQuestion).toDouble()),
+                )
               ],
             ),
-            trailing: Icon(Icons.arrow_back_ios_new,color: primaryColor,size: 20,),
+            trailing: const Icon(
+              Icons.arrow_back_ios_new,
+              color: primaryColor,
+              size: 20,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _cardQuiz(Map<String, dynamic> quiz, NetworkImageWidget networkImage, TextStyleCustom textStyle) {
+  Widget _cardQuiz(Map<String, dynamic> quiz, NetworkImageWidget networkImage,
+      TextStyleCustom textStyle) {
     return Slidable(
       key: ValueKey(quiz['id']), // Khóa duy nhất để nhận dạng Slidable
       endActionPane: ActionPane(
@@ -347,9 +385,9 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
                 child: !quiz['url'].toString().startsWith('/data/')
                     ? networkImage.networkImage(quiz['url'])
                     : Image.file(
-                  File(quiz['url']),
-                  fit: BoxFit.cover,
-                ),
+                        File(quiz['url']),
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             title: Column(
@@ -357,7 +395,8 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
               children: [
                 Text(
                   quiz['title'],
-                  style: textStyle.contentTextStyle(FontWeight.w500, Colors.black),
+                  style:
+                      textStyle.contentTextStyle(FontWeight.w500, Colors.black),
                 ),
                 const BoxHeight(h: 2),
                 Text(
@@ -367,7 +406,11 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
                 ),
               ],
             ),
-            trailing: const Icon(Icons.arrow_back_ios_new,color: primaryColor,size: 20,),
+            trailing: const Icon(
+              Icons.arrow_back_ios_new,
+              color: primaryColor,
+              size: 20,
+            ),
           ),
         ),
       ),

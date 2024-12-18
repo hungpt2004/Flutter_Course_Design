@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quiz_app/bloc/bloc_cart/cart_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_favorite/favorite_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_favorite/favorite_bloc_event.dart';
 import 'package:flutter_quiz_app/bloc/bloc_favorite/favorite_bloc_state.dart';
@@ -15,6 +16,9 @@ import 'package:flutter_quiz_app/components/button/button_field.dart';
 import 'package:flutter_quiz_app/components/snackbar/scaffold_snackbar_msg.dart';
 import 'package:flutter_quiz_app/constant/email_key.dart';
 import 'package:flutter_quiz_app/constant/label_str.dart';
+import 'package:flutter_quiz_app/model/cart.dart';
+import 'package:flutter_quiz_app/model/cart_items.dart';
+import 'package:flutter_quiz_app/model/completed_quiz.dart';
 import 'package:flutter_quiz_app/model/favorite.dart';
 import 'package:flutter_quiz_app/service/payment/payment_service.dart';
 import 'package:flutter_quiz_app/service/shared_preferences/singleton_user_manage.dart';
@@ -24,6 +28,7 @@ import 'package:flutter_quiz_app/theme/network_image.dart';
 import 'package:flutter_quiz_app/theme/responsive_size.dart';
 import 'package:flutter_quiz_app/theme/text_style.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../components/exception/cart_exception.dart';
 import '../../../../model/quiz.dart';
 import '../../../../model/user.dart';
 import '../../../../service/shared_preferences/local_data_save.dart';
@@ -42,8 +47,9 @@ class _CardQuizWidgetState extends State<CardQuizWidget> {
   final textStyle = TextStyleCustom();
   User? userCurrent = UserManager().currentUser;
   bool? isFavorite;
-  String statusText1 = 'Do quiz';
-  String statusText2 = 'Buy quiz';
+  String statusText1 = 'Free';
+  String statusText2 = 'Need Pay';
+
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +166,21 @@ class _CardQuizWidgetState extends State<CardQuizWidget> {
                                     top: 10,
                                     left: 10,
                                     child: GestureDetector(
-                                      onTap: () {},
+                                      onTap: () async {
+                                        if(quizIndex['price'] == 0){
+                                          ShowScaffoldMessenger.showScaffoldMessengerUnsuccessfully(context, 'This course is free', textStyle);
+                                        } else if (quizIndex['price'] > 0){
+                                          Cart cart = Cart(userId: userCurrent!.id!);
+                                          try {
+                                            await DBHelper.instance.createCart(cart, userCurrent!.id!);
+                                          } on CartAlreadyExistException catch (e) {
+                                            print(e.toString());
+                                          }
+                                          final currentCart = await DBHelper.instance.getCartByUserId(userCurrent!.id!);
+                                          CartItem cartItems = CartItem(cartId: currentCart!.id!, quizId: quizIndex['id'], quantity: 1);
+                                          CartBloc.addToCart(context,currentCart.id!, cartItems, userCurrent!.id!);
+                                        }
+                                      },
                                       child: Container(
                                         width: 30,
                                         height: 30,
@@ -264,21 +284,55 @@ class _CardQuizWidgetState extends State<CardQuizWidget> {
     return SizedBox(
         height: 50,
         child: Center(
-          child: ButtonField(
-              text: quizIndex['price'] == 0 ? statusText1 : statusText2,
-              function: () async {
-                quizIndex['price'] == 0
-                    ? {
-                        print('USER: ${user.id}'),
-                        await QuizBloc.enjoyQuiz(context, quizIndex['id'], user.id!),
-                        Future.delayed(const Duration(milliseconds: 100), () {
-                          Navigator.pushNamed(context, '/doQuiz', arguments: quizIndex['id']);
-                        })
-                      }
-                    : await StripeService.instance.makePayment(quizIndex['price'], user.username);
-              }),
+          child: MaterialButton(
+            onPressed: () async {
+              CompletedQuiz? completeQuiz = await DBHelper.instance.getCompleteQuizByQuizIdAndUserId(user.id!);
+              if(completeQuiz != null) {
+                if(completeQuiz.status == 'unlock') {
+                  print('QUIZ NAY DANG O DAY');
+                  print(completeQuiz.quizId);
+                  print(completeQuiz.status);
+                  await QuizBloc.enjoyQuiz(context, quizIndex['id'], user.id!);
+                  // await DBHelper.instance.updateStatusUnlock(quizIndex['id'],user.id!);
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    Navigator.pushNamed(context, '/doQuiz', arguments: quizIndex['id']);
+                  });
+                } else if (completeQuiz.status == 'lock') {
+                  await StripeService.instance.makePayment(quizIndex['price'], user.username,1,CompletedQuiz(userId: user.id!, quizId: quizIndex['id'], progress: 0),user.id!);
+                  await DBHelper.instance.updateStatusUnlock(quizIndex['id'],user.id!);
+                } else if (completeQuiz.status == 'did') {
+
+                }
+              } else if (completeQuiz == null) {
+                if(quizIndex['price'] <= 0) {
+                  await QuizBloc.enjoyQuiz(context, quizIndex['id'], user.id!);
+                  await DBHelper.instance.updateStatusUnlock(quizIndex['id'],user.id!);
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    Navigator.pushNamed(context, '/doQuiz', arguments: quizIndex['id']);
+                  });
+                } else if (quizIndex['price'] > 0) {
+                  await StripeService.instance.makePayment(quizIndex['price'], user.username,1,CompletedQuiz(userId: user.id!, quizId: quizIndex['id'], progress: 0),user.id!);
+                  await DBHelper.instance.updateStatusUnlock(quizIndex['id'],user.id!);
+                }
+                else {
+                  // final completeQuiz = await DBHelper.instance.getCompleteQuizByQuizIdAndUserId(user.id!);
+                  // if(completeQuiz!.quizId == quizIndex['id'] && completeQuiz.status == 'did') {
+                  //   ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(context, 'You are already do this', textStyle);
+                  //   setState(() {
+                  //     statusText1 = 'Did';
+                  //   });
+                  // }
+                }
+              }
+            },
+            elevation: 10,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            color: quizIndex['price'] == 0 ? primaryColor  : Colors.grey.withOpacity(0.8),
+            child: Text(quizIndex['price'] == 0 ? statusText1 : statusText2, style: textStyle.contentTextStyle(FontWeight.w500, quizIndex['price'] == 0 ? Colors.white : Colors.black),),
+          ),
         ));
   }
+
 
   Widget _rowInformation(User user, Map<String, dynamic> quizIndex) {
     return Padding(

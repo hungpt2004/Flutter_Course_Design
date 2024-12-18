@@ -12,13 +12,14 @@ class CustomProgressbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final percentString = (progress * 100).toStringAsFixed(2); // Chuyển thành chuỗi và giới hạn 2 chữ số thập phân
+    final twoDigits = percentString.split('.')[0];
     final textStyle = TextStyleCustom();
     return Container(
       width: width,
       height: height,
       decoration: BoxDecoration(
         color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(10)
       ),
       child: Stack(
         children: [
@@ -26,15 +27,31 @@ class CustomProgressbar extends StatelessWidget {
             width: (width*progress),
             height: height,
             decoration: BoxDecoration(
-              color: secondaryColor,
-              borderRadius: BorderRadius.circular(10)
+              color: Colors.green,
             ),
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                '${progress*100.toInt()}%',
+                '${int.parse(twoDigits)}%',
                 style: textStyle.smallTextStyle(FontWeight.w600, Colors.white),
               )
+            ),
+          ),
+          Positioned(
+            right: 0,
+            child: Container(
+              width: width - (width*progress),
+              height: height,
+              decoration: BoxDecoration(
+                  color: Colors.red,
+              ),
+              child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    '${100 - int.parse(twoDigits)}%',
+                    style: textStyle.smallTextStyle(FontWeight.w600, Colors.white),
+                  )
+              ),
             ),
           )
         ],

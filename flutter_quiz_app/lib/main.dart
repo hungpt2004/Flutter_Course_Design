@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_answer/answer_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_auth/auth_bloc.dart';
+import 'package:flutter_quiz_app/bloc/bloc_cart/cart_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_category/category_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_favorite/favorite_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_own_quiz/ownquiz_bloc.dart';
@@ -28,7 +29,8 @@ void main() async {
       BlocProvider(create: (_) => QuestionBloc()),
       BlocProvider(create: (_) => OwnQuizBloc()),
       BlocProvider(create: (_) => FavoriteBloc()),
-      BlocProvider(create: (_) => AnswerBloc())
+      BlocProvider(create: (_) => AnswerBloc()),
+      BlocProvider(create: (_) => CartBloc())
     ], child: const MyApp())
   );
 }

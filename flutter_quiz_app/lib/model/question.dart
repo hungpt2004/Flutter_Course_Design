@@ -1,19 +1,17 @@
 class Question {
   final int? id;
-  final String imageUrl;
-  final String description;
-  final String content;
-  final String answer1;
-  final String answer2;
-  final String answer3;
-  final String answer4;
-  final int correctAnswer;
+  String? imageUrl;
+  String content;
+  String answer1;
+  String answer2;
+  String answer3;
+  String answer4;
+  int correctAnswer;
   final int quizId;
 
   Question({
     this.id,
-    required this.imageUrl,
-    required this.description,
+    this.imageUrl,
     required this.content,
     required this.answer1,
     required this.answer2,
@@ -28,7 +26,6 @@ class Question {
     return Question(
       id: map['id'],
       imageUrl: map['image_url'],
-      description: map['description'],
       content: map['content'],
       answer1: map['answer1'],
       answer2: map['answer2'],
@@ -43,8 +40,7 @@ class Question {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'image_url': imageUrl,
-      'description': description,
+      'image_url': imageUrl ?? '',
       'content': content,
       'answer1': answer1,
       'answer2': answer2,

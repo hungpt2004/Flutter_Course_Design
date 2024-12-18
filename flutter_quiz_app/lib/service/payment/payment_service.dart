@@ -1,5 +1,7 @@
 
 import 'package:dio/dio.dart';
+import 'package:flutter_quiz_app/model/completed_quiz.dart';
+import 'package:flutter_quiz_app/sql/sql_helper.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 import '../../constant/payment_key.dart';
@@ -9,7 +11,7 @@ class StripeService {
 
   static final StripeService instance = StripeService._();
 
-  Future<void> makePayment(int price, String username) async {
+  Future<void> makePayment(int price, String username, int role, CompletedQuiz complete, int userId) async {
     try {
       String? paymentIntentClientSecret = await _createPaymentIntent(
         price,
@@ -23,6 +25,12 @@ class StripeService {
         ),
       );
       await _processPayment();
+      if(role == 1) {
+        await DBHelper.instance.createNewCompleteQuiz(complete, userId);
+        print('DA THUC HIEN MO KHOA');
+      } else if (role == 2) {
+
+      }
     } catch (e) {
       print(e);
     }
@@ -57,6 +65,7 @@ class StripeService {
     }
     return null;
   }
+
 
   Future<void> _processPayment() async {
     try {

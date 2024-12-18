@@ -41,14 +41,23 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
 
   void _onJoinQuiz(OnPressEnjoyQuiz event, Emitter<QuizState> emit) async {
      final completeList = await DBHelper.instance.getAllCompleteQuizByUserId(event.userId);
-     bool check = completeList.any((items) => items['quiz_id'] == event.quizId);
-     if(!check){
-       await DBHelper.instance.createNewCompleteQuiz(CompletedQuiz(userId: event.userId, quizId: event.quizId, paidAt: DateTime.now()), event.userId);
-       emit(EnjoyQuizSuccess(event.quizId));
+     print(completeList.toString());
+     if(completeList == null) {
+       return;
      } else {
-       emit(EnjoyQuizSuccess(event.quizId));
+       bool check = completeList.any((items) => items['quiz_id'] == event.quizId);
+       //neu chua ton tai
+       //nhung phai mua => tao nhung khong tao new paidAt
+       if(!check){
+         await DBHelper.instance.createNewCompleteQuiz(CompletedQuiz(userId: event.userId, quizId: event.quizId, paidAt: DateTime.now(), progress: 0), event.userId);
+         print(CompletedQuiz(userId: event.userId, quizId: event.quizId, paidAt: DateTime.now(), progress: 0).toString());
+         emit(EnjoyQuizSuccess(event.quizId));
+       } else {
+         emit(EnjoyQuizSuccess(event.quizId));
+       }
      }
   }
+
 
   void _onAddSubject(OnPressedAddSubject event, Emitter<QuizState> emit) async {
     try {

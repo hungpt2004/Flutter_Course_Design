@@ -38,15 +38,64 @@ class RegisterLoading extends AuthState {
 
 class ResetPasswordSuccess extends AuthState {
   final String success;
-  ResetPasswordSuccess({required this.success});
+  User? user;
+  ResetPasswordSuccess({required this.success, this.user});
 }
 
 class ResetPasswordFailure extends AuthState{
   final String error;
-  ResetPasswordFailure({required this.error});
+  User? user;
+  ResetPasswordFailure({required this.error, this.user});
 }
 
 class ResetPasswordLoading extends AuthState {
   bool isLoading;
   ResetPasswordLoading({required this.isLoading});
+}
+
+class UpdateSuccess extends AuthState {
+  String text;
+  UpdateSuccess(this.text);
+}
+
+class UpdateFailure extends AuthState {
+  String text;
+  UpdateFailure(this.text);
+}
+
+class UpdateAvatarSuccess extends AuthState {
+  String text;
+  User user;
+  UpdateAvatarSuccess(this.text, this.user);
+}
+
+
+class UpdateAvatarFailure extends AuthState {
+  String text;
+  UpdateAvatarFailure(this.text);
+}
+
+
+class UpdateNameSuccess extends AuthState {
+  String text;
+  User user;
+  UpdateNameSuccess(this.text, this.user);
+}
+
+
+class UpdateNameFailure extends AuthState {
+  String text;
+  UpdateNameFailure(this.text);
+}
+
+class UpdateDOBSuccess extends AuthState {
+  String text;
+  User user;
+  UpdateDOBSuccess(this.text, this.user);
+}
+
+
+class UpdateDOBFailure extends AuthState {
+  String text;
+  UpdateDOBFailure(this.text);
 }

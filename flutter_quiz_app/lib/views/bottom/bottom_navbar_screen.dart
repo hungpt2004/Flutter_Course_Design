@@ -3,15 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_auth/auth_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_auth/auth_bloc_state.dart';
+import 'package:flutter_quiz_app/bloc/bloc_cart/cart_bloc.dart';
+import 'package:flutter_quiz_app/bloc/bloc_cart/cart_bloc_state.dart';
 import 'package:flutter_quiz_app/components/box/box_width.dart';
 import 'package:flutter_quiz_app/theme/color.dart';
 import 'package:flutter_quiz_app/theme/responsive_size.dart';
 import 'package:flutter_quiz_app/theme/text_style.dart';
+import 'package:flutter_quiz_app/views/cart/cart_screen.dart';
 import 'package:flutter_quiz_app/views/exam_quiz/exam_quiz_screen.dart';
 import 'package:flutter_quiz_app/views/favorite/favorite_screen.dart';
 import 'package:flutter_quiz_app/views/home/home_screen.dart';
 import 'package:flutter_quiz_app/views/profile/profile_screen.dart';
 import 'package:flutter_svg/svg.dart';
+
+import '../../model/cart.dart';
+import '../../model/user.dart';
+import '../../service/shared_preferences/singleton_user_manage.dart';
+import '../../sql/sql_helper.dart';
 
 class BottomNavbarScreen extends StatefulWidget {
   const BottomNavbarScreen({super.key});
@@ -22,6 +30,27 @@ class BottomNavbarScreen extends StatefulWidget {
 
 class _BottomNavbarScreenState extends State<BottomNavbarScreen> {
   int _currentIndex = 0;
+  final textStyle = TextStyleCustom();
+  Cart? cart;
+  List<Map<String,dynamic>>? cartList;
+  User? user=  UserManager().currentUser;
+
+  @override
+  void initState() {
+    CartBloc.loadingCart(context, user!.id!);
+    super.initState();
+  }
+
+  _loadCartFromUser() async {
+    final cartInitial = await DBHelper.instance.getCartByUserId(user!.id!);
+    setState(() {
+      cart = cartInitial;
+    });
+    final cartListInitial = await DBHelper.instance.getCartItemsByCartId(cart!.id!);
+    setState(() {
+      cartList = cartListInitial;
+    });
+  }
 
   _toggleIndex(int index) {
     setState(() {
@@ -32,11 +61,7 @@ class _BottomNavbarScreenState extends State<BottomNavbarScreen> {
   List<Widget> pages = [
     const HomeScreen(),
     const ExamQuizScreen(),
-    const Scaffold(
-      body: Center(
-        child: Text('Shopping Cart'),
-      ),
-    ),
+    const CartScreen(),
     const FavoriteScreen(),
     const ProfileScreen()
   ];
@@ -72,20 +97,26 @@ class _BottomNavbarScreenState extends State<BottomNavbarScreen> {
   }
 
   Widget _centerButton() {
-    return FloatingActionButton(
-      onPressed: () {
-        _toggleIndex(2);
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        if(state is CartAddSuccess){
+          final cartList = state.cartItems;
+          return _bodyRenderCenterButton(cartList.length);
+        } else if (state is CartAddFailure) {
+          final cartList = state.cartItems;
+          return _bodyRenderCenterButton(cartList.length);
+        } else if (state is CartRemoveSuccess) {
+          final cartList = state.cartItems;
+          return _bodyRenderCenterButton(cartList.length);
+        } else if (state is CartRemoveFailure) {
+          final cartList = state.cartItems;
+          return _bodyRenderCenterButton(cartList.length);
+        } else if (state is LoadingSuccess) {
+          final cartList = state.cartItems;
+          return _bodyRenderCenterButton(cartList.length);
+        }
+        return _bodyRenderCenterButton(0);
       },
-      backgroundColor: primaryColor,
-      elevation: 5,
-      hoverElevation: 25,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20), side: BorderSide.none),
-      child: SvgPicture.asset(
-        'assets/svg/shopping.svg',
-        width: 30,
-        height: 30,
-      ),
     );
   }
 
@@ -108,4 +139,45 @@ class _BottomNavbarScreenState extends State<BottomNavbarScreen> {
       ),
     );
   }
+
+  Widget _bodyRenderCenterButton(int length){
+    return SizedBox(
+        width: StyleSize(context).widthPercent(60),
+        child: Stack(
+          children: [
+            FloatingActionButton(
+                onPressed: () {
+                  _toggleIndex(2);
+                },
+                backgroundColor: primaryColor,
+                elevation: 5,
+                hoverElevation: 25,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20), side: BorderSide.none),
+                child: SvgPicture.asset(
+                  'assets/svg/shopping.svg',
+                  width: 30,
+                  height: 30,
+                )
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.deepOrangeAccent
+                ),
+                child: Center(
+                  child: Text('$length',style: textStyle.contentTextStyle(FontWeight.w500, Colors.black.withOpacity(0.8)),),
+                ),
+              ),
+            ),
+          ],
+        )
+    );
+  }
+
 }

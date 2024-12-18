@@ -17,16 +17,15 @@ class AnswerBloc extends Bloc<AnswerEvent, AnswerState> {
 
   static int currentQuestionIndex = 0;
   static int score = 0;
-  static Map<int, int> selectedAnswered = {}; // Lưu câu trả lời đã chọn
-  static int amountCorrectAnswer = 0;
+  static Map<int, int> selectedAnswered = {};
+  static Map<int, int> correctAnswerCount = {};
 
-  //Chon cau tra loi
   void _onSelectAnswer(OnPressedSelectAnswer event, Emitter<AnswerState> emit) async {
     try {
       //Tinh diem dua tren cau tra loi
       print('Cau hoi hien tai: $currentQuestionIndex');
       print('Cau tra loi dung: ${event.question['correct_answer']}');
-      score += calculateScore(event.selectAnswer, event.question['correct_answer']);
+      score += calculateScore(event.selectAnswer, event.question['correct_answer'],event.questionId, event.quizId);
       currentQuestionIndex++;
       print('Cau hoi tiep theo: $currentQuestionIndex');
 
@@ -35,8 +34,11 @@ class AnswerBloc extends Bloc<AnswerEvent, AnswerState> {
       print('Diem sau khi hoan thanh cau : $score}');
 
       //Kiem tra het cau hoi hay chua
-      if(currentQuestionIndex >= event.totalQuestion){
-        emit(AnsweredAllQuestion('All question answered. You can now submit your answers'));
+      if(currentQuestionIndex > event.totalQuestion){
+        currentQuestionIndex = 0; // Reset lại chỉ số câu hỏi
+        score = 0; // Reset lại điểm
+        selectedAnswered.clear(); // Xóa danh sách câu trả lời đã chọn nếu cần
+        emit(AnsweredAllQuestion('All question answered. You can now submit your answers',selectedAnswered,event.questionId));
       } else {
         emit(AnswerSelectedSuccess('Answer selected successfully',selectedAnswered,event.questionId));
       }
@@ -48,26 +50,36 @@ class AnswerBloc extends Bloc<AnswerEvent, AnswerState> {
   void _onSubmitQuiz(OnPressSubmitAnswer event, Emitter<AnswerState> emit) async {
     try {
       await DBHelper.instance.updateCompleteQuiz(score, event.userId, event.quizId, DateTime.now());
-      print('Update xong roi');
       await DBHelper.instance.updateUserTotalScore(event.totalScore!, event.userId);
-      print('DA SUBMIT1');
       emit(AnswerSubmitSuccess('Submit success', score));
     } catch (e) {
-      print(e.toString());
       emit(AnswerSubmitFailure(e.toString()));
     }
   }
 
+  int calculateScore(int selectedAnswer, int correctAnswer, int questionId, int quizId) {
+    int previousAnswer = selectedAnswered[questionId] ?? -1; // Lấy đáp án cũ (-1 nếu chưa có)
+    int deltaScore = 0;
 
-  //Neu tra loi dung => + 20 diem
-  int calculateScore(int selectedAnswer, int correctAnswer) {
-    amountCorrectAnswer++;
-    return selectedAnswer == correctAnswer ? 20 : 0;
+    // Nếu có đáp án cũ
+    if (previousAnswer != -1) {
+      if (previousAnswer == correctAnswer) {
+        deltaScore -= 20;
+        correctAnswerCount[quizId] = (correctAnswerCount[quizId] ?? 0) - 1;
+      }
+    }
+
+    // Cộng điểm nếu đáp án mới đúng
+    if (selectedAnswer == correctAnswer) {
+      deltaScore += 20;
+      correctAnswerCount[quizId] = (correctAnswerCount[quizId] ?? 0) + 1;
+    }
+
+    return deltaScore;
   }
 
-  static Future<void> selectAnswer(BuildContext context, int selectedAnswer, int questionId, int totalQuestion, Map<String,dynamic> question) async {
-    print('Dang o day');
-    context.read<AnswerBloc>().add(OnPressedSelectAnswer(questionId, selectedAnswer, totalQuestion, question));
+  static Future<void> selectAnswer(BuildContext context, int selectedAnswer, int questionId, int totalQuestion,int quizId, Map<String,dynamic> question) async {
+    context.read<AnswerBloc>().add(OnPressedSelectAnswer(questionId, selectedAnswer, totalQuestion,quizId, question));
   }
 
   static Future<void> submitAnswer(BuildContext context, int userId, int quizId, int score, int totalScore) async {

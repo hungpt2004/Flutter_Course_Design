@@ -6,8 +6,9 @@ class OnPressedSelectAnswer extends AnswerEvent {
   final int questionId;
   final int selectAnswer;
   final int totalQuestion;
+  final int quizId;
   final Map<String,dynamic> question;
-  OnPressedSelectAnswer(this.questionId, this.selectAnswer, this.totalQuestion, this.question);
+  OnPressedSelectAnswer(this.questionId, this.selectAnswer, this.totalQuestion,this.quizId, this.question);
 }
 
 class OnPressSubmitAnswer extends AnswerEvent {

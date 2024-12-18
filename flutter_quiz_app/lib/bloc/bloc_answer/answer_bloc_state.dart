@@ -25,7 +25,9 @@ class AnswerSubmitFailure extends AnswerState {
 
 class AnsweredAllQuestion extends AnswerState {
   String text;
-  AnsweredAllQuestion(this.text);
+  final Map<int,int> selectedAnswer;
+  final int questionId;
+  AnsweredAllQuestion(this.text, this.selectedAnswer, this.questionId);
 }
 
 class Initial extends AnswerState {}

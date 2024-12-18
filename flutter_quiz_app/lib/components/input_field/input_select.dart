@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quiz_app/theme/text_style.dart';
 
 class InputSelectField extends StatefulWidget {
-  InputSelectField({super.key,this.controller,required this.textInputAction, required this.hint, this.label, required this.paddingRate});
+  InputSelectField({super.key,this.controller,required this.textInputAction, required this.hint, this.label, required this.paddingRate, this.function});
 
   TextEditingController? controller;
   TextInputAction textInputAction;
   final String hint;
   String? label;
   double paddingRate;
+  VoidCallback? function;
 
   @override
   State<InputSelectField> createState() => _InputTextFieldState();
@@ -33,6 +34,7 @@ class _InputTextFieldState extends State<InputSelectField> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           hintText: widget.hint,
           hintStyle: textStyle.contentTextStyle(FontWeight.w500, Colors.black),
+          suffixIcon: IconButton(onPressed: widget.function, icon: Icon(Icons.keyboard_arrow_right_rounded)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide.none

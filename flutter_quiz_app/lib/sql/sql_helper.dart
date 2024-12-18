@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_quiz_app/components/exception/cart_exception.dart';
 import 'package:flutter_quiz_app/model/completed_quiz.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import '../model/cart.dart';
+import '../model/cart_items.dart';
 import '../model/favorite.dart';
 import '../model/pin.dart';
 import '../model/question.dart';
@@ -43,6 +46,9 @@ class DBHelper {
       score INTEGER,
       completed_at TEXT,
       paid_at TEXT,
+      status TEXT CHECK (status IN ('lock', 'unlock','did')) DEFAULT 'lock',
+      progress INTEGER,
+      number_correct INTEGER,
       PRIMARY KEY (user_id, quiz_id),
       FOREIGN KEY (user_id) REFERENCES USER (id),
       FOREIGN KEY (quiz_id) REFERENCES QUIZ (id)
@@ -154,15 +160,37 @@ class DBHelper {
         quiz_id INTEGER,
         user_id INTEGER,
         created_at TEXT,
+        status TEXT CHECK (status IN ('active', 'inactive')) DEFAULT 'active',
         FOREIGN KEY (user_id) REFERENCES USER (id),
         FOREIGN KEY (quiz_id) REFERENCES QUIZ (id)
       );
   ''';
 
+  //C A R T
+  final tableCart = '''
+        CREATE TABLE CART (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER,
+          FOREIGN KEY (user_id) REFERENCES USER (id)
+        );
+  ''';
+
+  //C A R T -- I T E M
+  final tableCartItems = '''
+        CREATE TABLE CART_ITEM (
+          cart_id INTEGER,
+          quiz_id INTEGER,
+          quantity INTEGER,
+          PRIMARY KEY (cart_id, quiz_id),
+          FOREIGN KEY (cart_id) REFERENCES CART (id),
+          FOREIGN KEY (quiz_id) REFERENCES QUIZ (id)
+        )
+  ''';
+
   //Create name database
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDatabase('DatabaseBoi.db');
+    _database = await _initDatabase('DatabaseHello.db');
     return _database!;
   }
 
@@ -187,6 +215,8 @@ class DBHelper {
       await db.execute(tableFeedback);
       await db.execute(tablePin);
       await db.execute(tableFavorite);
+      await db.execute(tableCart);
+      await db.execute(tableCartItems);
 
       print("DA TAO BANG");
 
@@ -200,12 +230,10 @@ class DBHelper {
       await insertQuestions(db);
 
       print("DA INSERT");
-
     } catch (e) {
       debugPrint(e.toString());
     }
   }
-
 
   // ----------------------------------------------------- I N S E R T ------------------------------------------------------
 
@@ -234,7 +262,7 @@ class DBHelper {
         'email': 'johndoe@example.com',
         'phone': '1234567890',
         'dob': '1995-01-01',
-        'url':'https://randomuser.me/api/portraits/men/17.jpg',
+        'url': 'https://randomuser.me/api/portraits/men/17.jpg',
         'total_score': 1200
       },
       {
@@ -245,7 +273,7 @@ class DBHelper {
         'email': 'janesmith@example.com',
         'phone': '0905256943',
         'dob': '1984-05-15',
-        'url':'https://randomuser.me/api/portraits/men/35.jpg',
+        'url': 'https://randomuser.me/api/portraits/men/35.jpg',
         'total_score': 1500
       },
       {
@@ -256,7 +284,7 @@ class DBHelper {
         'email': 'hungptfpt2004@gmail.com',
         'phone': '0987654321',
         'dob': '2004-02-20',
-        'url':'https://randomuser.me/api/portraits/men/88.jpg',
+        'url': 'https://randomuser.me/api/portraits/men/88.jpg',
         'total_score': 1500
       },
       {
@@ -267,7 +295,7 @@ class DBHelper {
         'email': 'haha@example.com',
         'phone': '0914259659',
         'dob': '2003-05-15',
-        'url':'https://randomuser.me/api/portraits/men/51.jpg',
+        'url': 'https://randomuser.me/api/portraits/men/51.jpg',
         'total_score': 1500
       },
       {
@@ -278,7 +306,7 @@ class DBHelper {
         'email': 'janesmith@example.com',
         'phone': '0914234252',
         'dob': '2002-05-15',
-        'url':'https://randomuser.me/api/portraits/men/53.jpg',
+        'url': 'https://randomuser.me/api/portraits/men/53.jpg',
         'total_score': 1500
       },
     ];
@@ -294,52 +322,59 @@ class DBHelper {
       {
         'title': 'Java Basics Quiz',
         'description': 'A quiz on basic Java programming concepts.',
-        'is_paid': 0,  // 0 = miễn phí
-        'price': 0,    // Giá 0 vì là quiz miễn phí
-        'user_id': 1,  // Giả sử user_id = 1 tồn tại trong bảng USER
-        'subject_id': 1,  // Giả sử subject_id = 1 là Java Programming trong bảng SUBJECT
-        'type_id': 1,  // Giả sử type_id = 1 là Multiple Choice
+        'is_paid': 0, // 0 = miễn phí
+        'price': 0, // Giá 0 vì là quiz miễn phí
+        'user_id': 1, // Giả sử user_id = 1 tồn tại trong bảng USER
+        'subject_id':
+            1, // Giả sử subject_id = 1 là Java Programming trong bảng SUBJECT
+        'type_id': 1, // Giả sử type_id = 1 là Multiple Choice
         'created_at': DateTime.now().toIso8601String(),
-        'url': 'https://simplycoding.in/wp-content/uploads/2021/06/Java-Theory-Java-Basics.jpg',
-        'isFavorite':0
+        'url':
+            'https://simplycoding.in/wp-content/uploads/2021/06/Java-Theory-Java-Basics.jpg',
+        'isFavorite': 0
       },
       {
         'title': 'Advanced Java Quiz',
         'description': 'A quiz on advanced Java programming concepts.',
-        'is_paid': 1,  // Quiz có phí
-        'price': 500,  // Giá 500
-        'user_id': 1,  // Giả sử user_id = 1 tồn tại trong bảng USER
-        'subject_id': 1,  // Giả sử subject_id = 1 là Java Programming trong bảng SUBJECT
-        'type_id': 1,  // Giả sử type_id = 1 là Multiple Choice
+        'is_paid': 1, // Quiz có phí
+        'price': 500, // Giá 500
+        'user_id': 1, // Giả sử user_id = 1 tồn tại trong bảng USER
+        'subject_id':
+            1, // Giả sử subject_id = 1 là Java Programming trong bảng SUBJECT
+        'type_id': 1, // Giả sử type_id = 1 là Multiple Choice
         'created_at': DateTime.now().toIso8601String(),
-        'url': 'https://techshark.co.in/wp-content/uploads/2020/06/591-5916423_advanced-java-logo-png-transparent-png.png',
-        'isFavorite':0
+        'url':
+            'https://techshark.co.in/wp-content/uploads/2020/06/591-5916423_advanced-java-logo-png-transparent-png.png',
+        'isFavorite': 0
       },
 
       // Quiz cho Flutter Programming
       {
         'title': 'Flutter Basics Quiz',
         'description': 'A quiz on basic Flutter programming concepts.',
-        'is_paid': 0,  // 0 = miễn phí
-        'price': 0,    // Giá 0 vì là quiz miễn phí
-        'user_id': 2,  // Giả sử user_id = 2 tồn tại trong bảng USER
-        'subject_id': 2,  // Giả sử subject_id = 2 là Flutter Programming trong bảng SUBJECT
-        'type_id': 1,  // Giả sử type_id = 1 là Multiple Choice
+        'is_paid': 0, // 0 = miễn phí
+        'price': 0, // Giá 0 vì là quiz miễn phí
+        'user_id': 2, // Giả sử user_id = 2 tồn tại trong bảng USER
+        'subject_id':
+            2, // Giả sử subject_id = 2 là Flutter Programming trong bảng SUBJECT
+        'type_id': 1, // Giả sử type_id = 1 là Multiple Choice
         'created_at': DateTime.now().toIso8601String(),
         'url': 'https://i.ytimg.com/vi/6JSZYIyPzfw/maxresdefault.jpg',
-        'isFavorite':0
+        'isFavorite': 0
       },
       {
         'title': 'Advanced Flutter Quiz',
         'description': 'A quiz on advanced Flutter programming concepts.',
-        'is_paid': 1,  // Quiz có phí
+        'is_paid': 1, // Quiz có phí
         'price': 1000, // Giá 1000
-        'user_id': 2,  // Giả sử user_id = 2 tồn tại trong bảng USER
-        'subject_id': 2,  // Giả sử subject_id = 2 là Flutter Programming trong bảng SUBJECT
-        'type_id': 1,  // Giả sử type_id = 1 là Multiple Choice
+        'user_id': 2, // Giả sử user_id = 2 tồn tại trong bảng USER
+        'subject_id':
+            2, // Giả sử subject_id = 2 là Flutter Programming trong bảng SUBJECT
+        'type_id': 1, // Giả sử type_id = 1 là Multiple Choice
         'created_at': DateTime.now().toIso8601String(),
-        'url':'https://smazee.com/uploads/blog/How-to-Develop-Advanced-UI-in-Flutter.png',
-        'isFavorite':0
+        'url':
+            'https://smazee.com/uploads/blog/How-to-Develop-Advanced-UI-in-Flutter.png',
+        'isFavorite': 0
       },
 
       // Quiz cho Android Programming
@@ -391,26 +426,27 @@ class DBHelper {
       {
         'title': 'IELTS Speaking Quiz',
         'description': 'A quiz on IELTS Speaking skills.',
-        'is_paid': 0,  // 0 = miễn phí
-        'price': 0,    // Giá 0 vì là quiz miễn phí
-        'user_id': 3,  // Giả sử user_id = 1 tồn tại trong bảng USER
-        'subject_id': 8,  // Giả sử subject_id = 8 là IELTS trong bảng SUBJECT
-        'type_id': 1,  // Giả sử type_id = 2 là True/False
+        'is_paid': 0, // 0 = miễn phí
+        'price': 0, // Giá 0 vì là quiz miễn phí
+        'user_id': 3, // Giả sử user_id = 1 tồn tại trong bảng USER
+        'subject_id': 8, // Giả sử subject_id = 8 là IELTS trong bảng SUBJECT
+        'type_id': 1, // Giả sử type_id = 2 là True/False
         'created_at': DateTime.now().toIso8601String(),
         'url': 'https://smiletutor.sg/wp-content/uploads/2017/06/IELTS.png',
-        'isFavorite':0
+        'isFavorite': 0
       },
       {
         'title': 'IELTS Listening Quiz',
         'description': 'A quiz on IELTS Listening skills.',
-        'is_paid': 1,  // Quiz có phí
+        'is_paid': 1, // Quiz có phí
         'price': 1500, // Giá 1500
-        'user_id': 3,  // Giả sử user_id = 1 tồn tại trong bảng USER
-        'subject_id': 8,  // Giả sử subject_id = 8 là IELTS trong bảng SUBJECT
+        'user_id': 3, // Giả sử user_id = 1 tồn tại trong bảng USER
+        'subject_id': 8, // Giả sử subject_id = 8 là IELTS trong bảng SUBJECT
         'type_id': 1,
         'created_at': DateTime.now().toIso8601String(),
-        'url':'https://th.bing.com/th/id/R.d7d7c6badeb9be43fdd45e326f69e76b?rik=PqiifBJR%2f8I9VQ&pid=ImgRaw&r=0',
-        'isFavorite':0
+        'url':
+            'https://th.bing.com/th/id/R.d7d7c6badeb9be43fdd45e326f69e76b?rik=PqiifBJR%2f8I9VQ&pid=ImgRaw&r=0',
+        'isFavorite': 0
       },
     ];
 
@@ -425,89 +461,91 @@ class DBHelper {
       // Câu hỏi cho Quiz "Java Basics Quiz" (subject_id = 1)
       {
         'image_url': null,
-        'quiz_id': 1,  // Giả sử quiz_id = 1 là "Java Basics Quiz"
+        'quiz_id': 1, // Giả sử quiz_id = 1 là "Java Basics Quiz"
         'content': 'What is the size of an int in Java?',
         'answer1': '2 bytes',
         'answer2': '4 bytes',
         'answer3': '8 bytes',
         'answer4': '16 bytes',
-        'correct_answer': 2,  // Câu trả lời đúng là answer2
+        'correct_answer': 2, // Câu trả lời đúng là answer2
       },
       {
         'image_url': null,
-        'quiz_id': 1,  // Giả sử quiz_id = 1 là "Java Basics Quiz"
+        'quiz_id': 1, // Giả sử quiz_id = 1 là "Java Basics Quiz"
         'content': 'What is the default value of a boolean in Java?',
         'answer1': 'true',
         'answer2': 'false',
         'answer3': 'null',
         'answer4': '0',
-        'correct_answer': 2,  // Câu trả lời đúng là answer2 (false)
+        'correct_answer': 2, // Câu trả lời đúng là answer2 (false)
       },
       {
         'image_url': null,
-        'quiz_id': 1,  // Giả sử quiz_id = 1 là "Java Basics Quiz"
+        'quiz_id': 1, // Giả sử quiz_id = 1 là "Java Basics Quiz"
         'content': 'What is a part of OOP in Java?',
         'answer1': 'Encapsulation',
         'answer2': 'Consistency',
         'answer3': 'Immutable',
         'answer4': 'None of above',
-        'correct_answer': 1,  // Câu trả lời đúng là answer2 (false)
+        'correct_answer': 1, // Câu trả lời đúng là answer2 (false)
       },
 
       // Câu hỏi cho Quiz "Advanced Java Quiz" (subject_id = 1)
       {
         'image_url': null,
-        'quiz_id': 2,  // Giả sử quiz_id = 2 là "Advanced Java Quiz"
+        'quiz_id': 2, // Giả sử quiz_id = 2 là "Advanced Java Quiz"
         'content': 'What is the purpose of the final keyword in Java?',
         'answer1': 'To define a constant',
         'answer2': 'To stop inheritance',
         'answer3': 'To mark a class as abstract',
         'answer4': 'To declare a static variable',
-        'correct_answer': 1,  // Câu trả lời đúng là answer1
+        'correct_answer': 1, // Câu trả lời đúng là answer1
       },
       {
         'image_url': null,
-        'quiz_id': 2,  // Giả sử quiz_id = 2 là "Advanced Java Quiz"
+        'quiz_id': 2, // Giả sử quiz_id = 2 là "Advanced Java Quiz"
         'content': 'Which of the following is a feature of Java?',
         'answer1': 'Platform-independent',
         'answer2': 'Code is executed directly by the CPU',
         'answer3': 'Requires a specific operating system',
         'answer4': 'None of the above',
-        'correct_answer': 1,  // Câu trả lời đúng là answer1
+        'correct_answer': 1, // Câu trả lời đúng là answer1
       },
 
       //Flutter Basics Quiz
       {
         'image_url': null,
-        'quiz_id': 3,  // Giả sử quiz_id = 3 là "Flutter Basics Quiz"
+        'quiz_id': 3, // Giả sử quiz_id = 3 là "Flutter Basics Quiz"
         'content': 'What is the main programming language used for Flutter?',
         'answer1': 'Java',
         'answer2': 'Kotlin',
         'answer3': 'Dart',
         'answer4': 'Swift',
-        'correct_answer': 3,  // Câu trả lời đúng là answer3
+        'correct_answer': 3, // Câu trả lời đúng là answer3
       },
       {
         'image_url': null,
-        'quiz_id': 3,  // Giả sử quiz_id = 3 là "Flutter Basics Quiz"
-        'content': 'Which widget is used to create a scrollable view in Flutter?',
+        'quiz_id': 3, // Giả sử quiz_id = 3 là "Flutter Basics Quiz"
+        'content':
+            'Which widget is used to create a scrollable view in Flutter?',
         'answer1': 'Column',
         'answer2': 'Row',
         'answer3': 'ListView',
         'answer4': 'Container',
-        'correct_answer': 3,  // Câu trả lời đúng là answer3
+        'correct_answer': 3, // Câu trả lời đúng là answer3
       },
 
       //Flutter Advanced Quiz
       {
         'image_url': null,
         'quiz_id': 4,
-        'content': 'Which is the most difficult state management type in Flutter ?',
+        'content':
+            'Which is the most difficult state management type in Flutter ?',
         'answer1': 'BloC',
         'answer2': 'Block',
         'answer3': 'Supply',
         'answer4': 'State',
-        'correct_answer': 1,  // Câu trả lời đúng là answer3
+        'correct_answer': 1, // Câu trả lời đúng là answer3
       },
       {
         'image_url': null,
@@ -517,19 +555,20 @@ class DBHelper {
         'answer2': 'Async Wait',
         'answer3': 'I don\'t know',
         'answer4': 'None of above',
-        'correct_answer': 2,  // Câu trả lời đúng là answer3
+        'correct_answer': 2, // Câu trả lời đúng là answer3
       },
 
       // Câu hỏi cho Quiz "IELTS Listening Quiz" (subject_id = 8)
       {
         'image_url': null,
         'quiz_id': 5,
-        'content': 'In the IELTS listening test, what is the maximum number of speakers you will hear?',
+        'content':
+            'In the IELTS listening test, what is the maximum number of speakers you will hear?',
         'answer1': '1',
         'answer2': '2',
         'answer3': '3',
         'answer4': '4',
-        'correct_answer': 2,  // Câu trả lời đúng là answer2
+        'correct_answer': 2, // Câu trả lời đúng là answer2
       },
       {
         'image_url': null,
@@ -539,32 +578,33 @@ class DBHelper {
         'answer2': 'Listening for specific information',
         'answer3': 'Listening for grammar',
         'answer4': 'Listening for pronunciation',
-        'correct_answer': 2,  // Câu trả lời đúng là answer2
+        'correct_answer': 2, // Câu trả lời đúng là answer2
       },
 
       // Câu hỏi cho Quiz "IELTS Reading Quiz" (subject_id = 8)
       {
         'image_url': null,
         'quiz_id': 6,
-        'content': 'In the IELTS reading test, what type of questions are commonly asked?',
+        'content':
+            'In the IELTS reading test, what type of questions are commonly asked?',
         'answer1': 'Multiple choice questions',
         'answer2': 'True/False/Not Given questions',
         'answer3': 'Matching headings to paragraphs',
         'answer4': 'All of the above',
-        'correct_answer': 4,  // Câu trả lời đúng là answer4
+        'correct_answer': 4, // Câu trả lời đúng là answer4
       },
       {
         'image_url': null,
         'quiz_id': 6,
-        'content': 'What is the purpose of the "True/False/Not Given" questions in the IELTS reading test?',
+        'content':
+            'What is the purpose of the "True/False/Not Given" questions in the IELTS reading test?',
         'answer1': 'To test understanding of details and facts',
         'answer2': 'To test vocabulary knowledge',
         'answer3': 'To assess your ability to understand the writer\'s opinion',
-        'answer4': 'To check your ability to identify the meaning of specific words',
+        'answer4':
+            'To check your ability to identify the meaning of specific words',
         'correct_answer': 1,
       },
-
-
     ];
 
     for (final question in questions) {
@@ -574,26 +614,24 @@ class DBHelper {
 
   // I N S E R T -- C O M P L E T E -- Q U I Z
 
-
   // I N S E R T -- F E E D B A C K
-
 
   // I N S E R T -- D I S C O U N T
 
   Future<void> insertDiscounts(Database db) async {
     final discounts = [
       {
-        'name':'Try to upgrade rank',
+        'name': 'Try to upgrade rank',
         'value': 10,
         'rank_id': 1,
       },
       {
-        'name':'Welcome to Silver Member',
+        'name': 'Welcome to Silver Member',
         'value': 20,
         'rank_id': 2,
       },
       {
-        'name':'Master Quiz',
+        'name': 'Master Quiz',
         'value': 60,
         'rank_id': 5,
       },
@@ -631,22 +669,21 @@ class DBHelper {
     }
   }
 
-
-
   //------------------------------------------------------ F U N C T I O N -------------------------------------------------
 
   // A D D -- U S E R
   Future<int> addNewUser(User user) async {
-    List<Map<String,dynamic>> users = await getAllUser();
-    for(Map<String,dynamic> u in users){
-      if(u['username'] == user.username){
+    List<Map<String, dynamic>> users = await getAllUser();
+    for (Map<String, dynamic> u in users) {
+      if (u['username'] == user.username) {
         throw Exception("Username already exists");
       } else if (u['email'] == user.email) {
         throw Exception("Email already exists");
       }
     }
     final db = await instance.database;
-    return db.insert('USER', user.toMap(),conflictAlgorithm: ConflictAlgorithm.replace);
+    return db.insert('USER', user.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<int> updateRankByScore(int score, int userId) async {
@@ -654,24 +691,60 @@ class DBHelper {
     final rankList = await getAllRank();
     int newRankId = 0;
 
-    for(var r in rankList) {
-      if(score > r['min_score']) {
+    for (var r in rankList) {
+      if (score > r['min_score']) {
         newRankId = r['id'];
       } else {
         break;
       }
     }
 
-    if(newRankId != 0) {
-      return db.update('USER', {'rank_id': newRankId},where: 'id = ?', whereArgs: [userId]);
+    if (newRankId != 0) {
+      return db.update('USER', {'rank_id': newRankId},
+          where: 'id = ?', whereArgs: [userId]);
     }
     return 0;
   }
 
   // U P D A T E -- U S E R
-  Future<int> updateUser(User user) async {
+  Future<int> updateUser(User user, int userId) async {
     final db = await instance.database;
-    return db.update('USER', user.toMap(), where: 'id = ?', whereArgs: [user.id]);
+    try {
+      return db
+          .update('USER', user.toMap(), where: 'id = ?', whereArgs: [userId]);
+    } catch (e) {
+      throw Exception('Update user error!');
+    }
+  }
+
+  Future<int> updateAvatar(String url, int userId) async {
+    final db = await instance.database;
+    try {
+      return db.update('USER', {'url': url},
+          where: 'id = ?', whereArgs: [userId]);
+    } catch (e) {
+      throw Exception('Update image error!');
+    }
+  }
+
+  Future<int> updateName(String name, int userId) async {
+    final db = await instance.database;
+    try {
+      return db.update('USER', {'name': name},
+          where: 'id = ?', whereArgs: [userId]);
+    } catch (e) {
+      throw Exception('Update new name error!');
+    }
+  }
+
+  Future<int> updateDob(String dob, int userId) async {
+    final db = await instance.database;
+    try {
+      return db.update('USER', {'dob': dob},
+          where: 'id = ?', whereArgs: [userId]);
+    } catch (e) {
+      throw Exception('Update new dob error!');
+    }
   }
 
   // U P D A T E -- P A S S W O R D
@@ -679,45 +752,41 @@ class DBHelper {
     final db = await instance.database;
     User? user = await getUserByEmail(email);
     String oldPassword = user!.password;
-    if(oldPassword == newPassword) {
+    if (oldPassword == newPassword) {
       throw Exception('Please enter different the old password');
     }
-    return db.update('USER', {'password':newPassword}, where: 'id = ?',whereArgs: [user!.id]);
+    return db.update('USER', {'password': newPassword},
+        where: 'id = ?', whereArgs: [user!.id]);
   }
-
 
   Future<int> updateUserTotalScore(int score, int userId) async {
     final db = await instance.database;
     try {
-      return await db.update('USER', {'total_score':score}, where: 'id = ?', whereArgs: [userId]);
+      return await db.update('USER', {'total_score': score},
+          where: 'id = ?', whereArgs: [userId]);
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
-
   // G E T - A L L - U S E R
-  Future<List<Map<String,dynamic>>> getAllUser() async {
+  Future<List<Map<String, dynamic>>> getAllUser() async {
     final db = await instance.database;
     return db.query('USER');
   }
 
   // G E T - A L L - U S E R - DESC
-  Future<List<Map<String,dynamic>>> getAllUserByDesc() async {
+  Future<List<Map<String, dynamic>>> getAllUserByDesc() async {
     final db = await instance.database;
-    return db.query('USER',orderBy: 'total_score DESC');
+    return db.query('USER', orderBy: 'total_score DESC');
   }
-
 
   // G E T - U S E R - B Y - N A M E
   Future<User?> getUserByUsername(String username) async {
     final db = await instance.database;
-    final List<Map<String,dynamic>> users = await db.query(
-      'USER',
-      where: 'username = ?',
-      whereArgs: [username]
-    );
-    if(users.isNotEmpty) {
+    final List<Map<String, dynamic>> users =
+        await db.query('USER', where: 'username = ?', whereArgs: [username]);
+    if (users.isNotEmpty) {
       //Chuyen phan tu dau tien cua map -> doi tuong
       return User.fromMap(users.first);
     }
@@ -727,12 +796,9 @@ class DBHelper {
   // G E T - U S E R - B Y - E M A I L
   Future<User?> getUserByEmail(String email) async {
     final db = await instance.database;
-    final List<Map<String,dynamic>> users = await db.query(
-        'USER',
-        where: 'email = ?',
-        whereArgs: [email]
-    );
-    if(users.isNotEmpty) {
+    final List<Map<String, dynamic>> users =
+        await db.query('USER', where: 'email = ?', whereArgs: [email]);
+    if (users.isNotEmpty) {
       return User.fromMap(users.first);
     }
     return null;
@@ -748,29 +814,25 @@ class DBHelper {
   // G E T - U S E R - B Y - I D
   Future<User?> getUserById(int id) async {
     final db = await instance.database;
-    final List<Map<String,dynamic>> users = await db.query(
-        'USER',
-        where: 'id = ?',
-        whereArgs: [id]
-    );
-    if(users.isNotEmpty) {
+    final List<Map<String, dynamic>> users =
+        await db.query('USER', where: 'id = ?', whereArgs: [id]);
+    if (users.isNotEmpty) {
       return User.fromMap(users.first);
     }
     return null;
   }
 
-
   // [ P I N ]
   Future<int> addNewPin(String password, String email) async {
     final db = await instance.database;
     User? user = await getUserByEmail(email);
-    if(user != null) {
+    if (user != null) {
       Pin? getPin = await getPinByUserId(user.id!);
-      if(getPin != null) {
+      if (getPin != null) {
         print("PIN existed");
         //CHECK TIME
         DateTime realTime = DateTime.now();
-        if(realTime.isAfter(getPin.expiredAt!)){
+        if (realTime.isAfter(getPin.expiredAt!)) {
           await deletePinByPinId(getPin.id!);
           print("DELETE EXPIRED PIN");
 
@@ -780,7 +842,6 @@ class DBHelper {
           await db.insert('PIN', newPin.toMap());
           print('DA INSERT NEW PIN');
           return 1;
-
         } else {
           throw Exception('Error already request for $email');
         }
@@ -790,7 +851,6 @@ class DBHelper {
         await db.insert('PIN', newPin.toMap());
         print('DA INSERT NEW PIN NULL');
         return 1;
-
       }
     }
     throw Exception('User are not found');
@@ -798,12 +858,9 @@ class DBHelper {
 
   Future<Pin?> getPinByUserId(int userId) async {
     final db = await instance.database;
-    final List<Map<String,dynamic>> pins = await db.query(
-        'PIN',
-        where: 'user_id = ?',
-        whereArgs: [userId]
-    );
-    if(pins.isNotEmpty) {
+    final List<Map<String, dynamic>> pins =
+        await db.query('PIN', where: 'user_id = ?', whereArgs: [userId]);
+    if (pins.isNotEmpty) {
       return Pin.fromMap(pins.first);
     }
     return null;
@@ -811,33 +868,27 @@ class DBHelper {
 
   Future<void> deletePinByPinId(int pinId) async {
     final db = await instance.database;
-    db.delete('PIN',where: 'id = ?',whereArgs: [pinId]);
+    db.delete('PIN', where: 'id = ?', whereArgs: [pinId]);
   }
-
-
 
   // [ R A N K ]
   Future<Rank?> getRankByRankId(int rankID) async {
     final db = await instance.database;
-    final List<Map<String,dynamic>> ranks = await db.query(
-        'RANK',
-        where: 'id = ?',
-        whereArgs: [rankID]
-    );
-    if(ranks.isNotEmpty) {
+    final List<Map<String, dynamic>> ranks =
+        await db.query('RANK', where: 'id = ?', whereArgs: [rankID]);
+    if (ranks.isNotEmpty) {
       return Rank.fromMap(ranks.first);
     }
     return null;
   }
 
-  Future<List<Map<String,dynamic>>> getAllRank() async {
+  Future<List<Map<String, dynamic>>> getAllRank() async {
     final db = await instance.database;
     return db.query('RANK');
   }
 
-
   // [ S U B J E C T]
-  Future<List<Map<String,dynamic>>> getAllSubjects() async {
+  Future<List<Map<String, dynamic>>> getAllSubjects() async {
     final db = await DBHelper.instance.database;
     return db.query('SUBJECT');
   }
@@ -846,7 +897,7 @@ class DBHelper {
     final db = await instance.database;
     final listSubjects = await getAllSubjects();
     bool check = listSubjects.any((items) => items['name'] == subject.name);
-    if(check){
+    if (check) {
       throw Exception('Subject already exist');
     } else {
       return db.insert('SUBJECT', subject.toMap());
@@ -855,17 +906,13 @@ class DBHelper {
 
   Future<Subject?> getSubjectById(int id) async {
     final db = await instance.database;
-    final List<Map<String,dynamic>> subjects = await db.query(
-        'SUBJECT',
-        where: 'id = ?',
-        whereArgs: [id]
-    );
-    if(subjects.isNotEmpty) {
+    final List<Map<String, dynamic>> subjects =
+        await db.query('SUBJECT', where: 'id = ?', whereArgs: [id]);
+    if (subjects.isNotEmpty) {
       return Subject.fromMap(subjects.first);
     }
     return null;
   }
-
 
   // [ Q U I Z ]
 
@@ -874,7 +921,7 @@ class DBHelper {
     final db = await DBHelper.instance.database;
     final ownQuiz = await getQuizByUserId(userId);
     final checkAny = ownQuiz.any((items) => items['title'] == quiz.title);
-    if(checkAny) {
+    if (checkAny) {
       throw Exception('Quiz already exist! Try again');
     } else {
       return db.insert('QUIZ', quiz.toMap());
@@ -885,8 +932,9 @@ class DBHelper {
   Future<int> updateQuiz(Quiz quiz, int userId) async {
     final db = await instance.database;
     final ownQuiz = await getQuizByUserId(userId);
-    final checkAny = ownQuiz.any((items) => items['id'] == quiz.id && items['user_id'] == userId);
-    if(checkAny) {
+    final checkAny = ownQuiz
+        .any((items) => items['id'] == quiz.id && items['user_id'] == userId);
+    if (checkAny) {
       return db.update('QUIZ', quiz.toMap());
     } else {
       throw Exception('Quiz not found! Try again');
@@ -896,26 +944,25 @@ class DBHelper {
   //Delete Quiz
   Future<void> deleteQuizById(int id) async {
     final db = await instance.database;
-    db.delete('QUIZ',where: 'id = ?', whereArgs: [id]);
+    db.delete('QUIZ', where: 'id = ?', whereArgs: [id]);
   }
 
   //Get All Quiz
-  Future<List<Map<String,dynamic>>> getAllQuiz() async {
+  Future<List<Map<String, dynamic>>> getAllQuiz() async {
     final db = await instance.database;
     return db.query('QUIZ');
   }
 
   //Get Quiz By Subject Id
-  Future<List<Map<String,dynamic>>> getQuizBySubjectId(int subjectId) async {
+  Future<List<Map<String, dynamic>>> getQuizBySubjectId(int subjectId) async {
     final db = await instance.database;
-    return db.query('QUIZ',where: 'subject_id = ?', whereArgs: [subjectId]);
+    return db.query('QUIZ', where: 'subject_id = ?', whereArgs: [subjectId]);
   }
 
-
   //Get Quiz By User Id
-  Future<List<Map<String,dynamic>>> getQuizByUserId(int userId) async {
+  Future<List<Map<String, dynamic>>> getQuizByUserId(int userId) async {
     final db = await instance.database;
-    return db.query('QUIZ',where: 'user_id = ?', whereArgs: [userId]);
+    return db.query('QUIZ', where: 'user_id = ?', whereArgs: [userId]);
   }
 
   //Update Quiz Favorite Status
@@ -932,19 +979,22 @@ class DBHelper {
   //Get Quiz By Id
   Future<Quiz?> getQuizById(int quizId) async {
     final db = await instance.database;
-    final List<Map<String, dynamic>> quizs = await db.query('QUIZ',where: 'id = ?',whereArgs: [quizId]);
-    if(quizs.isNotEmpty){
+    final List<Map<String, dynamic>> quizs =
+        await db.query('QUIZ', where: 'id = ?', whereArgs: [quizId]);
+    if (quizs.isNotEmpty) {
       return Quiz.fromMap(quizs.first);
     } else {
       return null;
     }
   }
 
+
   // [ T Y P E ]
   Future<Type?> getTypeById(int typeId) async {
     final db = await DBHelper.instance.database;
-    final List<Map<String, dynamic>> types = await db.query('TYPE',where: 'id = ?',whereArgs: [typeId]);
-    if(types.isNotEmpty){
+    final List<Map<String, dynamic>> types =
+        await db.query('TYPE', where: 'id = ?', whereArgs: [typeId]);
+    if (types.isNotEmpty) {
       return Type.fromMap(types.first);
     } else {
       return null;
@@ -956,26 +1006,21 @@ class DBHelper {
     return db.query('TYPE');
   }
 
-
   // [ Q U E S T I O N ]
-  Future<List<Map<String,dynamic>>> getQuestionListByQuizId(int quizId) async {
+  Future<List<Map<String, dynamic>>> getQuestionListByQuizId(int quizId) async {
     final db = await DBHelper.instance.database;
-    return db.query('QUESTION',where: 'quiz_id=?',whereArgs: [quizId]);
+    return db.query('QUESTION', where: 'quiz_id=?', whereArgs: [quizId]);
   }
 
   Future<Question?> getQuestionById(int questionId) async {
     final db = await DBHelper.instance.database;
-    final List<Map<String,dynamic>> questions = await db.query(
-        'QUESTION',
-        where: 'id = ?',
-        whereArgs: [questionId]
-    );
-    if(questions.isNotEmpty) {
+    final List<Map<String, dynamic>> questions =
+        await db.query('QUESTION', where: 'id = ?', whereArgs: [questionId]);
+    if (questions.isNotEmpty) {
       return Question.fromMap(questions.first);
     }
     return null;
   }
-
 
   // [ F A V O R I T E ]
   Future<int> addNewFavorite(Favorite favorite, int quizId, int userId) async {
@@ -1016,82 +1061,161 @@ class DBHelper {
 
   Future<Favorite?> getFavoriteByUserId(int userId) async {
     final db = await DBHelper.instance.database;
-    final List<Map<String,dynamic>> favorites = await db.query(
-        'FAVORITE',
-        where: 'user_id = ?',
-        whereArgs: [userId]
-    );
-    if(favorites.isNotEmpty) {
+    final List<Map<String, dynamic>> favorites =
+        await db.query('FAVORITE', where: 'user_id = ?', whereArgs: [userId]);
+    if (favorites.isNotEmpty) {
       return Favorite.fromMap(favorites.first);
     }
     return null;
   }
 
-  Future<List<Map<String,dynamic>>> getAllFavoriteByUserId(int userId) async {
+  Future<List<Map<String, dynamic>>> getAllFavoriteByUserId(int userId) async {
     final db = await DBHelper.instance.database;
-    return db.query('FAVORITE',where: 'user_id=?',whereArgs: [userId]);
+    return db.query('FAVORITE', where: 'user_id=?', whereArgs: [userId]);
   }
 
-  Future<List<Map<String,dynamic>>> getAllFavorite() async {
+  Future<List<Map<String, dynamic>>> getAllFavorite() async {
     final db = await DBHelper.instance.database;
     return db.query('FAVORITE');
   }
 
-
   // [ C O M P L E T E - Q U I Z ]
   Future<int> createNewCompleteQuiz(CompletedQuiz complete, int userId) async {
     final db = await DBHelper.instance.database;
-    final completeList = await DBHelper.instance.getAllCompleteQuizByUserId(userId);
-    bool check = completeList.any((items) => items['quiz_id'] == complete.quizId);
-    if(check){
+    final completeList =
+        await DBHelper.instance.getAllCompleteQuizByUserId(userId);
+    bool check =
+        completeList.any((items) => items['quiz_id'] == complete.quizId);
+    if (check) {
       throw Exception('Quiz already join');
     } else {
       return db.insert('COMPLETED_QUIZ', complete.toMap());
     }
   }
 
-  Future<int> updateCompleteQuiz(int score, int userId, int quizId, DateTime dateTime) async {
+  Future<int> updateNumberCorrectAnswer(int correctCount, int userId, int quizId) async {
+    final db = await DBHelper.instance.database;
+    return db.update('COMPLETED_QUIZ', {'number_correct':correctCount},where: 'user_id = ? AND quiz_id = ?',whereArgs: [userId,quizId]);
+  }
+
+  Future<int> updateCompleteQuizProgress(int progress, int userId, int quizId) async {
+    final db = await DBHelper.instance.database;
+    return db.update('COMPLETED_QUIZ', {'progress':progress},where: 'user_id = ? AND quiz_id = ?',whereArgs: [userId,quizId]);
+  }
+
+  Future<int> updateStatusUnlock(int quizId, int userId) async {
+    final db = await instance.database;
+    return db.update('COMPLETED_QUIZ', {'status': 'unlock'},
+        where: 'user_id = ? AND quiz_id = ?', whereArgs: [userId, quizId]);
+  }
+
+  Future<int> updateStatusDid(int quizId, int userId) async {
+    final db = await instance.database;
+    return db.update('COMPLETED_QUIZ', {'status': 'did'},
+        where: 'user_id = ? AND quiz_id = ?', whereArgs: [userId, quizId]);
+  }
+
+  Future<int> updateCompleteQuiz(
+      int score, int userId, int quizId, DateTime dateTime) async {
     final db = await DBHelper.instance.database;
     // final complete = await DBHelper.instance.getCompleteQuizByQuizIdAndUserId(userId);
     // final listComplete = await DBHelper.instance.getAllCompleteQuizByUserId(3);
     // print('DO DAI ${listComplete.length}');
     // bool check = listComplete.any((items) => items['user_id'] == 3 && items['quiz_id'] == 1);
-      print('Score SQL: $score');
-      print('Complete_at SQL: ${dateTime.toIso8601String()}');
-      return db.update(
-        'COMPLETED_QUIZ',
-        {
-          'score': score,
-          'completed_at': dateTime.toIso8601String()
-        },
-        where: 'user_id = ? AND quiz_id = ?',
-        whereArgs: [userId, quizId],
-      );
-    }
-
-    Future<void>deleteCompleteQuiz(int userId, int quizId) async {
-      final db = await instance.database;
-      await db.delete('COMPLETED_QUIZ',where: 'user_id=? AND quiz_id=?',whereArgs: [userId,quizId]);
-    }
-
-  Future<List<Map<String,dynamic>>> getAllCompleteQuizByUserId(int userId) async {
-    final db = await DBHelper.instance.database;
-    return db.query('COMPLETED_QUIZ',where: 'user_id=?',whereArgs: [userId]);
+    print('Score SQL: $score');
+    print('Complete_at SQL: ${dateTime.toIso8601String()}');
+    return db.update(
+      'COMPLETED_QUIZ',
+      {'score': score, 'completed_at': dateTime.toIso8601String()},
+      where: 'user_id = ? AND quiz_id = ?',
+      whereArgs: [userId, quizId],
+    );
   }
 
 
+  Future<void> deleteCompleteQuiz(int userId, int quizId) async {
+    final db = await instance.database;
+    await db.delete('COMPLETED_QUIZ',
+        where: 'user_id=? AND quiz_id=?', whereArgs: [userId, quizId]);
+  }
+
+  Future<List<Map<String, dynamic>>> getAllCompleteQuizByUserId(
+      int userId) async {
+    final db = await DBHelper.instance.database;
+    return db.query('COMPLETED_QUIZ', where: 'user_id=?', whereArgs: [userId]);
+  }
+
   Future<CompletedQuiz?> getCompleteQuizByQuizIdAndUserId(int userId) async {
     final db = await DBHelper.instance.database;
-    final List<Map<String,dynamic>> completes = await db.query(
-        'COMPLETED_QUIZ',
-        where: 'user_id = ?',
-        whereArgs: [userId]
-    );
+    final List<Map<String, dynamic>> completes = await db.query('COMPLETED_QUIZ', where: 'user_id = ?', whereArgs: [userId]);
     print('Complete cua user');
-    if(completes.isNotEmpty) {
+    if (completes.isNotEmpty) {
       return CompletedQuiz.fromMap(completes.first);
     }
     return null;
   }
+
+  // [ C A R T ] & [ C A R T -- I T E M  ]
+  Future<int> createCart(Cart cart, int userId) async {
+    final db = await DBHelper.instance.database;
+    final cartList = await cartListByUserId(userId);
+    if (cartList.isNotEmpty) {
+      throw CartAlreadyExistException(msg: 'User only create one cart');
+    }
+    try {
+      return await db.insert('CART', cart.toMap(), conflictAlgorithm: ConflictAlgorithm.replace,);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> cartListByUserId(int userId) async {
+    final db = await DBHelper.instance.database;
+    return db.query('CART', where: 'user_id=?', whereArgs: [userId]);
+  }
+
+  Future<Cart?> getCartByUserId(int userId) async {
+    final List<Map<String, dynamic>> carts = await cartListByUserId(userId);
+    if (carts.isNotEmpty) {
+      return Cart.fromMap(carts.first);
+    }
+    return null;
+  }
+
+  Future<int> addQuizToCart(CartItem cartItems, int userId) async {
+    final db = await instance.database;
+    final cart = await getCartByUserId(userId);
+    final cartItemsList = await getCartItemsByCartId(cart!.id!);
+    bool check = cartItemsList.any((items) => items['quiz_id'] == cartItems.quizId);
+    if (check) {
+      throw QuizAlreadyExistException(msg: 'Quiz already exist in Cart');
+    } else {
+      return await db.insert('CART_ITEM', cartItems.toMap());
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getCartItemsByCartId(int cartId) async {
+    final db = await instance.database;
+    return await db.query('CART_ITEM', where: 'cart_id = ?', whereArgs: [cartId]);
+  }
+
+  Future<int> removeQuizFromCart(int quizId, int cartId) async {
+    final db = await instance.database;
+    return db.delete('CART_ITEM',where: 'quiz_id = ? AND cart_id = ?',whereArgs: [quizId,cartId]);
+  }
+
+  // [ Q U E S T I O N ]
+  Future<int> addNewQuestion(Question question, int quizId, int userId) async {
+    final db = await instance.database;
+    final ownQuizList = await DBHelper.instance.getQuizByUserId(userId);
+    final questionList = await DBHelper.instance.getQuestionListByQuizId(quizId);
+    bool check = questionList.any((items) => items['content'] == question.content);
+    if(check){
+      throw Exception('Question already exist');
+    } else {
+      return db.insert('QUESTION', question.toMap());
+    }
+  }
+
 
 }
