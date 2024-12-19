@@ -252,22 +252,32 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
       int totalQuestion) {
     return Slidable(
       key: ValueKey(quiz.id),
-      endActionPane: ActionPane(motion: ScrollMotion(), children: [
+      endActionPane: ActionPane(motion: const ScrollMotion(), children: [
         SlidableAction(
           onPressed: (context) {
             // Xử lý cập nhật
           },
-          padding: EdgeInsets.all(0),
+          padding: const EdgeInsets.all(0),
           foregroundColor: primaryColor,
-          icon: Icons.edit,
-          label: 'Edit',
+          icon: Icons.manage_accounts_rounded,
+          label: 'Result',
+        ),
+        SlidableAction(
+          onPressed: (context) {
+            // Xử lý cập nhật
+          },
+          padding: const EdgeInsets.all(0),
+          foregroundColor: primaryColor,
+          icon: Icons.comment,
+          label: 'Feedback',
         ),
         SlidableAction(
           onPressed: (context) async {
             // Xử lý xóa
             await DBHelper.instance.deleteCompleteQuiz(user!.id!, quiz.id!);
+            await DBHelper.instance.updateNumberCorrectAnswerReset(user!.id!, quiz.id!);
           },
-          padding: EdgeInsets.all(0),
+          padding: const EdgeInsets.all(0),
           foregroundColor: primaryColor,
           icon: Icons.delete,
           label: 'Delete',
@@ -302,7 +312,7 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
                 ),
                 const BoxHeight(h: 2),
                 Text(
-                  'Paid at : ${textStyle.formatDateFromText(DateTime.parse(completeIndex['paid_at']))}',
+                  'Paid at : ${textStyle.formatDateFromText(DateTime.parse(completeIndex['paid_at'])) ?? DateTime.now()}',
                   style: textStyle.superSmallTextStyle(
                       FontWeight.w500, Colors.black),
                 ),
@@ -340,22 +350,11 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
         motion: const ScrollMotion(), // Hiệu ứng cuộn
         children: [
           SlidableAction(
-            onPressed: (context) {
-              // Xử lý cập nhật
-              print("Update quiz: ${quiz['id']}");
-              // Gọi logic cập nhật tại đây
-            },
-            padding: EdgeInsets.all(0),
-            foregroundColor: primaryColor,
-            icon: Icons.edit,
-            label: 'Edit',
-          ),
-          SlidableAction(
             onPressed: (context) async {
               // Xử lý xóa
               await _showModalSheetDelete(quiz);
             },
-            padding: EdgeInsets.all(0),
+            padding: const EdgeInsets.all(0),
             foregroundColor: primaryColor,
             icon: Icons.delete,
             label: 'Delete',
@@ -364,7 +363,7 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
             onPressed: (context) async {
               // Xử lý xóa
             },
-            padding: EdgeInsets.all(0),
+            padding: const EdgeInsets.all(0),
             foregroundColor: primaryColor,
             icon: Icons.menu_open,
             label: 'Details',

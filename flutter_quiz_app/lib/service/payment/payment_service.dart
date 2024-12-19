@@ -1,7 +1,10 @@
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_quiz_app/components/snackbar/scaffold_snackbar_msg.dart';
 import 'package:flutter_quiz_app/model/completed_quiz.dart';
 import 'package:flutter_quiz_app/sql/sql_helper.dart';
+import 'package:flutter_quiz_app/theme/text_style.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 import '../../constant/payment_key.dart';
@@ -11,30 +14,67 @@ class StripeService {
 
   static final StripeService instance = StripeService._();
 
-  Future<void> makePayment(int price, String username, int role, CompletedQuiz complete, int userId) async {
+  Future<void> makePayment({required int price,required String username,required int role,required int userId, int? quizId,required BuildContext context}) async {
+    final textStyle = TextStyleCustom();
     try {
-      String? paymentIntentClientSecret = await _createPaymentIntent(
-        price,
-        "vnd",
-      );
+      String? paymentIntentClientSecret = await _createPaymentIntent(price, "vnd");
       if (paymentIntentClientSecret == null) return;
+
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntentClientSecret,
           merchantDisplayName: username,
         ),
       );
-      await _processPayment();
-      if(role == 1) {
-        await DBHelper.instance.createNewCompleteQuiz(complete, userId);
-        print('DA THUC HIEN MO KHOA');
-      } else if (role == 2) {
 
+      await Stripe.instance.presentPaymentSheet();
+
+      if (role == 1) {
+        await DBHelper.instance.createNewCompleteQuiz(
+          CompletedQuiz(
+            userId: userId,
+            quizId: quizId!,
+            completedAt: DateTime.now(),
+            paidAt: DateTime.now(),
+          ),
+          userId,
+        );
+        await DBHelper.instance.updatePaidAtTime(userId, quizId);
+        await DBHelper.instance.updateStatusUnlock(quizId, userId);
+        ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(context, 'Buy quiz successfully', textStyle);
+      } else if (role == 2) {
+        final cart = await DBHelper.instance.getCartByUserId(userId);
+        final cartItemList = await DBHelper.instance.getCartItemsByCartId(cart!.id!);
+        print('SO ITEM TRONG CART: ${cartItemList.length}');
+        for (var c in cartItemList) {
+          print('QUIZ_ID: ${c['quiz_id']}');
+          final quizId = c['quiz_id'];
+          if (quizId == null) {
+            print('Quiz ID của một item trong cartItemList là null, bỏ qua.');
+            continue;
+          }
+          await DBHelper.instance.createNewCompleteQuiz(
+            CompletedQuiz(
+              userId: userId,
+              quizId: quizId,
+              completedAt: DateTime.now(),
+              paidAt: DateTime.now(),
+            ),
+            userId,
+          );
+          await DBHelper.instance.updatePaidAtTime(userId, quizId);
+          await DBHelper.instance.updateStatusUnlock(quizId, quizId);
+        }
+        ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(context, 'Buy quiz successfully', textStyle);
+        print('THANH TOÁN THÀNH CÔNG - ROLE 2');
+      } else {
+        print('THANH TOÁN KHOONG THÀNH CÔNG');
       }
     } catch (e) {
-      print(e);
+      print('LỖI TRONG QUÁ TRÌNH THANH TOÁN: $e');
     }
   }
+
 
   Future<String?> _createPaymentIntent(int amount, String currency) async {
     try {
@@ -70,7 +110,9 @@ class StripeService {
   Future<void> _processPayment() async {
     try {
       await Stripe.instance.presentPaymentSheet();
+      print('TRINH BAY SHEET');
       await Stripe.instance.confirmPaymentSheetPayment();
+      print('DA THANH TOAN THANH CONG');
     } catch (e) {
       print(e);
     }

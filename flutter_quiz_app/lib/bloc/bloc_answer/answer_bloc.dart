@@ -27,17 +27,16 @@ class AnswerBloc extends Bloc<AnswerEvent, AnswerState> {
       print('Cau tra loi dung: ${event.question['correct_answer']}');
       score += calculateScore(event.selectAnswer, event.question['correct_answer'],event.questionId, event.quizId);
       currentQuestionIndex++;
-      print('Cau hoi tiep theo: $currentQuestionIndex');
 
       selectedAnswered[event.questionId] = event.selectAnswer;
-      print('Danh sách câu trả lời đã chọn: $selectedAnswered');
-      print('Diem sau khi hoan thanh cau : $score}');
-
+      print('CURRENT INDEX QUESTION : ${currentQuestionIndex}');
+      print('TONG SO CAU TRA LOI DUNG ${correctAnswerCount[event.quizId]}');
       //Kiem tra het cau hoi hay chua
       if(currentQuestionIndex > event.totalQuestion){
         currentQuestionIndex = 0; // Reset lại chỉ số câu hỏi
         score = 0; // Reset lại điểm
         selectedAnswered.clear(); // Xóa danh sách câu trả lời đã chọn nếu cần
+        correctAnswerCount[event.quizId] = 0;
         emit(AnsweredAllQuestion('All question answered. You can now submit your answers',selectedAnswered,event.questionId));
       } else {
         emit(AnswerSelectedSuccess('Answer selected successfully',selectedAnswered,event.questionId));

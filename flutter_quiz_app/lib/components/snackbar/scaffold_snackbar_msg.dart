@@ -38,7 +38,7 @@ class ShowScaffoldMessenger {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 1)
       ),
     );
   }
@@ -74,7 +74,7 @@ class ShowScaffoldMessenger {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 1),
       ),
     );
   }

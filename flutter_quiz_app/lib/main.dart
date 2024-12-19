@@ -38,6 +38,7 @@ void main() async {
 Future<void> _setup() async {
   WidgetsFlutterBinding.ensureInitialized();
   Stripe.publishableKey = stripePublishableKey;
+
 }
 
 class MyApp extends StatefulWidget {

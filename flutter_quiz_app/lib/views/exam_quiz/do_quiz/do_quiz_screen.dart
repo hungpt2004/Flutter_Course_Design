@@ -53,6 +53,7 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
     final percentString = (percent * 100).toStringAsFixed(2); // Chuyển thành chuỗi và giới hạn 2 chữ số thập phân
     final twoDigits = percentString.split('.')[0]; // Lấy phần nguyên (2 chữ số đầu)
 
+    //Alert finish
     showGeneralDialog(
       //Nhan ra ngoai de dong
       barrierDismissible: true,
@@ -155,12 +156,12 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
                             onPageChanged: (index) {
                               Future.delayed(const Duration(milliseconds: 50),
                                   () {
-                                QuestionBloc.changePage(context, index);
+                                QuestionBloc.changePage(context, index, widget.quizId);
                               });
                             },
                             itemCount: questionList.length,
                             itemBuilder: (context, index) {
-                              // options.add(questionList[index]['answer${index}']);
+                              print('TONG SO QUESTION CUA LIST NAY : ${questionList.length}');
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 20),
@@ -244,7 +245,6 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
         }
 
         if (state is AnsweredAllQuestion) {
-          // Nếu tất cả câu hỏi đã được trả lời, không cho phép chọn câu trả lời nữa
           if (state.selectedAnswer.containsKey(questionId) &&
               state.selectedAnswer[questionId] == index) {
             isSelected = true; // Câu trả lời đã chọn vẫn sẽ được giữ
@@ -310,8 +310,45 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
                     );
                   },
                 ),
-              if (currentPage ==
-                  length - 1) // Only show 'Submit' button on the last page
+              if (currentPage == length - 1) // Only show 'Submit' button on the last page
+                ButtonField(
+                  text: 'Submit',
+                  function: () async {
+                    await _submit();
+                    await _alertComplete(length);
+                    print('DA HOAN THANH');
+                    //reset
+                    // go to success certificate
+                  },
+                ),
+              if (currentPage < length - 1)
+                ButtonField(
+                  text: 'Next',
+                  function: () {
+                    _pageController.nextPage(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                ),
+            ],
+          );
+        } else if (state is QuestionMoveFailure) {
+          currentPage = state.currentPage;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              if (currentPage > 0)
+                ButtonField(
+                  text: 'Back',
+                  function: () {
+                    _pageController.previousPage(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                ),
+              if (currentPage == length - 1) // Only show 'Submit' button on the last page
                 ButtonField(
                   text: 'Submit',
                   function: () async {
@@ -339,4 +376,5 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
       },
     );
   }
+
 }

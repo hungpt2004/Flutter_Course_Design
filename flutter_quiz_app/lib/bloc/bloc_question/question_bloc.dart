@@ -13,8 +13,20 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
   }
 
   void _onChangePage(OnPressedMoveQuestion event, Emitter<QuestionState> emit) async {
-    emit(QuestionMoveSuccess(event.currentIndex));
+    final questionList = await DBHelper.instance.getQuestionListByQuizId(event.quizId);
+
+    if (event.currentIndex < 0 || event.currentIndex >= questionList.length) {
+      // Phát trạng thái thất bại kèm thông tin về trạng thái hiện tại
+      emit(QuestionMoveFailure(
+        'Invalid page index.',
+        event.currentIndex < 0 ? 0 : questionList.length - 1, // Giữ chỉ số hợp lệ
+        questionList,
+      ));
+    } else {
+      emit(QuestionMoveSuccess(event.currentIndex, questionList));
+    }
   }
+
 
   void _onAddQuestion(OnPressedAddQuestion event, Emitter<QuestionState> emit) async {
     try {
@@ -27,8 +39,8 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
     }
   }
 
-  static Future<void> changePage(BuildContext context, int index) async {
-    context.read<QuestionBloc>().add(OnPressedMoveQuestion(index));
+  static Future<void> changePage(BuildContext context, int index, int quizId) async {
+    context.read<QuestionBloc>().add(OnPressedMoveQuestion(index, quizId));
   }
 
   static Future<void> addQuestion(BuildContext context, Question question, int quizId, int userId) async {

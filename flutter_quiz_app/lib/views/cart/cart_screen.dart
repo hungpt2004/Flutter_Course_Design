@@ -34,7 +34,6 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   final textStyle = TextStyleCustom();
   final networkImage = NetworkImageWidget();
-  Cart? cart;
   List<Map<String, dynamic>>? cartList;
   User? user = UserManager().currentUser;
 
@@ -76,7 +75,14 @@ class _CartScreenState extends State<CartScreen> {
             return _body(state.cartItems, state.sum);
           } else if (state is LoadingSuccess) {
             return _body(state.cartItems, state.sum);
+          } else if (state is CartClearAll) {
+            print('DANG O DAY $state');
+            return const Center(child: NotYetNoti(label: 'Cart', image: 'assets/svg/cart.svg'));
+          } else if (state is CartClearAllFailure) {
+            print('DANG O DAY $state');
+            return _body(state.cartItems, state.sum);
           }
+          print(state);
           return const Center(child: NotYetNoti(label: 'Cart', image: 'assets/svg/cart.svg'));
         },
         listener: (context, state) {
@@ -126,8 +132,7 @@ class _CartScreenState extends State<CartScreen> {
                                 return const Text('Error');
                               }
                               final quizIndex = snapshot.data!;
-                              return _cart(
-                                  quizIndex, cartIndex['cart_id'], sum);
+                              return _cart(quizIndex, cartIndex['cart_id'], sum);
                             },
                           );
                         },
@@ -440,13 +445,13 @@ class _CartScreenState extends State<CartScreen> {
                   style:
                       textStyle.contentTextStyle(FontWeight.w500, Colors.black),
                 ),
-                const BoxHeight(h: 2),
+                const BoxHeight(h: 4),
                 Text(
-                  'Create at : ${textStyle.formatDateFromText(DateTime.parse(quiz.createdAt.toString()))}',
+                  'Price: ${quiz.price}\$/quiz',
                   style: textStyle.superSmallTextStyle(
                       FontWeight.w500, Colors.black),
                 ),
-                const BoxHeight(h: 2),
+                const BoxHeight(h: 5),
                 Row(
                   children: [
                     Material(
@@ -506,9 +511,10 @@ class _CartScreenState extends State<CartScreen> {
           style: textStyle.superSmallTextStyle(FontWeight.w500, Colors.black),
         ),
         trailing: MaterialButton(
-          onPressed: () {
-            // StripeService.instance.makePayment(sum.toInt(), user!.name,2,C);
-          },
+          onPressed: () async {
+            await StripeService.instance.makePayment(price: sum.toInt(), username: user!.name, role: 2, userId: user!.id!, context: context);
+            Future.delayed(Duration(milliseconds: 100),() async {await CartBloc.clearCart(context, user!.id!);});
+            },
           elevation: 4,
           color: Colors.deepOrange,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),

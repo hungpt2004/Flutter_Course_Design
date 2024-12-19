@@ -31,6 +31,19 @@ class CartRemoveFailure extends CartState {
   CartRemoveFailure(this.cartItems, this.error, this.sum);
 }
 
+class CartClearAll extends CartState {
+  List<Map<String,dynamic>> cartItems;
+  double sum;
+  CartClearAll(this.cartItems, this.sum);
+}
+
+class CartClearAllFailure extends CartState {
+  List<Map<String,dynamic>> cartItems;
+  String error;
+  double sum;
+  CartClearAllFailure(this.cartItems,this.error,this.sum);
+}
+
 class LoadingSuccess extends CartState {
   List<Map<String, dynamic>> cartItems;
   double sum;

@@ -14,6 +14,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<OnPressedAddToCart>(_onAddToCart);
     on<OnPressedRemoveCart>(_onRemoveCart);
     on<LoadingCart>(_onLoadingCart);
+    on<OnPressedClearCart>(_onClearCart);
   }
 
   void _onAddToCart(OnPressedAddToCart event, Emitter<CartState> emit) async {
@@ -27,7 +28,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       double sumOfBill = 0;
       for(var q in cartItems){
         Quiz? quiz = await DBHelper.instance.getQuizById(q['quiz_id']);
-        sumOfBill += (quiz!.price! + q['quantity']);
+        sumOfBill += (quiz!.price! * q['quantity']);
       }
       print('Tong bill $sumOfBill');
       emit(CartAddSuccess(cartItems,sumOfBill));
@@ -37,7 +38,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       double sumOfBill = 0;
       for(var q in cartItems){
         Quiz? quiz = await DBHelper.instance.getQuizById(q['quiz_id']);
-        sumOfBill += (quiz!.price! + q['quantity']);
+        sumOfBill += (quiz!.price! * q['quantity']);
       }
       emit(CartAddFailure(cartItems, e.toString(),sumOfBill));
     }
@@ -52,7 +53,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       double sumOfBill = 0;
       for(var q in cartItems){
         Quiz? quiz = await DBHelper.instance.getQuizById(q['quiz_id']);
-        sumOfBill += (quiz!.price! + q['quantity']);
+        sumOfBill += (quiz!.price! * q['quantity']);
       }
       print('Tong bill $sumOfBill');
       emit(CartRemoveSuccess(cartItems,sumOfBill));
@@ -75,11 +76,31 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     double sumOfBill = 0;
     for(var q in cartItems){
       Quiz? quiz = await DBHelper.instance.getQuizById(q['quiz_id']);
-      sumOfBill += (quiz!.price! + q['quantity']);
+      sumOfBill += (quiz!.price! * q['quantity']);
     }
     emit(LoadingSuccess(cartList,sumOfBill));
   }
 
+
+  void _onClearCart(OnPressedClearCart event, Emitter<CartState> emit) async {
+    try {
+      final cart = await DBHelper.instance.getCartByUserId(event.userId);
+      List<Map<String, dynamic>> cartItems = await DBHelper.instance.getCartItemsByCartId(cart!.id!);
+      for(var c in cartItems){
+        await DBHelper.instance.removeQuizFromCart(c['quiz_id'], cart.id!);
+      }
+      emit(CartClearAll(cartItems, 0));
+    } catch (e) {
+      final cart = await DBHelper.instance.getCartByUserId(event.userId);
+      List<Map<String, dynamic>> cartItems = await DBHelper.instance.getCartItemsByCartId(cart!.id!);
+      double sumOfBill = 0;
+      for(var q in cartItems){
+        Quiz? quiz = await DBHelper.instance.getQuizById(q['quiz_id']);
+        sumOfBill += (quiz!.price! + q['quantity']);
+      }
+      emit(CartClearAllFailure(cartItems, e.toString(), sumOfBill));
+    }
+  }
 
   static Future<void> addToCart(BuildContext context,int carId,  CartItem cartItems, int userId) async {
     context.read<CartBloc>().add(OnPressedAddToCart(carId, userId, cartItems));
@@ -93,5 +114,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     context.read<CartBloc>().add(LoadingCart(userId));
   }
 
+  static Future<void> clearCart(BuildContext context,int userId) async {
+    context.read<CartBloc>().add(OnPressedClearCart(userId));
+  }
 
 }

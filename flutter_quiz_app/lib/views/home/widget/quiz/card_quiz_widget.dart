@@ -28,6 +28,7 @@ import 'package:flutter_quiz_app/theme/network_image.dart';
 import 'package:flutter_quiz_app/theme/responsive_size.dart';
 import 'package:flutter_quiz_app/theme/text_style.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../components/button/button_icon.dart';
 import '../../../../components/exception/cart_exception.dart';
 import '../../../../model/quiz.dart';
 import '../../../../model/user.dart';
@@ -47,173 +48,259 @@ class _CardQuizWidgetState extends State<CardQuizWidget> {
   final textStyle = TextStyleCustom();
   User? userCurrent = UserManager().currentUser;
   bool? isFavorite;
-  String statusText1 = 'Free';
+  String statusText1 = 'Let\'s play';
   String statusText2 = 'Need Pay';
 
+  //confirm alert
+  _showModalRestart(BuildContext context, int quizId, int userId) {
+    showGeneralDialog(
+      //Nhan ra ngoai de dong
+      barrierDismissible: true,
+      barrierLabel: 'DIALOG',
+      context: context,
+      transitionDuration:
+          const Duration(milliseconds: 300), // Thời gian hiệu ứng
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15), color: Colors.white),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const BoxHeight(h: 10),
+                Material(
+                  color: fullColor,
+                  child: Text(
+                    ' You already do this quiz !',
+                    textAlign: TextAlign.center,
+                    style: textStyle.contentTextStyle(
+                        FontWeight.w500, Colors.black),
+                  ),
+                ),
+                const BoxHeight(h: 5),
+                Material(
+                  color: fullColor,
+                  child: Text(
+                    '* Your result will be reset when you do this again !',
+                    textAlign: TextAlign.start,
+                    style: textStyle.superSmallTextStyle(
+                        FontWeight.w500, primaryColor),
+                  ),
+                ),
+                const BoxHeight(h: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ButtonIcon(
+                        text: 'Cancel',
+                        icon: Icons.cancel,
+                        function: () {
+                          Navigator.pop(context);
+                        }),
+                    ButtonIcon(
+                        text: 'Restart',
+                        icon: Icons.refresh_sharp,
+                        function: () async {
+                          await QuizBloc.enjoyQuiz(context, quizId, userId);
+                          Future.delayed(const Duration(milliseconds: 100), () {
+                            Navigator.pushNamed(context, '/doQuiz',
+                                arguments: quizId);
+                          });
+                        })
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: CurvedAnimation(
+            parent: animation,
+            curve: Curves.fastEaseInToSlowEaseOut,
+          ),
+          child: child,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<FavoriteBloc, FavoriteState>(
-      builder: (context, state) {
-        return FutureBuilder(
-          future: widget.subjectId != null
-              ? DBHelper.instance.getQuizBySubjectId(widget.subjectId!)
-              : DBHelper.instance.getAllQuiz(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator(
-                color: primaryColor,
-              );
-            } else if (!snapshot.hasData || snapshot.hasError) {
-              return const Text('Error in card quiz');
-            } else {
-              final quizList = snapshot.data;
-              return GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: CROSS_COUNT,
-                    mainAxisExtent: HEIGHT,
-                    crossAxisSpacing: CROSS_SPACING,
-                    mainAxisSpacing: MAIN_SPACING),
-                itemCount: quizList!.length,
-                itemBuilder: (context, index) {
-                  final quizIndex = quizList[index];
-                  return GestureDetector(
-                    //Xu ly khi user nhan vao card => detail
-                    onTap: () {},
-                    child: Card(
-                      elevation: 3,
-                      color: fullColor,
-                      child: Column(
-                        children: [
-                          Container(
-                              width: double.infinity,
-                              height: StyleSize(context).heightPercent(100),
-                              decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10)),
-                                  image: DecorationImage(
-                                      image: !quizIndex['url']
-                                              .toString()
-                                              .startsWith('/data/')
-                                          ? CachedNetworkImageProvider(
-                                              quizIndex['url'])
-                                          : FileImage(File(quizIndex['url'])),
-                                      fit: BoxFit.cover)),
-                              child: Stack(
-                                children: [
-                                  FutureBuilder(
-                                    future: precacheImage(
-                                        CachedNetworkImageProvider(
-                                            quizIndex['url']),
-                                        context),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return _loadingOverlay(); // Loading state
-                                      } else if (snapshot.hasError) {
-                                        return _errorOverlay(); // Error state
-                                      } else {
-                                        return const SizedBox
-                                            .shrink(); // Success state, show nothing
+    return BlocListener<FavoriteBloc, FavoriteState>(
+      child: FutureBuilder(
+        future: widget.subjectId != null
+            ? DBHelper.instance.getQuizBySubjectId(widget.subjectId!)
+            : DBHelper.instance.getAllQuiz(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator(
+              color: primaryColor,
+            );
+          } else if (!snapshot.hasData || snapshot.hasError) {
+            return const Text('Error in card quiz');
+          } else {
+            final quizList = snapshot.data;
+            return GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: CROSS_COUNT,
+                  mainAxisExtent: HEIGHT,
+                  crossAxisSpacing: CROSS_SPACING,
+                  mainAxisSpacing: MAIN_SPACING),
+              itemCount: quizList!.length,
+              itemBuilder: (context, index) {
+                final quizIndex = quizList[index];
+                return GestureDetector(
+                  //Xu ly khi user nhan vao card => detail
+                  onTap: () {},
+                  //card cua tung quiz
+                  child: Card(
+                    elevation: 3,
+                    color: fullColor,
+                    child: Column(
+                      children: [
+                        Container(
+                            width: double.infinity,
+                            height: StyleSize(context).heightPercent(100),
+                            decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10)),
+                                image: DecorationImage(
+                                    image: !quizIndex['url']
+                                            .toString()
+                                            .startsWith('/data/')
+                                        ? CachedNetworkImageProvider(
+                                            quizIndex['url'])
+                                        : FileImage(File(quizIndex['url'])),
+                                    fit: BoxFit.cover)),
+                            child: Stack(
+                              children: [
+                                FutureBuilder(
+                                  future: precacheImage(
+                                      CachedNetworkImageProvider(
+                                          quizIndex['url']),
+                                      context),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return _loadingOverlay(); // Loading state
+                                    } else if (snapshot.hasError) {
+                                      return _errorOverlay(); // Error state
+                                    } else {
+                                      return const SizedBox
+                                          .shrink(); // Success state, show nothing
+                                    }
+                                  },
+                                ),
+                                _overlay(),
+                                Positioned(
+                                  top: 10,
+                                  right: 10,
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      if (quizIndex['isFavorite'] == 0) {
+                                        context.read<FavoriteBloc>().add(
+                                            OnPressedAddFavorite(
+                                                Favorite(
+                                                    userId: userCurrent!.id!,
+                                                    quizId: quizIndex['id'],
+                                                    createdAt: DateTime.now()),
+                                                quizIndex['id'],
+                                                userCurrent!.id!));
+                                      } else if (quizIndex['isFavorite'] == 1) {
+                                        context.read<FavoriteBloc>().add(
+                                            OnPressedRemoveFavorite(
+                                                quizIndex['id'],
+                                                userCurrent!.id!));
                                       }
                                     },
+                                    child: Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.grey.withOpacity(0.5)),
+                                      child: Center(
+                                        child: SvgPicture.asset(
+                                            'assets/svg/heart.svg'),
+                                      ),
+                                    ),
                                   ),
-                                  _overlay(),
-                                  Positioned(
-                                    top: 10,
-                                    right: 10,
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        if (quizIndex['isFavorite'] == 0) {
-                                          context.read<FavoriteBloc>().add(
-                                              OnPressedAddFavorite(
-                                                  Favorite(
-                                                      userId: userCurrent!.id!,
-                                                      quizId: quizIndex['id'],
-                                                      createdAt:
-                                                          DateTime.now()),
-                                                  quizIndex['id'],
-                                                  userCurrent!.id!));
-                                        } else if (quizIndex['isFavorite'] ==
-                                            1) {
-                                          context.read<FavoriteBloc>().add(
-                                              OnPressedRemoveFavorite(
-                                                  quizIndex['id'], userCurrent!.id!));
+                                ),
+                                Positioned(
+                                  top: 10,
+                                  left: 10,
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      if (quizIndex['price'] == 0) {
+                                        ShowScaffoldMessenger
+                                            .showScaffoldMessengerUnsuccessfully(
+                                                context,
+                                                'This course is free',
+                                                textStyle);
+                                      } else if (quizIndex['price'] > 0) {
+                                        Cart cart =
+                                            Cart(userId: userCurrent!.id!);
+                                        try {
+                                          await DBHelper.instance.createCart(
+                                              cart, userCurrent!.id!);
+                                        } on CartAlreadyExistException catch (e) {
+                                          print(e.toString());
                                         }
-                                      },
-                                      child: Container(
-                                        width: 30,
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                Colors.grey.withOpacity(0.5)),
-                                        child: Center(
-                                          child: quizIndex['isFavorite'] == 0
-                                              ? SvgPicture.asset(
-                                                  'assets/svg/heart.svg')
-                                              : SvgPicture.asset(
-                                                  'assets/svg/heart_click.svg'),
+                                        final currentCart = await DBHelper
+                                            .instance
+                                            .getCartByUserId(userCurrent!.id!);
+                                        CartItem cartItems = CartItem(
+                                            cartId: currentCart!.id!,
+                                            quizId: quizIndex['id'],
+                                            quantity: 1);
+                                        CartBloc.addToCart(
+                                            context,
+                                            currentCart.id!,
+                                            cartItems,
+                                            userCurrent!.id!);
+                                      }
+                                    },
+                                    child: Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.grey.withOpacity(0.5)),
+                                      child: Center(
+                                        child: SvgPicture.asset(
+                                          'assets/svg/shopping.svg',
+                                          width: 20,
+                                          height: 20,
                                         ),
                                       ),
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 10,
-                                    left: 10,
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        if(quizIndex['price'] == 0){
-                                          ShowScaffoldMessenger.showScaffoldMessengerUnsuccessfully(context, 'This course is free', textStyle);
-                                        } else if (quizIndex['price'] > 0){
-                                          Cart cart = Cart(userId: userCurrent!.id!);
-                                          try {
-                                            await DBHelper.instance.createCart(cart, userCurrent!.id!);
-                                          } on CartAlreadyExistException catch (e) {
-                                            print(e.toString());
-                                          }
-                                          final currentCart = await DBHelper.instance.getCartByUserId(userCurrent!.id!);
-                                          CartItem cartItems = CartItem(cartId: currentCart!.id!, quizId: quizIndex['id'], quantity: 1);
-                                          CartBloc.addToCart(context,currentCart.id!, cartItems, userCurrent!.id!);
-                                        }
-                                      },
-                                      child: Container(
-                                        width: 30,
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                Colors.grey.withOpacity(0.5)),
-                                        child: Center(
-                                          child: SvgPicture.asset(
-                                            'assets/svg/shopping.svg',
-                                            width: 20,
-                                            height: 20,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )),
-                          const BoxHeight(h: 10),
-                          _title(quizIndex),
-                          const BoxHeight(h: 8),
-                          _information(quizIndex),
-                        ],
-                      ),
+                                ),
+                              ],
+                            )),
+                        const BoxHeight(h: 10),
+                        _title(quizIndex),
+                        const BoxHeight(h: 8),
+                        _information(quizIndex),
+                      ],
                     ),
-                  );
-                },
-              );
-            }
-          },
-        );
-      },
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
       listener: (context, state) {
         if (state is FavoriteLoading) {
           ShowScaffoldMessenger.showScaffoldMessengerLoading(
@@ -286,53 +373,40 @@ class _CardQuizWidgetState extends State<CardQuizWidget> {
         child: Center(
           child: MaterialButton(
             onPressed: () async {
-              CompletedQuiz? completeQuiz = await DBHelper.instance.getCompleteQuizByQuizIdAndUserId(user.id!);
-              if(completeQuiz != null) {
-                if(completeQuiz.status == 'unlock') {
-                  print('QUIZ NAY DANG O DAY');
-                  print(completeQuiz.quizId);
-                  print(completeQuiz.status);
-                  await QuizBloc.enjoyQuiz(context, quizIndex['id'], user.id!);
-                  // await DBHelper.instance.updateStatusUnlock(quizIndex['id'],user.id!);
-                  Future.delayed(const Duration(milliseconds: 100), () {
-                    Navigator.pushNamed(context, '/doQuiz', arguments: quizIndex['id']);
-                  });
-                } else if (completeQuiz.status == 'lock') {
-                  await StripeService.instance.makePayment(quizIndex['price'], user.username,1,CompletedQuiz(userId: user.id!, quizId: quizIndex['id'], progress: 0),user.id!);
-                  await DBHelper.instance.updateStatusUnlock(quizIndex['id'],user.id!);
-                } else if (completeQuiz.status == 'did') {
+              //Check tat ca complete quiz cua user
+              final completeList = await DBHelper.instance.getAllCompleteQuizByUserId(user.id!);
+              bool check = completeList.any((item) => item['user_id'] == user.id! && item['quiz_id'] == quizIndex['id']);
 
-                }
-              } else if (completeQuiz == null) {
-                if(quizIndex['price'] <= 0) {
-                  await QuizBloc.enjoyQuiz(context, quizIndex['id'], user.id!);
-                  await DBHelper.instance.updateStatusUnlock(quizIndex['id'],user.id!);
-                  Future.delayed(const Duration(milliseconds: 100), () {
-                    Navigator.pushNamed(context, '/doQuiz', arguments: quizIndex['id']);
-                  });
-                } else if (quizIndex['price'] > 0) {
-                  await StripeService.instance.makePayment(quizIndex['price'], user.username,1,CompletedQuiz(userId: user.id!, quizId: quizIndex['id'], progress: 0),user.id!);
-                  await DBHelper.instance.updateStatusUnlock(quizIndex['id'],user.id!);
-                }
-                else {
-                  // final completeQuiz = await DBHelper.instance.getCompleteQuizByQuizIdAndUserId(user.id!);
-                  // if(completeQuiz!.quizId == quizIndex['id'] && completeQuiz.status == 'did') {
-                  //   ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(context, 'You are already do this', textStyle);
-                  //   setState(() {
-                  //     statusText1 = 'Did';
-                  //   });
-                  // }
-                }
+              //Kiem tra progress neu progress > 0 thi restart update diem moi
+              final completeQuiz = await DBHelper.instance.getCompleteQuiz(user.id!, quizIndex['id']);
+
+              if (check && completeQuiz!.progress > 0) {
+                //Quiz da ton tai
+                _showModalRestart(context, quizIndex['id'], user.id!);
+              } else if (!check && quizIndex['price'] > 0) {
+                //Quiz can duoc thanh toan
+                await StripeService.instance.makePayment(price: quizIndex['price'], username: user.name, role: 1, userId: user.id!, context: context);
+              } else {
+                //Quiz chua duoc lam
+                await QuizBloc.enjoyQuiz(context, quizIndex['id'], user.id!);
+                // await DBHelper.instance.updateStatusUnlock(quizIndex['id'],user.id!);
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  Navigator.pushNamed(context, '/doQuiz',
+                      arguments: quizIndex['id']);
+                });
               }
             },
             elevation: 10,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            color: quizIndex['price'] == 0 ? primaryColor  : Colors.grey.withOpacity(0.8),
-            child: Text(quizIndex['price'] == 0 ? statusText1 : statusText2, style: textStyle.contentTextStyle(FontWeight.w500, quizIndex['price'] == 0 ? Colors.white : Colors.black),),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            color: primaryColor,
+            child: Text(
+              statusText1,
+              style: textStyle.contentTextStyle(FontWeight.w500, Colors.white),
+            ),
           ),
         ));
   }
-
 
   Widget _rowInformation(User user, Map<String, dynamic> quizIndex) {
     return Padding(
@@ -353,14 +427,20 @@ class _CardQuizWidgetState extends State<CardQuizWidget> {
     return Row(
       children: [
         SizedBox(
-            width: 20,
-            height: 20,
+            width: StyleSize(context).widthPercent(20),
+            height: StyleSize(context).heightPercent(20),
             child: Stack(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: networkImage.networkImage(user.url!),
-                ),
+                Container(
+                    width: StyleSize(context).widthPercent(150),
+                    height: StyleSize(context).heightPercent(150),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        image: DecorationImage(
+                            image: !user.url!.toString().startsWith('/data/')
+                                ? CachedNetworkImageProvider(user.url!)
+                                : FileImage(File(user.url!)),
+                            fit: BoxFit.cover))),
                 Positioned(
                   top: 0,
                   right: 0,
@@ -386,7 +466,7 @@ class _CardQuizWidgetState extends State<CardQuizWidget> {
 
   Widget _price(Map<String, dynamic> quizIndex) {
     return Text(
-      quizIndex['price'] == 0 ? 'Free' : '${quizIndex['price']}\$',
+      quizIndex['price'] == 0 ? '0\$' : '${quizIndex['price']}\$',
       style: textStyle.superSmallTextStyle(FontWeight.bold, Colors.black),
     );
   }

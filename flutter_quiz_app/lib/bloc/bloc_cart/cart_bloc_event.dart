@@ -16,8 +16,15 @@ class OnPressedRemoveCart extends CartEvent {
   OnPressedRemoveCart(this.cartId, this.quizId);
 }
 
+class OnPressedClearCart extends CartEvent {
+  int userId;
+  OnPressedClearCart(this.userId);
+}
+
 class LoadingCart extends CartEvent {
   int userId;
   LoadingCart(this.userId);
 }
+
+
 

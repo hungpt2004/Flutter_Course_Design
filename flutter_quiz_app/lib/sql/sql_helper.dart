@@ -190,7 +190,7 @@ class DBHelper {
   //Create name database
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDatabase('DatabaseHello.db');
+    _database = await _initDatabase('KhoQuaBoiOi.db');
     return _database!;
   }
 
@@ -988,7 +988,6 @@ class DBHelper {
     }
   }
 
-
   // [ T Y P E ]
   Future<Type?> getTypeById(int typeId) async {
     final db = await DBHelper.instance.database;
@@ -1093,14 +1092,34 @@ class DBHelper {
     }
   }
 
-  Future<int> updateNumberCorrectAnswer(int correctCount, int userId, int quizId) async {
+  Future<int> updateNumberCorrectAnswer(
+      int correctCount, int userId, int quizId) async {
     final db = await DBHelper.instance.database;
-    return db.update('COMPLETED_QUIZ', {'number_correct':correctCount},where: 'user_id = ? AND quiz_id = ?',whereArgs: [userId,quizId]);
+    final questionList =
+        await DBHelper.instance.getQuestionListByQuizId(quizId);
+    int totalQuestionOfQuiz = questionList.length;
+    if (correctCount > totalQuestionOfQuiz) {
+      return 0;
+    } else {
+      return db.update('COMPLETED_QUIZ', {'number_correct': correctCount},
+          where: 'user_id = ? AND quiz_id = ?', whereArgs: [userId, quizId]);
+    }
   }
 
-  Future<int> updateCompleteQuizProgress(int progress, int userId, int quizId) async {
+  Future<int> updateNumberCorrectAnswerReset(int userId, int quizId) async {
     final db = await DBHelper.instance.database;
-    return db.update('COMPLETED_QUIZ', {'progress':progress},where: 'user_id = ? AND quiz_id = ?',whereArgs: [userId,quizId]);
+    final questionList =
+        await DBHelper.instance.getQuestionListByQuizId(quizId);
+    int totalQuestionOfQuiz = questionList.length;
+    return db.update('COMPLETED_QUIZ', {'number_correct': 0},
+        where: 'user_id = ? AND quiz_id = ?', whereArgs: [userId, quizId]);
+  }
+
+  Future<int> updateCompleteQuizProgress(
+      int progress, int userId, int quizId) async {
+    final db = await DBHelper.instance.database;
+    return db.update('COMPLETED_QUIZ', {'progress': progress},
+        where: 'user_id = ? AND quiz_id = ?', whereArgs: [userId, quizId]);
   }
 
   Future<int> updateStatusUnlock(int quizId, int userId) async {
@@ -1118,12 +1137,6 @@ class DBHelper {
   Future<int> updateCompleteQuiz(
       int score, int userId, int quizId, DateTime dateTime) async {
     final db = await DBHelper.instance.database;
-    // final complete = await DBHelper.instance.getCompleteQuizByQuizIdAndUserId(userId);
-    // final listComplete = await DBHelper.instance.getAllCompleteQuizByUserId(3);
-    // print('DO DAI ${listComplete.length}');
-    // bool check = listComplete.any((items) => items['user_id'] == 3 && items['quiz_id'] == 1);
-    print('Score SQL: $score');
-    print('Complete_at SQL: ${dateTime.toIso8601String()}');
     return db.update(
       'COMPLETED_QUIZ',
       {'score': score, 'completed_at': dateTime.toIso8601String()},
@@ -1132,6 +1145,12 @@ class DBHelper {
     );
   }
 
+  Future<int> updatePaidAtTime(int userId, int quizId) async {
+    final db = await DBHelper.instance.database;
+    return db.update(
+        'COMPLETED_QUIZ', {'paid_at': DateTime.now().toIso8601String()},
+        where: 'quiz_id = ? AND user_id = ?', whereArgs: [quizId, userId]);
+  }
 
   Future<void> deleteCompleteQuiz(int userId, int quizId) async {
     final db = await instance.database;
@@ -1147,8 +1166,19 @@ class DBHelper {
 
   Future<CompletedQuiz?> getCompleteQuizByQuizIdAndUserId(int userId) async {
     final db = await DBHelper.instance.database;
-    final List<Map<String, dynamic>> completes = await db.query('COMPLETED_QUIZ', where: 'user_id = ?', whereArgs: [userId]);
+    final List<Map<String, dynamic>> completes = await db
+        .query('COMPLETED_QUIZ', where: 'user_id = ?', whereArgs: [userId]);
     print('Complete cua user');
+    if (completes.isNotEmpty) {
+      return CompletedQuiz.fromMap(completes.first);
+    }
+    return null;
+  }
+
+  Future<CompletedQuiz?> getCompleteQuiz(int userId, int quizId) async {
+    final db = await DBHelper.instance.database;
+    final List<Map<String, dynamic>> completes = await db
+        .query('COMPLETED_QUIZ', where: 'user_id = ? AND quiz_id = ?', whereArgs: [userId,quizId]);
     if (completes.isNotEmpty) {
       return CompletedQuiz.fromMap(completes.first);
     }
@@ -1163,7 +1193,11 @@ class DBHelper {
       throw CartAlreadyExistException(msg: 'User only create one cart');
     }
     try {
-      return await db.insert('CART', cart.toMap(), conflictAlgorithm: ConflictAlgorithm.replace,);
+      return await db.insert(
+        'CART',
+        cart.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -1186,9 +1220,13 @@ class DBHelper {
     final db = await instance.database;
     final cart = await getCartByUserId(userId);
     final cartItemsList = await getCartItemsByCartId(cart!.id!);
+    final completeList = await getAllCompleteQuizByUserId(userId);
     bool check = cartItemsList.any((items) => items['quiz_id'] == cartItems.quizId);
+    bool checkComplete = completeList.any((items) => items['quiz_id'] == cartItems.quizId && items['user_id'] == userId);
     if (check) {
       throw QuizAlreadyExistException(msg: 'Quiz already exist in Cart');
+    } else if (checkComplete) {
+      throw QuizAlreadyExistException(msg: 'Quiz already have');
     } else {
       return await db.insert('CART_ITEM', cartItems.toMap());
     }
@@ -1196,25 +1234,34 @@ class DBHelper {
 
   Future<List<Map<String, dynamic>>> getCartItemsByCartId(int cartId) async {
     final db = await instance.database;
-    return await db.query('CART_ITEM', where: 'cart_id = ?', whereArgs: [cartId]);
+    return await db
+        .query('CART_ITEM', where: 'cart_id = ?', whereArgs: [cartId]);
   }
 
   Future<int> removeQuizFromCart(int quizId, int cartId) async {
     final db = await instance.database;
-    return db.delete('CART_ITEM',where: 'quiz_id = ? AND cart_id = ?',whereArgs: [quizId,cartId]);
+    return db.delete('CART_ITEM',
+        where: 'quiz_id = ? AND cart_id = ?', whereArgs: [quizId, cartId]);
   }
+
 
   // [ Q U E S T I O N ]
   Future<int> addNewQuestion(Question question, int quizId, int userId) async {
     final db = await instance.database;
-    final ownQuizList = await DBHelper.instance.getQuizByUserId(userId);
-    final questionList = await DBHelper.instance.getQuestionListByQuizId(quizId);
+    final questionList =
+    await DBHelper.instance.getQuestionListByQuizId(quizId);
     bool check = questionList.any((items) => items['content'] == question.content);
-    if(check){
+    if (check) {
       throw Exception('Question already exist');
     } else {
       return db.insert('QUESTION', question.toMap());
     }
+  }
+
+  // [ D I S C O U N T ]
+  Future<List<Map<String,dynamic>>> getAllVoucherByRankId(int rankId) async {
+    final db = await instance.database;
+    return db.query('DISCOUNT',where: 'rank_id=?',whereArgs: [rankId]);
   }
 
 

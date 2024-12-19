@@ -6,7 +6,8 @@ abstract class QuestionEvent {}
 
 class OnPressedMoveQuestion extends QuestionEvent {
   int currentIndex;
-  OnPressedMoveQuestion(this.currentIndex);
+  int quizId;
+  OnPressedMoveQuestion(this.currentIndex, this.quizId);
 }
 
 class OnPressedAddQuestion extends QuestionEvent {
