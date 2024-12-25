@@ -60,7 +60,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ShowScaffoldMessenger.showScaffoldMessengerLoading(
                 context, textStyle);
           } else if (state is SendSuccess) {
-            print('GUI MAIL');
             ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(
                 context,state.success, textStyle);
             _toggleButton(false);

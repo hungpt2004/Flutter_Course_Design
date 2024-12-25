@@ -26,7 +26,6 @@ class AnswerBloc extends Bloc<AnswerEvent, AnswerState> {
       print('Cau hoi hien tai: $currentQuestionIndex');
       print('Cau tra loi dung: ${event.question['correct_answer']}');
       score += calculateScore(event.selectAnswer, event.question['correct_answer'],event.questionId, event.quizId);
-      currentQuestionIndex++;
 
       selectedAnswered[event.questionId] = event.selectAnswer;
       print('CURRENT INDEX QUESTION : ${currentQuestionIndex}');
@@ -65,6 +64,7 @@ class AnswerBloc extends Bloc<AnswerEvent, AnswerState> {
       if (previousAnswer == correctAnswer) {
         deltaScore -= 20;
         correctAnswerCount[quizId] = (correctAnswerCount[quizId] ?? 0) - 1;
+        currentQuestionIndex--;
       }
     }
 
@@ -72,6 +72,7 @@ class AnswerBloc extends Bloc<AnswerEvent, AnswerState> {
     if (selectedAnswer == correctAnswer) {
       deltaScore += 20;
       correctAnswerCount[quizId] = (correctAnswerCount[quizId] ?? 0) + 1;
+      currentQuestionIndex++;
     }
 
     return deltaScore;

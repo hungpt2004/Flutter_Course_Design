@@ -15,6 +15,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<OnPressedRemoveCart>(_onRemoveCart);
     on<LoadingCart>(_onLoadingCart);
     on<OnPressedClearCart>(_onClearCart);
+    on<OnPressedApplyVoucher>(_onApplyVoucher);
   }
 
   void _onAddToCart(OnPressedAddToCart event, Emitter<CartState> emit) async {
@@ -69,6 +70,31 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
 
+  void _onApplyVoucher(OnPressedApplyVoucher event, Emitter<CartState> emit) async {
+    try {
+      final cart = await DBHelper.instance.getCartByUserId(event.userId);
+      List<Map<String, dynamic>> cartItems = await DBHelper.instance.getCartItemsByCartId(cart!.id!);
+      double sumOfBill = 0;
+      for(var q in cartItems){
+        Quiz? quiz = await DBHelper.instance.getQuizById(q['quiz_id']);
+        sumOfBill += (quiz!.price! * q['quantity']);
+      }
+      final voucher = await DBHelper.instance.getVoucherByRankId(event.rankId);
+      final mainSum = sumOfBill - voucher!.value;
+      emit(CartApplyVoucherSuccess(cartItems, (mainSum), sumOfBill));
+    } catch (e) {
+      final cart = await DBHelper.instance.getCartByUserId(event.userId);
+      List<Map<String, dynamic>> cartItems = await DBHelper.instance.getCartItemsByCartId(cart!.id!);
+      double sumOfBill = 0;
+      for(var q in cartItems){
+        Quiz? quiz = await DBHelper.instance.getQuizById(q['quiz_id']);
+        sumOfBill += (quiz!.price! * q['quantity']);
+      }
+      emit(CartApplyVoucherFailure(cartItems, e.toString(),sumOfBill));
+    }
+  }
+
+
   void _onLoadingCart(LoadingCart event, Emitter<CartState> emit) async {
     final cart = await DBHelper.instance.getCartByUserId(event.userId);
     final cartList = await DBHelper.instance.getCartItemsByCartId(cart!.id!);
@@ -116,6 +142,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   static Future<void> clearCart(BuildContext context,int userId) async {
     context.read<CartBloc>().add(OnPressedClearCart(userId));
+  }
+
+  static Future<void> applyVoucher(BuildContext context, int userId, int rankId) async {
+    context.read<CartBloc>().add(OnPressedApplyVoucher(rankId, userId));
   }
 
 }

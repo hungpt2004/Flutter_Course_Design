@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_favorite/favorite_bloc.dart';
@@ -19,8 +17,6 @@ import 'package:flutter_quiz_app/theme/network_image.dart';
 import 'package:flutter_quiz_app/theme/text_style.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
-
-import '../../bloc/bloc_quiz/quiz_bloc.dart';
 import '../../components/button/button_field.dart';
 import '../../model/user.dart';
 
@@ -80,10 +76,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               Text(
                 'Leaderboard of Ranks',
                 style:
-                    textStyle.subTitleTextStyle(FontWeight.w700, Colors.black),
+                    textStyle.subTitleTextStyle(FontWeight.w600, Colors.black),
               ),
               const BoxWidth(w: 5),
-              Lottie.asset('assets/animation/top.json', width: 50, height: 50)
+              Lottie.asset('assets/animation/top.json', width: 40, height: 40)
             ],
           ),
           elevation: 15,
@@ -176,7 +172,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   Widget build(BuildContext context) {
     print('Load list favorite lan 1');
     OwnQuizBloc.loadingFavorite(context, user!.id!);
-
     return Scaffold(backgroundColor: fullColor, body: _body());
   }
 
@@ -224,20 +219,24 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       color: fullColor,
       child: ListTile(
           leading: SizedBox(
-            width: 50,
-            height: 50,
+            width: 40,
+            height: 40,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(50),
-              child: networkImage.networkImage(user['url']),
+              child: user['url'].toString().startsWith('/data/')
+                  ? Image.file(
+                File(user['url']),
+                fit: BoxFit.cover,)
+                  : networkImage.networkImage(user['url']),
             ),
           ),
           title: Text(
             user['name'] ?? 'Unknown',
-            style: textStyle.contentTextStyle(FontWeight.w600, Colors.black),
+            style: textStyle.superSmallTextStyle(FontWeight.w600, Colors.black),
           ), // Tên user
           subtitle: Text(
             'Points: ${user['total_score'] ?? 0}',
-            style: textStyle.contentTextStyle(FontWeight.w500, Colors.black),
+            style: textStyle.superSmallTextStyle(FontWeight.w500, Colors.black),
           ), // Điểm
           trailing: IconButton(onPressed: (){}, icon: Icon(Icons.person,size: 30,)),
           ),

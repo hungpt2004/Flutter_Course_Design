@@ -18,7 +18,7 @@ import 'constant/payment_key.dart';
 
 void main() async {
   await _setup();
-  await UserManager().loadUser();
+  // await UserManager().loadUser();
   runApp(
     MultiBlocProvider(providers: [
       BlocProvider(create: (_) => AuthBloc()),
@@ -38,7 +38,6 @@ void main() async {
 Future<void> _setup() async {
   WidgetsFlutterBinding.ensureInitialized();
   Stripe.publishableKey = stripePublishableKey;
-
 }
 
 class MyApp extends StatefulWidget {
@@ -66,7 +65,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: AppRoutes.getAppRoutes(context),
-      initialRoute: '/login',
+      initialRoute: '/splash',
     );
   }
 }

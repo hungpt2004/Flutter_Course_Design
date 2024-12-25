@@ -385,7 +385,11 @@ class _CardQuizWidgetState extends State<CardQuizWidget> {
                 _showModalRestart(context, quizIndex['id'], user.id!);
               } else if (!check && quizIndex['price'] > 0) {
                 //Quiz can duoc thanh toan
-                await StripeService.instance.makePayment(price: quizIndex['price'], username: user.name, role: 1, userId: user.id!, context: context);
+                print('DANG O DAY');
+                print(quizIndex['price']);
+                print(quizIndex['id']);
+                print(user.id!);
+                await StripeService.instance.makePayment(price: quizIndex['price'], username: user.name, role: 1, userId: user.id!, quizId: quizIndex['id'], context: context);
               } else {
                 //Quiz chua duoc lam
                 await QuizBloc.enjoyQuiz(context, quizIndex['id'], user.id!);

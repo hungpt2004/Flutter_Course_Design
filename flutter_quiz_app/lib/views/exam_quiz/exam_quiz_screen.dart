@@ -1,25 +1,17 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quiz_app/bloc/bloc_answer/answer_bloc.dart';
-import 'package:flutter_quiz_app/bloc/bloc_auth/auth_bloc.dart';
-import 'package:flutter_quiz_app/bloc/bloc_auth/auth_bloc_state.dart';
 import 'package:flutter_quiz_app/bloc/bloc_own_quiz/ownquiz_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_own_quiz/ownquiz_bloc_state.dart';
 import 'package:flutter_quiz_app/bloc/bloc_quiz/quiz_bloc.dart';
-import 'package:flutter_quiz_app/bloc/bloc_quiz/quiz_bloc_event.dart';
 import 'package:flutter_quiz_app/bloc/bloc_quiz/quiz_bloc_state.dart';
 import 'package:flutter_quiz_app/components/appbar/custom_progressbar.dart';
 import 'package:flutter_quiz_app/components/box/box_height.dart';
 import 'package:flutter_quiz_app/components/box/box_width.dart';
 import 'package:flutter_quiz_app/components/button/button_field.dart';
 import 'package:flutter_quiz_app/components/button/button_icon.dart';
-import 'package:flutter_quiz_app/components/input_field/label_text.dart';
 import 'package:flutter_quiz_app/components/snackbar/not_yet_noti.dart';
 import 'package:flutter_quiz_app/components/snackbar/scaffold_snackbar_msg.dart';
-import 'package:flutter_quiz_app/service/shared_preferences/local_data_save.dart';
 import 'package:flutter_quiz_app/service/shared_preferences/singleton_user_manage.dart';
 import 'package:flutter_quiz_app/sql/sql_helper.dart';
 import 'package:flutter_quiz_app/theme/color.dart';
@@ -27,8 +19,6 @@ import 'package:flutter_quiz_app/theme/network_image.dart';
 import 'package:flutter_quiz_app/theme/responsive_size.dart';
 import 'package:flutter_quiz_app/theme/text_style.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../model/quiz.dart';
 import '../../model/user.dart';
@@ -48,6 +38,7 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
 
   @override
   void initState() {
+    print('TEN USER HIEN TAI ${user!.name}');
     OwnQuizBloc.loadingQuiz(context, user!.id!);
     super.initState();
   }
@@ -80,8 +71,10 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
               ButtonField(
                   text: 'Delete',
                   function: () async {
-                    // await QuizBloc.removeQuiz(context, quiz['id']);
                     await DBHelper.instance.deleteQuizById(quiz['id']);
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      Navigator.pop(context);
+                    });
                   })
             ],
           )
@@ -92,10 +85,6 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //Khi khoi tao ham build se chay ham loadOwnQuiz!
-    // OwnQuizBloc.loadingQuiz(context, user!.id!);
-    print('USER HIEN TAI : ${user!.username}');
-
     return Scaffold(backgroundColor: fullColor, body: _body(textStyle));
   }
 
@@ -168,8 +157,6 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
             itemBuilder: (context, index) {
               final completeQuizIndex = completeQuiz[index];
               final questions = questionList[index];
-              print(completeQuizIndex.toString());
-              print('DO DAI LIST CAU HOI ${questions.length}');
               return _cardCompleteQuiz(completeQuizIndex, quizList[index]!, networkImage, textStyle, questions.length);
             },
           );
@@ -189,11 +176,9 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
           final quizList = quizState.quizzes;
           return BlocBuilder<QuizBloc, QuizState>(
             builder: (context, state) {
-              //Goi lai lan nua de phat ra state la 1 quiz
+              //Load danh sach again
               OwnQuizBloc.loadingQuiz(context, user!.id!);
               return BlocListener<QuizBloc, QuizState>(
-                //Child cua BlocListener khong tu dong render
-                //Su dung BlocBuiler boc ben ngoai de render
                 child: quizList.isEmpty
                     ? const NotYetNoti(
                         label: 'Add',
@@ -225,7 +210,6 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
         } else if (quizState is OwnQuizLoadingFailure) {
           return const Text('Failed to load quizzes');
         } else {
-          print(quizState);
           return const CircularProgressIndicator(color: primaryColor);
         }
       },
@@ -255,7 +239,19 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
       endActionPane: ActionPane(motion: const ScrollMotion(), children: [
         SlidableAction(
           onPressed: (context) {
-            // Xử lý cập nhật
+            if(completeIndex['progress'] < 50){
+              ShowScaffoldMessenger.showScaffoldMessengerUnsuccessfully(context, 'You need to get 50% point to get key', textStyle);
+              return;
+            } else {
+              Navigator.pushNamed(
+                context,
+                '/history',
+                arguments: {
+                  'quizId': quiz.id,
+                  'quizUrl': quiz.url,
+                },
+              );
+            }
           },
           padding: const EdgeInsets.all(0),
           foregroundColor: primaryColor,
@@ -264,12 +260,17 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
         ),
         SlidableAction(
           onPressed: (context) {
-            // Xử lý cập nhật
+            Navigator.pushNamed(
+              context,
+              '/detail',
+              arguments: quiz
+              ,
+            );
           },
           padding: const EdgeInsets.all(0),
           foregroundColor: primaryColor,
-          icon: Icons.comment,
-          label: 'Feedback',
+          icon: Icons.menu_open,
+          label: 'Detail',
         ),
         SlidableAction(
           onPressed: (context) async {
@@ -312,7 +313,7 @@ class _ExamQuizScreenState extends State<ExamQuizScreen> {
                 ),
                 const BoxHeight(h: 2),
                 Text(
-                  'Paid at : ${textStyle.formatDateFromText(DateTime.parse(completeIndex['paid_at'])) ?? DateTime.now()}',
+                  'Paid at : ${textStyle.formatDateFromText(DateTime.parse(completeIndex['paid_at']))}',
                   style: textStyle.superSmallTextStyle(
                       FontWeight.w500, Colors.black),
                 ),

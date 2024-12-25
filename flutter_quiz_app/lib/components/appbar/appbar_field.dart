@@ -87,4 +87,24 @@ class AppBarCustom {
     );
   }
 
+  static AppBar appbarNoBackBtn(BuildContext context, String text, TextStyleCustom textStyle){
+    return AppBar(
+      automaticallyImplyLeading: false,
+      centerTitle: true,
+      backgroundColor: fullColor,
+      title: Text(text,
+          style: textStyle.titleTextStyle(FontWeight.w700, primaryColor)),
+    );
+  }
+
+  static AppBar appbarBackTextBtn(BuildContext context, String text, TextStyleCustom textStyle){
+    return AppBar(
+      automaticallyImplyLeading: true,
+      centerTitle: true,
+      backgroundColor: fullColor,
+      title: Text(text,
+          style: textStyle.titleTextStyle(FontWeight.w700, primaryColor)),
+    );
+  }
+
 }

@@ -21,4 +21,15 @@ class UserManager {
   Future<void> loadUser() async {
     currentUser = await LocalSaveData().getDataUserLocal();
   }
+
+  Future<void> logout() async {
+    // Clear the user data from local storage
+    await LocalSaveData().clearUserData(); // Ensure this method clears user data in SharedPreferences
+
+    // Clear currentUser in UserManager
+    currentUser = null; // Reset the currentUser to null
+
+    // Optionally, notify other parts of the app that the user has logged out (e.g., with BLoC or Provider)
+  }
 }
+

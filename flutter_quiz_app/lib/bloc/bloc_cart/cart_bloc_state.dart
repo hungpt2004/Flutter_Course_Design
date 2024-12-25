@@ -18,6 +18,20 @@ class CartAddFailure extends CartState {
   CartAddFailure(this.cartItems, this.error, this.sum);
 }
 
+class CartApplyVoucherSuccess extends CartState {
+  List<Map<String,dynamic>> cartItems;
+  double sum;
+  double oldSum;
+  CartApplyVoucherSuccess(this.cartItems, this.sum, this.oldSum);
+}
+
+class CartApplyVoucherFailure extends CartState {
+  List<Map<String,dynamic>> cartItems;
+  double sum;
+  String error;
+  CartApplyVoucherFailure(this.cartItems, this.error, this.sum);
+}
+
 class CartRemoveSuccess extends CartState {
   List<Map<String,dynamic>> cartItems;
   double sum;

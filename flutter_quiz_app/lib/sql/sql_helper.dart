@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_quiz_app/components/exception/cart_exception.dart';
 import 'package:flutter_quiz_app/model/completed_quiz.dart';
+import 'package:flutter_quiz_app/model/discount.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../model/cart.dart';
@@ -190,7 +191,7 @@ class DBHelper {
   //Create name database
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDatabase('KhoQuaBoiOi.db');
+    _database = await _initDatabase('TAOMOI.db');
     return _database!;
   }
 
@@ -322,9 +323,9 @@ class DBHelper {
       {
         'title': 'Java Basics Quiz',
         'description': 'A quiz on basic Java programming concepts.',
-        'is_paid': 0, // 0 = miễn phí
         'price': 0, // Giá 0 vì là quiz miễn phí
         'user_id': 1, // Giả sử user_id = 1 tồn tại trong bảng USER
+        'is_paid':0,
         'subject_id':
             1, // Giả sử subject_id = 1 là Java Programming trong bảng SUBJECT
         'type_id': 1, // Giả sử type_id = 1 là Multiple Choice
@@ -336,8 +337,8 @@ class DBHelper {
       {
         'title': 'Advanced Java Quiz',
         'description': 'A quiz on advanced Java programming concepts.',
-        'is_paid': 1, // Quiz có phí
         'price': 500, // Giá 500
+        'is_paid':0,
         'user_id': 1, // Giả sử user_id = 1 tồn tại trong bảng USER
         'subject_id':
             1, // Giả sử subject_id = 1 là Java Programming trong bảng SUBJECT
@@ -352,8 +353,8 @@ class DBHelper {
       {
         'title': 'Flutter Basics Quiz',
         'description': 'A quiz on basic Flutter programming concepts.',
-        'is_paid': 0, // 0 = miễn phí
         'price': 0, // Giá 0 vì là quiz miễn phí
+        'is_paid':0,
         'user_id': 2, // Giả sử user_id = 2 tồn tại trong bảng USER
         'subject_id':
             2, // Giả sử subject_id = 2 là Flutter Programming trong bảng SUBJECT
@@ -365,8 +366,8 @@ class DBHelper {
       {
         'title': 'Advanced Flutter Quiz',
         'description': 'A quiz on advanced Flutter programming concepts.',
-        'is_paid': 1, // Quiz có phí
         'price': 1000, // Giá 1000
+        'is_paid':0,
         'user_id': 2, // Giả sử user_id = 2 tồn tại trong bảng USER
         'subject_id':
             2, // Giả sử subject_id = 2 là Flutter Programming trong bảng SUBJECT
@@ -378,56 +379,92 @@ class DBHelper {
       },
 
       // Quiz cho Android Programming
-      // {
-      //   'title': 'Android Basics Quiz',
-      //   'description': 'A quiz on basic Android programming concepts.',
-      //   'is_paid': 0,  // 0 = miễn phí
-      //   'price': 0,    // Giá 0 vì là quiz miễn phí
-      //   'user_id': 1,  // Giả sử user_id = 1 tồn tại trong bảng USER
-      //   'subject_id': 3,  // Giả sử subject_id = 3 là Android Programming trong bảng SUBJECT
-      //   'type_id': 1,  // Giả sử type_id = 1 là Multiple Choice
-      //   'created_at': DateTime.now().toIso8601String(),
-      // },
-      // {
-      //   'title': 'Advanced Android Quiz',
-      //   'description': 'A quiz on advanced Android programming concepts.',
-      //   'is_paid': 1,  // Quiz có phí
-      //   'price': 800,  // Giá 800
-      //   'user_id': 1,  // Giả sử user_id = 1 tồn tại trong bảng USER
-      //   'subject_id': 3,  // Giả sử subject_id = 3 là Android Programming trong bảng SUBJECT
-      //   'type_id': 1,  // Giả sử type_id = 1 là Multiple Choice
-      //   'created_at': DateTime.now().toIso8601String(),
-      // },
-      //
+      {
+        'title': 'Android Basics Quiz',
+        'description': 'A quiz on basic Android programming concepts.',
+        'price': 0,    // Giá 0 vì là quiz miễn phí
+        'is_paid':0,
+        'user_id': 1,  // Giả sử user_id = 1 tồn tại trong bảng USER
+        'subject_id': 3,  // Giả sử subject_id = 3 là Android Programming trong bảng SUBJECT
+        'type_id': 1,  // Giả sử type_id = 1 là Multiple Choice
+        'url':'https://media.geeksforgeeks.org/wp-content/cdn-uploads/20210808001314/A-Complete-Guide-to-Learn-Android-Studio-for-Android-App-Development.png',
+        'created_at': DateTime.now().toIso8601String(),
+        'isFavorite': 0
+      },
+      {
+        'title': 'Advanced Android Quiz',
+        'description': 'A quiz on advanced Android programming concepts.',
+        'price': 800,  // Giá 800
+        'is_paid':0,
+        'user_id': 1,  // Giả sử user_id = 1 tồn tại trong bảng USER
+        'subject_id': 3,  // Giả sử subject_id = 3 là Android Programming trong bảng SUBJECT
+        'type_id': 1,  // Giả sử type_id = 1 là Multiple Choice
+        'url': 'https://th.bing.com/th/id/OIP.BQz-M74zVrcHIHJ0LOfBoQHaEK?rs=1&pid=ImgDetMain',
+        'created_at': DateTime.now().toIso8601String(),
+        'isFavorite': 0
+      },
+
       // // Quiz cho IOS Programming
-      // {
-      //   'title': 'iOS Basics Quiz',
-      //   'description': 'A quiz on basic iOS programming concepts.',
-      //   'is_paid': 0,  // 0 = miễn phí
-      //   'price': 0,    // Giá 0 vì là quiz miễn phí
-      //   'user_id': 2,  // Giả sử user_id = 2 tồn tại trong bảng USER
-      //   'subject_id': 4,  // Giả sử subject_id = 4 là iOS Programming trong bảng SUBJECT
-      //   'type_id': 1,  // Giả sử type_id = 1 là Multiple Choice
-      //   'created_at': DateTime.now().toIso8601String(),
-      // },
-      // {
-      //   'title': 'Advanced iOS Quiz',
-      //   'description': 'A quiz on advanced iOS programming concepts.',
-      //   'is_paid': 1,  // Quiz có phí
-      //   'price': 1200, // Giá 1200
-      //   'user_id': 2,  // Giả sử user_id = 2 tồn tại trong bảng USER
-      //   'subject_id': 4,  // Giả sử subject_id = 4 là iOS Programming trong bảng SUBJECT
-      //   'type_id': 1,  // Giả sử type_id = 1 là Multiple Choice
-      //   'created_at': DateTime.now().toIso8601String(),
-      // },
+      {
+        'title': 'iOS Basics Quiz',
+        'description': 'A quiz on basic iOS programming concepts.',
+        'price': 0,    // Giá 0 vì là quiz miễn phí
+        'is_paid':0,
+        'user_id': 2,  // Giả sử user_id = 2 tồn tại trong bảng USER
+        'subject_id': 4,  // Giả sử subject_id = 4 là iOS Programming trong bảng SUBJECT
+        'type_id': 1,  // Giả sử type_id = 1 là Multiple Choice
+        'url': 'https://www.sourcecodester.com/sites/default/files/images/admin/complete_ios_developer_course.jpg',
+        'created_at': DateTime.now().toIso8601String(),
+        'isFavorite': 0
+      },
+
+      {
+        'title': 'Advanced iOS Quiz',
+        'description': 'A quiz on advanced iOS programming concepts.',
+        'price': 1200, // Giá 1200
+        'is_paid':0,
+        'user_id': 2,  // Giả sử user_id = 2 tồn tại trong bảng USER
+        'subject_id': 4,  // Giả sử subject_id = 4 là iOS Programming trong bảng SUBJECT
+        'type_id': 1,  // Giả sử type_id = 1 là Multiple Choice
+        'url':'https://th.bing.com/th/id/OIP.whnYhraGunxltS2fMGmjXgHaFj?rs=1&pid=ImgDetMain',
+        'created_at': DateTime.now().toIso8601String(),
+        'isFavorite': 0
+      },
+
+      {
+        'title': 'JLPT N3 MojiGoi',
+        'description': 'A quiz for JLPT prepare',
+        'price': 0, // Giá 1500
+        'is_paid':0,
+        'user_id': 3, // Giả sử user_id = 1 tồn tại trong bảng USER
+        'subject_id': 6, // Giả sử subject_id = 8 là IELTS trong bảng SUBJECT
+        'type_id': 1,
+        'created_at': DateTime.now().toIso8601String(),
+        'url':
+        'https://th.bing.com/th/id/OIP.1gfw2UjZPFzzfywnVAyJWwHaEK?rs=1&pid=ImgDetMain',
+        'isFavorite': 0
+      },
+      {
+        'title': 'JLPT N3 Advanced Grammar',
+        'description': 'A quiz for JLPT prepare',
+        'price': 2000, // Giá 1500
+        'is_paid':0,
+        'user_id': 3, // Giả sử user_id = 1 tồn tại trong bảng USER
+        'subject_id': 6,
+        'type_id': 1,
+        'created_at': DateTime.now().toIso8601String(),
+        'url':
+        'https://th.bing.com/th/id/OIP.M74j2p_30LB285aA1zdk6AAAAA?rs=1&pid=ImgDetMain',
+        'isFavorite': 0
+      },
 
       // Quiz cho Ielts
 
       {
-        'title': 'IELTS Speaking Quiz',
-        'description': 'A quiz on IELTS Speaking skills.',
-        'is_paid': 0, // 0 = miễn phí
+        'title': 'IELTS Listening Quiz',
+        'description': 'A quiz on IELTS Listening skills.',
         'price': 0, // Giá 0 vì là quiz miễn phí
+        'is_paid':0,
         'user_id': 3, // Giả sử user_id = 1 tồn tại trong bảng USER
         'subject_id': 8, // Giả sử subject_id = 8 là IELTS trong bảng SUBJECT
         'type_id': 1, // Giả sử type_id = 2 là True/False
@@ -436,10 +473,10 @@ class DBHelper {
         'isFavorite': 0
       },
       {
-        'title': 'IELTS Listening Quiz',
-        'description': 'A quiz on IELTS Listening skills.',
-        'is_paid': 1, // Quiz có phí
+        'title': 'IELTS Reading Quiz',
+        'description': 'A quiz on IELTS Reading skills.',
         'price': 1500, // Giá 1500
+        'is_paid':0,
         'user_id': 3, // Giả sử user_id = 1 tồn tại trong bảng USER
         'subject_id': 8, // Giả sử subject_id = 8 là IELTS trong bảng SUBJECT
         'type_id': 1,
@@ -489,6 +526,26 @@ class DBHelper {
         'answer4': 'None of above',
         'correct_answer': 1, // Câu trả lời đúng là answer2 (false)
       },
+      {
+        'image_url': null,
+        'quiz_id': 1, // Giả sử quiz_id = 1 là "Java Basics Quiz"
+        'content': 'How many definition of Access Modifier?',
+        'answer1': '4',
+        'answer2': '3',
+        'answer3': '2',
+        'answer4': '1',
+        'correct_answer': 1, // Câu trả lời đúng là answer2 (false)
+      },
+      {
+        'image_url': null,
+        'quiz_id': 1, // Giả sử quiz_id = 1 là "Java Basics Quiz"
+        'content': 'What is the different between Static & Private?',
+        'answer1': 'No have Static access',
+        'answer2': 'Static and Private same',
+        'answer3': 'Static for all class, Private for initialize\'s class',
+        'answer4': 'None of above',
+        'correct_answer': 3, // Câu trả lời đúng là answer2 (false)
+      },
 
       // Câu hỏi cho Quiz "Advanced Java Quiz" (subject_id = 1)
       {
@@ -511,6 +568,57 @@ class DBHelper {
         'answer4': 'None of the above',
         'correct_answer': 1, // Câu trả lời đúng là answer1
       },
+      {
+        'image_url': null,
+        'quiz_id': 2, // Giả sử quiz_id = 2 là "Advanced Java Quiz"
+        'content': 'What is the difference between "=="" and "equals()" in Java?',
+        'answer1': '== compares object references, equals() compares object values',
+        'answer2': '== compares object values, equals() compares object references',
+        'answer3': 'Both compare object values',
+        'answer4': 'Both compare object references',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 2, // Giả sử quiz_id = 2 là "Advanced Java Quiz"
+        'content': 'Which keyword is used to handle exceptions in Java?',
+        'answer1': 'throw',
+        'answer2': 'catch',
+        'answer3': 'try',
+        'answer4': 'final',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 2, // Giả sử quiz_id = 2 là "Advanced Java Quiz"
+        'content': 'What is the purpose of the transient keyword in Java?',
+        'answer1': 'To prevent serialization of a variable',
+        'answer2': 'To make a variable constant',
+        'answer3': 'To mark a variable as synchronized',
+        'answer4': 'To make a variable final',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 2, // Giả sử quiz_id = 2 là "Advanced Java Quiz"
+        'content': 'What is the output of the following code: "System.out.println(10/3);"?',
+        'answer1': '3.0',
+        'answer2': '3',
+        'answer3': '3.33',
+        'answer4': 'Compilation error',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 2, // Giả sử quiz_id = 2 là "Advanced Java Quiz"
+        'content': 'Which of the following is true about Java interfaces?',
+        'answer1': 'An interface can contain only abstract methods',
+        'answer2': 'An interface can contain both abstract and non-abstract methods',
+        'answer3': 'An interface can contain only non-abstract methods',
+        'answer4': 'An interface cannot have any methods',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+
 
       //Flutter Basics Quiz
       {
@@ -532,6 +640,56 @@ class DBHelper {
         'answer2': 'Row',
         'answer3': 'ListView',
         'answer4': 'Container',
+        'correct_answer': 3, // Câu trả lời đúng là answer3
+      },
+      {
+        'image_url': null,
+        'quiz_id': 3, // Giả sử quiz_id = 3 là "Flutter Basics Quiz"
+        'content': 'What does the "hot reload" feature do in Flutter?',
+        'answer1': 'Reloads the entire application',
+        'answer2': 'Only reloads the UI without losing the state',
+        'answer3': 'Stops the application',
+        'answer4': 'Clears all app data',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 3, // Giả sử quiz_id = 3 là "Flutter Basics Quiz"
+        'content': 'Which of the following is a stateless widget in Flutter?',
+        'answer1': 'StatefulWidget',
+        'answer2': 'Text',
+        'answer3': 'Form',
+        'answer4': 'Container',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 3, // Giả sử quiz_id = 3 là "Flutter Basics Quiz"
+        'content': 'What is the purpose of the Scaffold widget in Flutter?',
+        'answer1': 'To create the app\'s layout structure',
+        'answer2': 'To display a dialog box',
+        'answer3': 'To manage app states',
+        'answer4': 'To handle navigation',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 3, // Giả sử quiz_id = 3 là "Flutter Basics Quiz"
+        'content': 'Which method is used to run a Flutter app?',
+        'answer1': 'runApp()',
+        'answer2': 'startApp()',
+        'answer3': 'initializeApp()',
+        'answer4': 'beginApp()',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 3, // Giả sử quiz_id = 3 là "Flutter Basics Quiz"
+        'content': 'What is the default size of the main app window in Flutter?',
+        'answer1': 'Fixed size',
+        'answer2': 'Full screen',
+        'answer3': 'Flexible based on content',
+        'answer4': 'Undefined',
         'correct_answer': 3, // Câu trả lời đúng là answer3
       },
 
@@ -557,11 +715,475 @@ class DBHelper {
         'answer4': 'None of above',
         'correct_answer': 2, // Câu trả lời đúng là answer3
       },
+      {
+        'image_url': null,
+        'quiz_id': 4, // Advanced Flutter Quiz
+        'content': 'What is the purpose of the `StreamBuilder` widget in Flutter?',
+        'answer1': 'To display a stream of data over time',
+        'answer2': 'To handle asynchronous operations',
+        'answer3': 'To optimize UI performance',
+        'answer4': 'To store data in memory',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 4, // Advanced Flutter Quiz
+        'content': 'What is the advantage of using the `FlutterProvider` package?',
+        'answer1': 'It simplifies the management of state across the app',
+        'answer2': 'It provides a faster compilation time',
+        'answer3': 'It improves the UI rendering performance',
+        'answer4': 'None of the above',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 4, // Advanced Flutter Quiz
+        'content': 'Which of the following is true about Flutter\'s Hot Reload feature?',
+        'answer1': 'It allows you to instantly see changes in the app without restarting the app',
+        'answer2': 'It restarts the entire app every time a change is made',
+        'answer3': 'It only works for UI updates, not for logic updates',
+        'answer4': 'It is only available for Android development',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 4, // Advanced Flutter Quiz
+        'content': 'Which method is used to navigate between different screens in Flutter?',
+        'answer1': 'Navigator.push()',
+        'answer2': 'Screen.transition()',
+        'answer3': 'Navigator.transition()',
+        'answer4': 'Route.push()',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 4, // Advanced Flutter Quiz
+        'content': 'What does the `async` keyword in Dart do?',
+        'answer1': 'Indicates that a function is asynchronous and can be awaited',
+        'answer2': 'It is used to start a new thread of execution',
+        'answer3': 'It marks a function as blocking',
+        'answer4': 'None of the above',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+
+      //Android Basic
+      {
+        'image_url': null,
+        'quiz_id': 5, // Android Basics Quiz
+        'content': 'What is the main purpose of the `onCreate()` method in an Android Activity?',
+        'answer1': 'To initialize the activity and set up the user interface',
+        'answer2': 'To save data before the activity is destroyed',
+        'answer3': 'To handle background tasks',
+        'answer4': 'To create a new instance of the activity',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 5, // Android Basics Quiz
+        'content': 'Which component is used to handle background tasks in Android?',
+        'answer1': 'Activity',
+        'answer2': 'Service',
+        'answer3': 'BroadcastReceiver',
+        'answer4': 'ContentProvider',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 5, // Android Basics Quiz
+        'content': 'What does the `Intent` class do in Android?',
+        'answer1': 'Handles user input',
+        'answer2': 'Starts activities or services and communicates between components',
+        'answer3': 'Manages device memory',
+        'answer4': 'Handles UI events',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 5, // Android Basics Quiz
+        'content': 'Which layout is best for creating a list of items in Android?',
+        'answer1': 'RelativeLayout',
+        'answer2': 'LinearLayout',
+        'answer3': 'FrameLayout',
+        'answer4': 'RecyclerView',
+        'correct_answer': 4, // Câu trả lời đúng là answer4
+      },
+      {
+        'image_url': null,
+        'quiz_id': 5, // Android Basics Quiz
+        'content': 'Which file in Android is responsible for defining app resources like strings, colors, and dimensions?',
+        'answer1': 'AndroidManifest.xml',
+        'answer2': 'strings.xml',
+        'answer3': 'gradle.properties',
+        'answer4': 'build.gradle',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+
+      //Android Advanced
+      {
+        'image_url': null,
+        'quiz_id': 6, // Advanced Android Quiz
+        'content': 'What is the purpose of `LiveData` in Android?',
+        'answer1': 'To represent the UI layer of an app',
+        'answer2': 'To manage background tasks',
+        'answer3': 'To hold data that is lifecycle-aware and can be observed',
+        'answer4': 'To handle network requests',
+        'correct_answer': 3, // Câu trả lời đúng là answer3
+      },
+      {
+        'image_url': null,
+        'quiz_id': 6, // Advanced Android Quiz
+        'content': 'Which of the following is used for dependency injection in Android?',
+        'answer1': 'Dagger',
+        'answer2': 'Retrofit',
+        'answer3': 'Glide',
+        'answer4': 'SQLite',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 6, // Advanced Android Quiz
+        'content': 'What is the purpose of the `ViewModel` class in Android?',
+        'answer1': 'To store and manage UI-related data in a lifecycle-conscious way',
+        'answer2': 'To manage background tasks',
+        'answer3': 'To hold UI logic and navigation',
+        'answer4': 'To handle user input in the UI layer',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 6, // Advanced Android Quiz
+        'content': 'What is `Coroutines` used for in Android development?',
+        'answer1': 'To handle UI interactions',
+        'answer2': 'To handle background tasks and concurrency',
+        'answer3': 'To manage user authentication',
+        'answer4': 'To handle network requests',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 6, // Advanced Android Quiz
+        'content': 'What is `Room` used for in Android?',
+        'answer1': 'For managing UI components',
+        'answer2': 'For storing data in SQLite database',
+        'answer3': 'For handling network operations',
+        'answer4': 'For creating notifications',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+
+      //ios basic
+      {
+        'image_url': null,
+        'quiz_id': 7, // iOS Basic Quiz
+        'content': 'Which programming language is used for iOS development?',
+        'answer1': 'Swift',
+        'answer2': 'Kotlin',
+        'answer3': 'Java',
+        'answer4': 'C#',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 7, // iOS Basic Quiz
+        'content': 'What is the default UI framework for iOS?',
+        'answer1': 'UIKit',
+        'answer2': 'SwiftUI',
+        'answer3': 'React Native',
+        'answer4': 'Flutter',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 7, // iOS Basic Quiz
+        'content': 'Which of the following is used for creating layouts in iOS?',
+        'answer1': 'XML',
+        'answer2': 'Storyboard',
+        'answer3': 'XAML',
+        'answer4': 'HTML',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 7, // iOS Basic Quiz
+        'content': 'Which of the following is a lifecycle method in a UIViewController?',
+        'answer1': 'viewWillAppear',
+        'answer2': 'onCreate',
+        'answer3': 'onResume',
+        'answer4': 'viewDidLoad',
+        'correct_answer': 4, // Câu trả lời đúng là answer4
+      },
+      {
+        'image_url': null,
+        'quiz_id': 7, // iOS Basic Quiz
+        'content': 'Which of the following is used to navigate between different screens in iOS?',
+        'answer1': 'Intent',
+        'answer2': 'Activity',
+        'answer3': 'Navigation Controller',
+        'answer4': 'ViewController',
+        'correct_answer': 3, // Câu trả lời đúng là answer3
+      },
+
+      //ios advanced
+      {
+        'image_url': null,
+        'quiz_id': 8, // iOS Advanced Quiz
+        'content': 'What is the purpose of the `Combine` framework in iOS?',
+        'answer1': 'To manage concurrency',
+        'answer2': 'To manage user interface updates',
+        'answer3': 'To handle asynchronous events using reactive programming',
+        'answer4': 'To create RESTful APIs',
+        'correct_answer': 3, // Câu trả lời đúng là answer3
+      },
+      {
+        'image_url': null,
+        'quiz_id': 8, // iOS Advanced Quiz
+        'content': 'Which of the following is used for dependency injection in iOS?',
+        'answer1': 'Core Data',
+        'answer2': 'SwiftUI',
+        'answer3': 'Swinject',
+        'answer4': 'AVFoundation',
+        'correct_answer': 3, // Câu trả lời đúng là answer3
+      },
+      {
+        'image_url': null,
+        'quiz_id': 8, // iOS Advanced Quiz
+        'content': 'What is the purpose of `Grand Central Dispatch (GCD)` in iOS?',
+        'answer1': 'To handle memory management',
+        'answer2': 'To manage background tasks and concurrency',
+        'answer3': 'To build user interfaces',
+        'answer4': 'To handle data storage',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 8, // iOS Advanced Quiz
+        'content': 'Which of the following is used to manage network requests in iOS?',
+        'answer1': 'Core Data',
+        'answer2': 'Alamofire',
+        'answer3': 'ARKit',
+        'answer4': 'CloudKit',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 8, // iOS Advanced Quiz
+        'content': 'Which of the following is used to store data locally in iOS?',
+        'answer1': 'UserDefaults',
+        'answer2': 'Core Data',
+        'answer3': 'SQLite',
+        'answer4': 'All of the above',
+        'correct_answer': 4, // Câu trả lời đúng là answer4
+      },
+
+
+      //JLPT N3 basic
+      {
+        'image_url': null,
+        'quiz_id': 9, // JLPT N3 Moji Goi Quiz
+        'content': 'どんな時に「ありがとう」と言いますか？',
+        'answer1': '何かをお願いした時',
+        'answer2': '何かをもらった時',
+        'answer3': '相手に怒った時',
+        'answer4': '何もない時',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 9, // JLPT N3 Moji Goi Quiz
+        'content': '「食べる」の丁寧な言い方はどれですか？',
+        'answer1': '食べます',
+        'answer2': '食べる',
+        'answer3': '食べた',
+        'answer4': '食べている',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 9, // JLPT N3 Moji Goi Quiz
+        'content': '「元気」の反対の意味は何ですか？',
+        'answer1': '元気',
+        'answer2': '病気',
+        'answer3': '疲れ',
+        'answer4': '幸せ',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 9, // JLPT N3 Moji Goi Quiz
+        'content': '「静か」の反対の意味は何ですか？',
+        'answer1': 'にぎやか',
+        'answer2': '静けさ',
+        'answer3': '早い',
+        'answer4': '強い',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 9, // JLPT N3 Moji Goi Quiz
+        'content': '「時々」の同じ意味はどれですか？',
+        'answer1': 'いつも',
+        'answer2': 'たまに',
+        'answer3': '毎日',
+        'answer4': 'しばらく',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 9, // JLPT N3 Moji Goi Quiz
+        'content': '「電車を降りる」の意味は何ですか？',
+        'answer1': '電車に乗る',
+        'answer2': '電車を待つ',
+        'answer3': '電車を降りる',
+        'answer4': '電車を運転する',
+        'correct_answer': 3, // Câu trả lời đúng là answer3
+      },
+      {
+        'image_url': null,
+        'quiz_id': 9, // JLPT N3 Moji Goi Quiz
+        'content': '「先生」の意味は何ですか？',
+        'answer1': '学生',
+        'answer2': '教師',
+        'answer3': '親',
+        'answer4': '友達',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 9, // JLPT N3 Moji Goi Quiz
+        'content': '「今日」の読み方はどれですか？',
+        'answer1': 'きょう',
+        'answer2': 'こんな',
+        'answer3': 'いま',
+        'answer4': 'あさ',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 9, // JLPT N3 Moji Goi Quiz
+        'content': '「速い」の反対の意味は何ですか？',
+        'answer1': '速い',
+        'answer2': '遅い',
+        'answer3': '早い',
+        'answer4': '強い',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 9, // JLPT N3 Moji Goi Quiz
+        'content': '「図書館」の意味は何ですか？',
+        'answer1': '本を読む場所',
+        'answer2': '本を売る場所',
+        'answer3': '本を借りる場所',
+        'answer4': '本を作る場所',
+        'correct_answer': 3, // Câu trả lời đúng là answer3
+      },
+
+      //JLPT for advanced
+      {
+        'image_url': null,
+        'quiz_id': 10, // JLPT N3 Ngữ Pháp Advanced Quiz
+        'content': '「〜はずです」の意味は何ですか？',
+        'answer1': '予想する',
+        'answer2': '意志を表す',
+        'answer3': '理由を説明する',
+        'answer4': '提案をする',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 10, // JLPT N3 Ngữ Pháp Advanced Quiz
+        'content': '「〜てもいいですか？」の使い方はどれですか？',
+        'answer1': '許可を求める',
+        'answer2': '提案をする',
+        'answer3': '断る',
+        'answer4': '希望を伝える',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 10, // JLPT N3 Ngữ Pháp Advanced Quiz
+        'content': '「〜がする」の意味は何ですか？',
+        'answer1': '物がある',
+        'answer2': '物の名前を言う',
+        'answer3': '感覚を表す',
+        'answer4': '物を作る',
+        'correct_answer': 3, // Câu trả lời đúng là answer3
+      },
+      {
+        'image_url': null,
+        'quiz_id': 10, // JLPT N3 Ngữ Pháp Advanced Quiz
+        'content': '「〜そうです」の意味は何ですか？',
+        'answer1': '予想を表す',
+        'answer2': '見た目を表す',
+        'answer3': '提案を表す',
+        'answer4': '過去を表す',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 10, // JLPT N3 Ngữ Pháp Advanced Quiz
+        'content': '「〜たばかりです」の意味は何ですか？',
+        'answer1': '何かをしている途中である',
+        'answer2': '最近何かをしたばかりである',
+        'answer3': '過去のことを話す',
+        'answer4': '何かをする予定である',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 10, // JLPT N3 Ngữ Pháp Advanced Quiz
+        'content': '「〜ようにする」の意味は何ですか？',
+        'answer1': '何かをするために努力する',
+        'answer2': '何かをしないように努力する',
+        'answer3': '何かをする予定である',
+        'answer4': '何かをしないと決める',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 10, // JLPT N3 Ngữ Pháp Advanced Quiz
+        'content': '「〜たことがある」の意味は何ですか？',
+        'answer1': '何かをした経験がある',
+        'answer2': '何かをしたことがない',
+        'answer3': '何かをした途中である',
+        'answer4': '何かをしたばかりである',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 10, // JLPT N3 Ngữ Pháp Advanced Quiz
+        'content': '「〜ので」の意味は何ですか？',
+        'answer1': '原因や理由を表す',
+        'answer2': '相手の意見を求める',
+        'answer3': '時期を表す',
+        'answer4': '感情を表す',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 10, // JLPT N3 Ngữ Pháp Advanced Quiz
+        'content': '「〜ために」の意味は何ですか？',
+        'answer1': '目的を表す',
+        'answer2': '理由を表す',
+        'answer3': '結果を表す',
+        'answer4': '時間を表す',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 10, // JLPT N3 Ngữ Pháp Advanced Quiz
+        'content': '「〜なければならない」の意味は何ですか？',
+        'answer1': '義務を表す',
+        'answer2': '希望を表す',
+        'answer3': '提案を表す',
+        'answer4': '許可を表す',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+
 
       // Câu hỏi cho Quiz "IELTS Listening Quiz" (subject_id = 8)
       {
         'image_url': null,
-        'quiz_id': 5,
+        'quiz_id': 11,
         'content':
             'In the IELTS listening test, what is the maximum number of speakers you will hear?',
         'answer1': '1',
@@ -572,7 +1194,7 @@ class DBHelper {
       },
       {
         'image_url': null,
-        'quiz_id': 5,
+        'quiz_id': 11,
         'content': 'What is the main focus of the IELTS listening test?',
         'answer1': 'Listening for general understanding',
         'answer2': 'Listening for specific information',
@@ -580,11 +1202,112 @@ class DBHelper {
         'answer4': 'Listening for pronunciation',
         'correct_answer': 2, // Câu trả lời đúng là answer2
       },
+      {
+        'image_url': null,
+        'quiz_id': 11, // IELTS Listening Test
+        'content': 'Listen to the recording and choose the correct answer. What is the speaker\'s favorite hobby?',
+        'answer1': 'Reading books',
+        'answer2': 'Playing football',
+        'answer3': 'Cooking',
+        'answer4': 'Swimming',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 11, // IELTS Listening Test
+        'content': 'Listen to the recording and choose the correct answer. What time does the meeting start?',
+        'answer1': '9:00 AM',
+        'answer2': '9:30 AM',
+        'answer3': '10:00 AM',
+        'answer4': '10:30 AM',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 11, // IELTS Listening Test
+        'content': 'Listen to the recording and choose the correct answer. What did the speaker forget to bring?',
+        'answer1': 'Umbrella',
+        'answer2': 'Laptop',
+        'answer3': 'Documents',
+        'answer4': 'Phone charger',
+        'correct_answer': 3, // Câu trả lời đúng là answer3
+      },
+      {
+        'image_url': null,
+        'quiz_id': 11, // IELTS Listening Test
+        'content': 'Listen to the recording and choose the correct answer. What is the speaker\'s opinion about the new restaurant?',
+        'answer1': 'It\'s too expensive',
+        'answer2': 'The food is delicious',
+        'answer3': 'The service is bad',
+        'answer4': 'It\'s not worth visiting',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 11, // IELTS Listening Test
+        'content': 'Listen to the recording and choose the correct answer. How does the speaker travel to work?',
+        'answer1': 'By car',
+        'answer2': 'By bus',
+        'answer3': 'By bicycle',
+        'answer4': 'By train',
+        'correct_answer': 4, // Câu trả lời đúng là answer4
+      },
+      {
+        'image_url': null,
+        'quiz_id': 11, // IELTS Listening Test
+        'content': 'Listen to the recording and choose the correct answer. Where is the speaker going for vacation?',
+        'answer1': 'Beach resort',
+        'answer2': 'Mountain town',
+        'answer3': 'Big city',
+        'answer4': 'Countryside',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 11, // IELTS Listening Test
+        'content': 'Listen to the recording and choose the correct answer. What is the speaker worried about?',
+        'answer1': 'The weather',
+        'answer2': 'Their health',
+        'answer3': 'The presentation',
+        'answer4': 'The flight',
+        'correct_answer': 3, // Câu trả lời đúng là answer3
+      },
+      {
+        'image_url': null,
+        'quiz_id': 11, // IELTS Listening Test
+        'content': 'Listen to the recording and choose the correct answer. What does the speaker like most about their job?',
+        'answer1': 'The salary',
+        'answer2': 'The colleagues',
+        'answer3': 'The flexibility',
+        'answer4': 'The challenges',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 11, // IELTS Listening Test
+        'content': 'Listen to the recording and choose the correct answer. What event is the speaker attending this weekend?',
+        'answer1': 'A wedding',
+        'answer2': 'A concert',
+        'answer3': 'A conference',
+        'answer4': 'A football match',
+        'correct_answer': 3, // Câu trả lời đúng là answer3
+      },
+      {
+        'image_url': null,
+        'quiz_id': 11, // IELTS Listening Test
+        'content': 'Listen to the recording and choose the correct answer. How does the speaker feel about the upcoming exam?',
+        'answer1': 'Confident',
+        'answer2': 'Anxious',
+        'answer3': 'Excited',
+        'answer4': 'Indifferent',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+
 
       // Câu hỏi cho Quiz "IELTS Reading Quiz" (subject_id = 8)
       {
         'image_url': null,
-        'quiz_id': 6,
+        'quiz_id': 12,
         'content':
             'In the IELTS reading test, what type of questions are commonly asked?',
         'answer1': 'Multiple choice questions',
@@ -595,7 +1318,7 @@ class DBHelper {
       },
       {
         'image_url': null,
-        'quiz_id': 6,
+        'quiz_id': 12,
         'content':
             'What is the purpose of the "True/False/Not Given" questions in the IELTS reading test?',
         'answer1': 'To test understanding of details and facts',
@@ -605,6 +1328,107 @@ class DBHelper {
             'To check your ability to identify the meaning of specific words',
         'correct_answer': 1,
       },
+      {
+        'image_url': null,
+        'quiz_id': 12, // IELTS Reading
+        'content': 'Read the passage and choose the correct answer. What is the main purpose of the passage?',
+        'answer1': 'To inform the reader about a scientific discovery',
+        'answer2': 'To describe a historical event',
+        'answer3': 'To explain a process',
+        'answer4': 'To entertain the reader',
+        'correct_answer': 3, // Câu trả lời đúng là answer3
+      },
+      {
+        'image_url': null,
+        'quiz_id': 12, // IELTS Reading
+        'content': 'Read the passage and choose the correct answer. What is the author’s opinion on climate change?',
+        'answer1': 'It is not a serious issue',
+        'answer2': 'It requires immediate action',
+        'answer3': 'It is a natural phenomenon',
+        'answer4': 'It will not affect future generations',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 12, // IELTS Reading
+        'content': 'Read the passage and choose the correct answer. What is the definition of "sustainability" according to the text?',
+        'answer1': 'The ability to use resources without depleting them',
+        'answer2': 'The process of reducing waste',
+        'answer3': 'The creation of renewable energy',
+        'answer4': 'The preservation of historical sites',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 12, // IELTS Reading
+        'content': 'Read the passage and choose the correct answer. What is the main challenge in the field of artificial intelligence?',
+        'answer1': 'The cost of development',
+        'answer2': 'The ethical concerns',
+        'answer3': 'The lack of skilled workers',
+        'answer4': 'The technological limitations',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 12, // IELTS Reading
+        'content': 'Read the passage and choose the correct answer. According to the passage, what is a potential benefit of renewable energy?',
+        'answer1': 'It is more expensive than traditional energy',
+        'answer2': 'It reduces environmental impact',
+        'answer3': 'It is difficult to implement on a large scale',
+        'answer4': 'It causes more pollution',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 12, // IELTS Reading
+        'content': 'Read the passage and choose the correct answer. What is the significance of the research mentioned in the passage?',
+        'answer1': 'It proves the effectiveness of a new medicine',
+        'answer2': 'It provides insight into human behavior',
+        'answer3': 'It solves a major environmental problem',
+        'answer4': 'It explores new technology for space exploration',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 12, // IELTS Reading
+        'content': 'Read the passage and choose the correct answer. What is one of the challenges faced by urban areas?',
+        'answer1': 'Lack of employment opportunities',
+        'answer2': 'Overpopulation and congestion',
+        'answer3': 'High levels of pollution',
+        'answer4': 'Limited access to education',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 12, // IELTS Reading
+        'content': 'Read the passage and choose the correct answer. What does the author suggest as a solution to the issue discussed in the passage?',
+        'answer1': 'Investing in new technologies',
+        'answer2': 'Improving public awareness',
+        'answer3': 'Implementing stricter laws',
+        'answer4': 'Focusing on education and training',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      },
+      {
+        'image_url': null,
+        'quiz_id': 12, // IELTS Reading
+        'content': 'Read the passage and choose the correct answer. What does the term "globalization" refer to in the text?',
+        'answer1': 'The process of cultures becoming more similar',
+        'answer2': 'The increasing integration of economies',
+        'answer3': 'The spread of technology worldwide',
+        'answer4': 'The rise of international organizations',
+        'correct_answer': 2, // Câu trả lời đúng là answer2
+      },
+      {
+        'image_url': null,
+        'quiz_id': 12, // IELTS Reading
+        'content': 'Read the passage and choose the correct answer. How does the author describe the future of technology?',
+        'answer1': 'Bright and full of possibilities',
+        'answer2': 'Uncertain and unpredictable',
+        'answer3': 'Dangerous and risky',
+        'answer4': 'Confusing and complex',
+        'correct_answer': 1, // Câu trả lời đúng là answer1
+      }
+
     ];
 
     for (final question in questions) {
@@ -1262,6 +2086,15 @@ class DBHelper {
   Future<List<Map<String,dynamic>>> getAllVoucherByRankId(int rankId) async {
     final db = await instance.database;
     return db.query('DISCOUNT',where: 'rank_id=?',whereArgs: [rankId]);
+  }
+
+  //1 rank 1 voucher
+  Future<Discount?> getVoucherByRankId(int rankId) async {
+    final List<Map<String, dynamic>> vouchers = await getAllVoucherByRankId(rankId);
+    if (vouchers.isNotEmpty) {
+      return Discount.fromMap(vouchers.first);
+    }
+    return null;
   }
 
 

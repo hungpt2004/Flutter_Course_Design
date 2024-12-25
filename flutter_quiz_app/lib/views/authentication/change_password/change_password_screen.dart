@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quiz_app/components/input_field/label_text.dart';
@@ -77,6 +76,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             } else if (state is ResetPasswordSuccess) {
               ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(
                   context, state.success, textStyle);
+              Future.delayed(const Duration(seconds: 5),(){
+                Navigator.pushReplacementNamed(context, '/login');
+              });
             } else if (state is ResetPasswordFailure) {
               ShowScaffoldMessenger.showScaffoldMessengerUnsuccessfully(
                   context, state.error, textStyle);
@@ -156,9 +158,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 }
                                 await AuthBloc.changePassword(context, widget.emailUser, _passController.text);
                                 _refresh();
-                                Future.delayed(Duration(seconds: 2),(){
-                                  Navigator.pushReplacementNamed(context, '/login');
-                                });
                               }
                             })
                       ],

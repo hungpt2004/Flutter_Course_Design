@@ -82,7 +82,7 @@ class _AddQuestionFormState extends State<AddQuestionForm> {
                 return const Text('Error when fetch data');
               }
               return Container(
-                width: 200,
+                width: 250,
                 decoration: BoxDecoration(
                     color: Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(10)),
@@ -92,7 +92,7 @@ class _AddQuestionFormState extends State<AddQuestionForm> {
                     iconSize: 30,
                     style:
                         textStyle.contentTextStyle(FontWeight.w500, Colors.white),
-                    menuWidth: 200,
+                    menuWidth: 250,
                     menuMaxHeight: 200,
                     hint: Text(
                       'Select a subject',

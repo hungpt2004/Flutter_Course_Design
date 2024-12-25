@@ -6,7 +6,7 @@ import 'package:flutter_quiz_app/model/completed_quiz.dart';
 import 'package:flutter_quiz_app/sql/sql_helper.dart';
 import 'package:flutter_quiz_app/theme/text_style.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-
+import '../../bloc/bloc_cart/cart_bloc.dart';
 import '../../constant/payment_key.dart';
 
 class StripeService {
@@ -30,6 +30,7 @@ class StripeService {
       await Stripe.instance.presentPaymentSheet();
 
       if (role == 1) {
+        print('ROLE 1');
         await DBHelper.instance.createNewCompleteQuiz(
           CompletedQuiz(
             userId: userId,
@@ -43,6 +44,7 @@ class StripeService {
         await DBHelper.instance.updateStatusUnlock(quizId, userId);
         ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(context, 'Buy quiz successfully', textStyle);
       } else if (role == 2) {
+        print('ROLE 2');
         final cart = await DBHelper.instance.getCartByUserId(userId);
         final cartItemList = await DBHelper.instance.getCartItemsByCartId(cart!.id!);
         print('SO ITEM TRONG CART: ${cartItemList.length}');
@@ -65,6 +67,7 @@ class StripeService {
           await DBHelper.instance.updatePaidAtTime(userId, quizId);
           await DBHelper.instance.updateStatusUnlock(quizId, quizId);
         }
+        Future.delayed(const Duration(milliseconds: 100),() async {await CartBloc.clearCart(context, userId);});
         ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(context, 'Buy quiz successfully', textStyle);
         print('THANH TOÁN THÀNH CÔNG - ROLE 2');
       } else {
@@ -106,17 +109,6 @@ class StripeService {
     return null;
   }
 
-
-  Future<void> _processPayment() async {
-    try {
-      await Stripe.instance.presentPaymentSheet();
-      print('TRINH BAY SHEET');
-      await Stripe.instance.confirmPaymentSheetPayment();
-      print('DA THANH TOAN THANH CONG');
-    } catch (e) {
-      print(e);
-    }
-  }
 
   String _calculateAmount(int amount) {
     final calculatedAmount = amount * 100;

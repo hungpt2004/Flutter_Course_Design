@@ -84,7 +84,7 @@ class _DoQuizScreenState extends State<DoQuizScreen> {
                               animation: true,
                               curve: Curves.fastOutSlowIn,
                               animateToInitialPercent: true,
-                              radius: 80,
+                              radius: 90,
                               lineWidth: 25,
                               percent: percent.clamp(0.0, 1.0),
                               progressBorderColor: Colors.deepPurpleAccent,

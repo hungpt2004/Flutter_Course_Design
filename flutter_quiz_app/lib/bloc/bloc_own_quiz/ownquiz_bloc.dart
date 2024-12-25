@@ -22,11 +22,9 @@ class OwnQuizBloc extends Bloc<OwnQuizEvent, OwnQuizState> {
       List<Quiz?> listQuiz = [];
       for(var c in completeList) {
         Quiz? quiz = await DBHelper.instance.getQuizById(c['quiz_id']);
-        print('Quiz id ${quiz!.id}');
         questionList.add(await DBHelper.instance.getQuestionListByQuizId(quiz!.id!));
         listQuiz.add(quiz);
       }
-      print(questionList.length);
       emit(OwnQuizLoadingSuccess(quizzes: quizzes,completeQuiz: completeList,quiz: listQuiz, questionList: questionList));
     } catch (e) {
       emit(OwnQuizLoadingFailure(e.toString()));
@@ -38,16 +36,13 @@ class OwnQuizBloc extends Bloc<OwnQuizEvent, OwnQuizState> {
     try {
       final favorites = await DBHelper.instance.getAllFavoriteByUserId(event.userId);
       //get quiz by quiz id
-
       //phat ra 1 danh sach question list ben trong quiz
-
       final quizzes = await Future.wait<Map<String, dynamic>>(
           favorites.map((quiz) async {
             final quizData = await DBHelper.instance.getQuizById(quiz['quiz_id']);
             return quizData?.toMap() ?? {}; // Chuyển đổi Quiz thành Map
           })
       );
-      print('TRONG FAVORITE LIST BLOC : ${favorites.length}');
       emit(OwnQuizLoadingFavorite(favorites: favorites, quizzes:quizzes));
     } catch (e) {
       emit(OwnQuizLoadingFailure(e.toString()));
@@ -55,12 +50,10 @@ class OwnQuizBloc extends Bloc<OwnQuizEvent, OwnQuizState> {
   }
 
   static Future<void> loadingQuiz(BuildContext context, int userId) async {
-    print("loadingOwnQuiz được gọi với userId: $userId");
     context.read<OwnQuizBloc>().add(OnPressedLoading(userId));
   }
 
   static Future<void> loadingFavorite(BuildContext context, int userId) async {
-    print("loadingOwnQuiz được gọi với userId: $userId");
     context.read<OwnQuizBloc>().add(OnPressedLoadingFavorite(userId));
   }
 

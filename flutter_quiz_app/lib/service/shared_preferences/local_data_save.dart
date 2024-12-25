@@ -49,8 +49,8 @@ class LocalSaveData {
   }
 
   //Logout
-  Future<void> logout() async {
+  Future<void> clearUserData() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    await prefs.clear();  // hoặc dùng `prefs.clear()` để xóa tất cả dữ liệu
   }
 }

@@ -48,10 +48,10 @@ class _LoginScreenState extends State<LoginScreen> {
             ShowScaffoldMessenger.showScaffoldMessengerLoading(
                 context, textStyle);
           } else if (state is LoginSuccess) {
-            // ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(
-            //     context, "Login Successfully", textStyle);
-            // print('Name trong login screen ${state.user.name}');
-            Future.delayed(Duration(seconds: 5), () {
+            ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(
+                context, "Login Successfully", textStyle);
+            print('Name trong login screen ${state.user.name}');
+            Future.delayed(const Duration(seconds: 5), () {
               Navigator.pushNamed(context, '/');
             });
           } else if (state is LoginFailure) {

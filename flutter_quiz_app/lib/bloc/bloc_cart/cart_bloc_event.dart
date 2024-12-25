@@ -26,5 +26,10 @@ class LoadingCart extends CartEvent {
   LoadingCart(this.userId);
 }
 
+class OnPressedApplyVoucher extends CartEvent {
+  int rankId;
+  int userId;
+  OnPressedApplyVoucher(this.rankId, this.userId);
+}
 
 

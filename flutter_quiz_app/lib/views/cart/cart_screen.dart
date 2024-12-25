@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_cart/cart_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_cart/cart_bloc_state.dart';
+import 'package:flutter_quiz_app/components/appbar/appbar_field.dart';
 import 'package:flutter_quiz_app/components/box/box_width.dart';
 import 'package:flutter_quiz_app/components/button/button_field.dart';
 import 'package:flutter_quiz_app/components/button/button_icon.dart';
@@ -21,6 +22,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../components/box/box_height.dart';
 import '../../model/cart.dart';
+import '../../model/discount.dart';
 import '../../model/quiz.dart';
 import '../../model/user.dart';
 
@@ -34,7 +36,6 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   final textStyle = TextStyleCustom();
   final networkImage = NetworkImageWidget();
-  List<Map<String, dynamic>>? cartList;
   User? user = UserManager().currentUser;
 
   @override
@@ -43,44 +44,77 @@ class _CartScreenState extends State<CartScreen> {
     super.initState();
   }
 
+  showVoucherSheet(Discount discount){
+    showModalBottomSheet(context: context, builder: (context) {
+      return Container(
+        width: StyleSize(context).screenWidth,
+        height: StyleSize(context).screenHeight * 0.4,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(topRight: Radius.circular(20),topLeft: Radius.circular(20)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Center(
+                child: Container(
+                  width: 100,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.grey.shade700
+                  ),
+                ),
+              ),
+              const BoxHeight(h: 20),
+              Card(
+                elevation: 10,
+
+                color: fullColor,
+                child: ListTile(
+                  leading: Icon(Icons.discount,color: Colors.orange.shade700,),
+                  title: Text(discount.name,style: textStyle.contentTextStyle(FontWeight.w500, Colors.black)),
+                  trailing: ButtonField(text: 'Apply', function: (){
+                    CartBloc.applyVoucher(context, user!.id!, user!.rankId!);
+                  }),
+                ),
+              ),
+            ],
+          ),
+        )
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-              size: 20,
-            )),
-        backgroundColor: fullColor,
-        title: Text('Shopping Cart',
-            style: textStyle.titleTextStyle(FontWeight.w700, primaryColor)),
-      ),
+      appBar: AppBarCustom.appbarNoBackBtn(context, 'SHOPPING CART', textStyle),
       backgroundColor: fullColor,
       body: BlocConsumer<CartBloc, CartState>(
         builder: (context, state) {
           if (state is CartAddSuccess) {
-            print(state.sum);
-            return _body(state.cartItems, state.sum);
+            return _body(cartItems: state.cartItems, sum: state.sum);
           } else if (state is CartAddFailure) {
-            return _body(state.cartItems, state.sum);
+            return _body(cartItems: state.cartItems, sum: state.sum);
           } else if (state is CartRemoveSuccess) {
-            return _body(state.cartItems, state.sum);
+            return _body(cartItems: state.cartItems, sum: state.sum);
           } else if (state is CartRemoveFailure) {
-            return _body(state.cartItems, state.sum);
+            return _body(cartItems: state.cartItems, sum: state.sum);
           } else if (state is LoadingSuccess) {
-            return _body(state.cartItems, state.sum);
+            return _body(cartItems: state.cartItems, sum: state.sum);
           } else if (state is CartClearAll) {
-            print('DANG O DAY $state');
             return const Center(child: NotYetNoti(label: 'Cart', image: 'assets/svg/cart.svg'));
           } else if (state is CartClearAllFailure) {
-            print('DANG O DAY $state');
-            return _body(state.cartItems, state.sum);
+            return _body(cartItems: state.cartItems, sum: state.sum);
+          } else if (state is CartApplyVoucherSuccess) {
+            final oldSum = state.oldSum;
+            return _body(cartItems: state.cartItems, sum: state.sum,oldSum: oldSum);
+          } else if (state is CartApplyVoucherFailure) {
+            return _body(cartItems: state.cartItems, sum: state.sum);
+          } else if (state is Initial) {
+            return const Center(child: NotYetNoti(label: 'Cart', image: 'assets/svg/cart.svg'));
           }
           print(state);
           return const Center(child: NotYetNoti(label: 'Cart', image: 'assets/svg/cart.svg'));
@@ -98,7 +132,8 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _body(List<Map<String, dynamic>> cartItems, double sum) {
+  // List<Map<String, dynamic>> cartItems, double sum
+  Widget _body({required List<Map<String, dynamic>> cartItems, required double sum, double? oldSum}) {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: SingleChildScrollView(
@@ -152,7 +187,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               _payMethod(),
-              _payDetails(sum),
+              _payDetails(sum: sum, oldSum: oldSum),
               _total(sum),
             ],
           ),
@@ -185,7 +220,7 @@ class _CartScreenState extends State<CartScreen> {
                 Container(
                   child: Row(
                     children: [
-                      Icon(Icons.paypal),
+                      const Icon(Icons.paypal),
                       Text(
                         'Online Payment',
                         style: textStyle.superSmallTextStyle(
@@ -194,7 +229,7 @@ class _CartScreenState extends State<CartScreen> {
                     ],
                   ),
                 ),
-                Icon(
+                const Icon(
                   Icons.check_circle,
                   color: Colors.green,
                   size: 20,
@@ -207,7 +242,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _payDetails(double sum) {
+  Widget _payDetails({required double sum, double? oldSum}) {
     return Card(
       elevation: 4,
       color: fullColor,
@@ -256,7 +291,7 @@ class _CartScreenState extends State<CartScreen> {
                         FontWeight.w500, Colors.black),
                   ),
                   Text(
-                    '-200\$',
+                    oldSum != null ? '-${oldSum-sum}\$' : '0',
                     style: textStyle.superSmallTextStyle(
                         FontWeight.w500, Colors.red),
                   ),
@@ -274,7 +309,7 @@ class _CartScreenState extends State<CartScreen> {
                         FontWeight.w500, Colors.black),
                   ),
                   Text(
-                    '${sum - 200}\$',
+                    '$sum\$',
                     style: textStyle.superSmallTextStyle(
                         FontWeight.w500, Colors.black),
                   ),
@@ -318,17 +353,32 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget _voucher() {
     return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Rank\'s Voucher',
-            style: textStyle.contentTextStyle(FontWeight.w500, Colors.black),
-          ),
-          ButtonField(text: 'Choose voucher', function: () {})
-        ],
-      ),
+      padding: const EdgeInsets.all(8.0),
+      child: FutureBuilder(
+        future: DBHelper.instance.getVoucherByRankId(user!.rankId!),
+        builder: (context, snapshot) {
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return const Center(child: CircularProgressIndicator(),);
+          } else if (!snapshot.hasData) {
+            return const Text('No have data');
+          } else if (snapshot.hasError) {
+            return const Text('Have an error');
+          }
+          final discount = snapshot.data!;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Rank\'s Voucher',
+                style: textStyle.contentTextStyle(FontWeight.w500, Colors.black),
+              ),
+              ButtonField(text: 'Choose voucher', function: () {
+                showVoucherSheet(discount);
+              })
+            ],
+          );
+        },
+      )
     );
   }
 
@@ -513,7 +563,6 @@ class _CartScreenState extends State<CartScreen> {
         trailing: MaterialButton(
           onPressed: () async {
             await StripeService.instance.makePayment(price: sum.toInt(), username: user!.name, role: 2, userId: user!.id!, context: context);
-            Future.delayed(Duration(milliseconds: 100),() async {await CartBloc.clearCart(context, user!.id!);});
             },
           elevation: 4,
           color: Colors.deepOrange,
@@ -526,4 +575,5 @@ class _CartScreenState extends State<CartScreen> {
       ),
     );
   }
+
 }

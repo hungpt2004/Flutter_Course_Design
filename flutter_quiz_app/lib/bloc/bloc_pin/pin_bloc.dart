@@ -26,8 +26,6 @@ class PinBloc extends Bloc<PinEvent, PinState> {
 
   Future<bool> _onPressSendPin(OnPressSendPin event, Emitter<PinState> emit) async {
     try {
-      emit(PinLoading(isLoading: true));
-
       User? user = await DBHelper.instance.getUserByEmail(event.email);
       if (user == null) {
         emit(PinFail(error: 'User not found'));
@@ -65,8 +63,6 @@ class PinBloc extends Bloc<PinEvent, PinState> {
     } catch (e) {
       emit(PinFail(error: 'An error occurred: ${e.toString()}'));
       return false;
-    } finally {
-      emit(PinLoading(isLoading: false));
     }
   }
 

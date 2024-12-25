@@ -41,16 +41,6 @@ class _BottomNavbarScreenState extends State<BottomNavbarScreen> {
     super.initState();
   }
 
-  _loadCartFromUser() async {
-    final cartInitial = await DBHelper.instance.getCartByUserId(user!.id!);
-    setState(() {
-      cart = cartInitial;
-    });
-    final cartListInitial = await DBHelper.instance.getCartItemsByCartId(cart!.id!);
-    setState(() {
-      cartList = cartListInitial;
-    });
-  }
 
   _toggleIndex(int index) {
     setState(() {
@@ -81,6 +71,9 @@ class _BottomNavbarScreenState extends State<BottomNavbarScreen> {
     return Column(
       children: [
         MaterialButton(
+            animationDuration: Duration(milliseconds: 300),
+            highlightColor: Colors.transparent, // Loại bỏ màu khi giữ nút
+            splashColor: Colors.transparent, // Loại bỏ hiệu ứng splash
             onPressed: () {
               _toggleIndex(index);
             },
@@ -91,7 +84,7 @@ class _BottomNavbarScreenState extends State<BottomNavbarScreen> {
                 width: 25,
                 height: 25)
         ),
-        Container(width: 10,height: 2,decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: _currentIndex == index ? primaryColor : Colors.grey),)
+        AnimatedContainer(duration: Duration(milliseconds: 300) ,width: 10,height: 2,decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: _currentIndex == index ? primaryColor : Colors.grey),)
       ],
     );
   }
@@ -109,6 +102,12 @@ class _BottomNavbarScreenState extends State<BottomNavbarScreen> {
           final cartList = state.cartItems;
           return _bodyRenderCenterButton(cartList.length);
         } else if (state is CartRemoveFailure) {
+          final cartList = state.cartItems;
+          return _bodyRenderCenterButton(cartList.length);
+        } else if (state is CartApplyVoucherSuccess) {
+          final cartList = state.cartItems;
+          return _bodyRenderCenterButton(cartList.length);
+        } else if (state is CartApplyVoucherFailure) {
           final cartList = state.cartItems;
           return _bodyRenderCenterButton(cartList.length);
         } else if (state is LoadingSuccess) {
@@ -132,7 +131,6 @@ class _BottomNavbarScreenState extends State<BottomNavbarScreen> {
         children: [
           _button('home_click.svg', 'home.svg', 0),
           _button('quiz_click.svg', 'quiz.svg', 1),
-          const BoxWidth(w: 20),
           _button('hear_click.svg', 'hear.svg', 3),
           _button('account_click.svg', 'account.svg', 4),
         ],

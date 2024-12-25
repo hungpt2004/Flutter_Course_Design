@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_auth/auth_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_auth/auth_bloc_state.dart';
+import 'package:flutter_quiz_app/components/appbar/appbar_field.dart';
 import 'package:flutter_quiz_app/components/box/box_height.dart';
 import 'package:flutter_quiz_app/components/box/box_width.dart';
 import 'package:flutter_quiz_app/components/button/button_field.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_quiz_app/components/input_field/input_text_field.dart';
 import 'package:flutter_quiz_app/components/input_field/label_text.dart';
 import 'package:flutter_quiz_app/components/snackbar/scaffold_snackbar_msg.dart';
 import 'package:flutter_quiz_app/constant/label_str.dart';
+import 'package:flutter_quiz_app/service/shared_preferences/local_data_save.dart';
 import 'package:flutter_quiz_app/service/shared_preferences/singleton_user_manage.dart';
 import 'package:flutter_quiz_app/theme/color.dart';
 import 'package:flutter_quiz_app/theme/responsive_size.dart';
@@ -45,7 +47,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   DateTime? dob;
 
   // P I C K -- I M A G E
-  Future<void> pickImage(bool isCamera, User currentUser, BuildContext context) async {
+  Future<void> pickImage(
+      bool isCamera, User currentUser, BuildContext context) async {
     try {
       final imageFile = await picker.pickImage(
           source: isCamera ? ImageSource.camera : ImageSource.gallery,
@@ -82,7 +85,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       barrierDismissible: true,
       barrierLabel: 'DIALOG',
       context: context,
-      transitionDuration: const Duration(milliseconds: 300), // Thời gian hiệu ứng
+      transitionDuration:
+          const Duration(milliseconds: 300), // Thời gian hiệu ứng
       pageBuilder: (context, animation, secondaryAnimation) {
         return Center(
           child: Container(
@@ -97,13 +101,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: 'Camera',
                     icon: Icons.camera_alt_outlined,
                     function: () {
-                      pickImage(true, user,context);
+                      pickImage(true, user, context);
                     }),
                 ButtonIcon(
                     text: 'Gallery',
                     icon: Icons.image,
                     function: () {
-                      pickImage(false, user,context);
+                      pickImage(false, user, context);
                     })
               ],
             ),
@@ -123,12 +127,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // S H O W -- N A M E
-  _showModalUpdateName(User user, BuildContext context){
+  _showModalUpdateName(User user, BuildContext context) {
     showGeneralDialog(
       barrierDismissible: true,
       barrierLabel: 'DIALOG',
       context: context,
-      transitionDuration: const Duration(milliseconds: 300), // Thời gian hiệu ứng
+      transitionDuration:
+          const Duration(milliseconds: 300), // Thời gian hiệu ứng
       pageBuilder: (context, animation, secondaryAnimation) {
         return Center(
           child: Container(
@@ -140,9 +145,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const BoxHeight(h: 10),
-                Material(color: fullColor, child: Text('Change Name',textAlign: TextAlign.center, style: textStyle.questionTextStyle(FontWeight.w500, Colors.black),)),
+                Material(
+                    color: fullColor,
+                    child: Text(
+                      'Change Name',
+                      textAlign: TextAlign.center,
+                      style: textStyle.questionTextStyle(
+                          FontWeight.w500, Colors.black),
+                    )),
                 const BoxHeight(h: 5),
-                Material(color: fullColor, child: Text('Enter the box below to change your name',textAlign: TextAlign.center, style: textStyle.contentTextStyle(FontWeight.w500, Colors.grey),)),
+                Material(
+                    color: fullColor,
+                    child: Text(
+                      'Enter the box below to change your name',
+                      textAlign: TextAlign.center,
+                      style: textStyle.contentTextStyle(
+                          FontWeight.w500, Colors.grey),
+                    )),
                 const BoxHeight(h: 5),
                 Material(
                   color: fullColor,
@@ -150,7 +169,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     width: StyleSize(context).screenWidth * 0.8,
                     height: 100,
                     child: Center(
-                      child: InputTextField(controller: _newNameController, textInputAction: TextInputAction.done, hint:'Enter New Name', paddingRate: 10),
+                      child: InputTextField(
+                          controller: _newNameController,
+                          textInputAction: TextInputAction.done,
+                          hint: 'Enter New Name',
+                          paddingRate: 10),
                     ),
                   ),
                 ),
@@ -159,9 +182,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(child: ButtonField(text: 'Cancel', function: () => Navigator.pop(context))),
+                      Expanded(
+                          child: ButtonField(
+                              text: 'Cancel',
+                              function: () => Navigator.pop(context))),
                       const BoxWidth(w: 5),
-                      Expanded(child: ButtonField(text: 'Save', function: (){AuthBloc.updateName(context, _newNameController.text,user.id!);}))
+                      Expanded(
+                          child: ButtonField(
+                              text: 'Save',
+                              function: () {
+                                AuthBloc.updateName(
+                                    context, _newNameController.text, user.id!);
+                              }))
                     ],
                   ),
                 )
@@ -193,6 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBarCustom.appbarNoBackBtn(context, 'PROFILE', textStyle),
       backgroundColor: fullColor,
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
@@ -200,17 +233,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             currentUser = state is LoginSuccess
                 ? state.user
                 : (state as UpdateAvatarSuccess).user;
-            return _body(currentUser!,context);
-          }
-          else if (state is UpdateNameSuccess) {
-            currentUser = state.user;
-            return _body(currentUser!,context);
-          }
-          else if (state is UpdateDOBSuccess) {
+            return _body(currentUser!, context);
+          } else if (state is UpdateNameSuccess) {
             currentUser = state.user;
             return _body(currentUser!, context);
-          }
-          else if (state is ResetPasswordSuccess) {
+          } else if (state is UpdateDOBSuccess) {
+            currentUser = state.user;
+            return _body(currentUser!, context);
+          } else if (state is ResetPasswordSuccess) {
             currentUser = state.user;
             return _body(currentUser!, context);
           }
@@ -222,22 +252,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _body(User currentUser, BuildContext context){
+  Widget _body(User currentUser, BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is UpdateAvatarSuccess) {
-          ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(context, state.text, textStyle);
-          Future.delayed(const Duration(milliseconds: 100),(){Navigator.pop(context);});
+          ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(
+              context, state.text, textStyle);
+          Future.delayed(const Duration(milliseconds: 100), () {
+            Navigator.pop(context);
+          });
         } else if (state is UpdateNameSuccess) {
-          ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(context, state.text, textStyle);
-          Future.delayed(const Duration(milliseconds: 100),(){Navigator.pop(context);});
+          ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(
+              context, state.text, textStyle);
+          Future.delayed(const Duration(milliseconds: 100), () {
+            Navigator.pop(context);
+          });
         } else if (state is UpdateDOBSuccess) {
-          ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(context, state.text, textStyle);
+          ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(
+              context, state.text, textStyle);
         } else if (state is UpdateDOBFailure) {
-          ShowScaffoldMessenger.showScaffoldMessengerUnsuccessfully(context, state.text, textStyle);
+          ShowScaffoldMessenger.showScaffoldMessengerUnsuccessfully(
+              context, state.text, textStyle);
         } else if (state is ResetPasswordSuccess) {
-          ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(context, state.success, textStyle);
-          Future.delayed(const Duration(milliseconds: 100),(){Navigator.pop(context);});
+          ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(
+              context, state.success, textStyle);
+          Future.delayed(const Duration(milliseconds: 100), () {
+            Navigator.pop(context);
+          });
         }
       },
       child: SingleChildScrollView(
@@ -245,32 +286,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const BoxHeight(h: 70),
-            Center(
-              child: Container(
-                  width: StyleSize(context).widthPercent(150),
-                  height: StyleSize(context).heightPercent(150),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      image: DecorationImage(
-                          image: !currentUser.url!
-                              .toString()
-                              .startsWith('/data/')
-                              ? CachedNetworkImageProvider(
-                              currentUser.url!)
-                              : FileImage(File(currentUser.url!)),
-                          fit: BoxFit.cover)),
-                  child: _camera(context, currentUser)
-              ),
-            ),
-            const BoxHeight(h: 20),
+            _avatar(context),
+            const BoxHeight(h: 10),
             const BoxHeight(h: 2),
             const LabelText(text: LABEL_FULLNAME),
             InputSelectField(
               textInputAction: TextInputAction.next,
               hint: currentUser.name,
               paddingRate: 25,
-              function: () => _showModalUpdateName(currentUser,context),
+              function: () => _showModalUpdateName(currentUser, context),
             ),
             const BoxHeight(h: 10),
             const BoxHeight(h: 2),
@@ -278,36 +302,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
             InputSelectField(
                 textInputAction: TextInputAction.next,
                 hint: currentUser.email,
-                paddingRate: 25
-            ),
+                paddingRate: 25),
             const BoxHeight(h: 10),
             const LabelText(text: LABEL_DOB),
-            const BoxHeight(h: 2
-            ),
+            const BoxHeight(h: 2),
             InputSelectField(
-                textInputAction: TextInputAction.next,
-                hint: textStyle.formatDateFromText(currentUser.dob!),
-                paddingRate: 25,
-                function: () async {
-                  await _selectDate(context).then((selectedDate) {
-                    if (selectedDate != null) {
-                      setState(() {
-                        dob = selectedDate; // Gán giá trị cho taskDeadline
-                        _newDobController.text = textStyle.formatDateFromText(selectedDate);
-                      });
-                    }
-                  });
-                  await AuthBloc.updateDob(context,dob!.toIso8601String(), currentUser.id!);
-                },
+              textInputAction: TextInputAction.next,
+              hint: textStyle.formatDateFromText(currentUser.dob!),
+              paddingRate: 25,
+              function: () async {
+                await _selectDate(context).then((selectedDate) {
+                  if (selectedDate != null) {
+                    setState(() {
+                      dob = selectedDate; // Gán giá trị cho taskDeadline
+                      _newDobController.text =
+                          textStyle.formatDateFromText(selectedDate);
+                    });
+                  }
+                });
+                await AuthBloc.updateDob(
+                    context, dob!.toIso8601String(), currentUser.id!);
+              },
             ),
             const BoxHeight(h: 10),
             const LabelText(text: LABEL_PASSWORD),
             const BoxHeight(h: 2),
             InputSelectField(
-                textInputAction: TextInputAction.next,
-                hint: 'Change password',
-                paddingRate: 25,
-                function: () => Navigator.pushNamed(context,'/passwordProfile'),
+              textInputAction: TextInputAction.next,
+              hint: 'Change password',
+              paddingRate: 25,
+              function: () => Navigator.pushNamed(context, '/passwordProfile'),
             ),
             const BoxHeight(h: 10),
             const LabelText(text: LABEL_PHONE),
@@ -315,56 +339,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
             InputSelectField(
                 textInputAction: TextInputAction.next,
                 hint: currentUser.phone!,
-                paddingRate: 25
-            ),
+                paddingRate: 25),
             const BoxHeight(h: 20),
-            Container(
-              width: 100,
-              height: 80,
-              decoration: BoxDecoration(
-                color: secondaryColor.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(10)
+            Center(
+              child: Container(
+                width: 130,
+                height: 40,
+                child: ButtonIcon(text: 'Logout', icon: Icons.logout, function: () async {
+                  await UserManager().logout();
+                  Navigator.pushReplacementNamed(context, '/login');
+                }),
               ),
-              child: _score(currentUser)
             )
           ],
         ),
       ),
     );
   }
-  
-  Widget _score(User currentUser){
-    return Container(
-      width: 100,
-      height: 80,
-      decoration: BoxDecoration(
-          color: secondaryColor.withOpacity(0.6),
-          borderRadius: BorderRadius.circular(10)
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: 100,
-            height: 30,
-            decoration: const BoxDecoration(
-                color: primaryColor,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
-            ),
-            child: Center(
-              child: Lottie.asset('assets/animation/score.json',width: 30,height: 30),
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: Text('${currentUser.totalScore}',style: textStyle.contentTextStyle(FontWeight.w500, Colors.white),),
-            ),
-          )
-        ],
-      ),
+
+  Widget _avatar(
+    BuildContext context,
+  ) {
+    return Center(
+      child: Container(
+          width: StyleSize(context).widthPercent(150),
+          height: StyleSize(context).heightPercent(150),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              image: DecorationImage(
+                  image: !currentUser!.url!.toString().startsWith('/data/')
+                      ? CachedNetworkImageProvider(currentUser!.url!)
+                      : FileImage(File(currentUser!.url!)),
+                  fit: BoxFit.cover)),
+          child: _camera(context, currentUser!)),
     );
   }
-  
-  Widget _camera(BuildContext context, User currentUser){
+
+  Widget _camera(BuildContext context, User currentUser) {
     return Stack(
       children: [
         Positioned(
@@ -374,8 +385,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: const ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(primaryColor),
                     padding: WidgetStatePropertyAll(EdgeInsets.all(0)),
-                    elevation: WidgetStatePropertyAll(10)
-                ),
+                    elevation: WidgetStatePropertyAll(10)),
                 onPressed: () {
                   _showModalUpload(context, currentUser);
                 },
@@ -387,7 +397,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
     );
   }
-
-
-  
 }
