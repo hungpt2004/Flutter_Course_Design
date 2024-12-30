@@ -24,35 +24,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final textStyle = TextStyleCustom();
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool isDisabled = true; // Mặc định là true để nút "Next" bị khóa.
-
-  void _toggleButton(bool enable) {
-    setState(() {
-      isDisabled = enable;
-    });
-  }
-
-  void _showButton() {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              backgroundColor: fullColor,
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  side: BorderSide.none),
-              content: Text(
-                'Please enter email to do the next step !',
-                style:
-                    textStyle.contentTextStyle(FontWeight.w500, Colors.black),
-              ),
-            ));
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarCustom.appbarBackNextBtn(textStyle, context, _showButton, isDisabled, _emailController),
+      appBar: AppBarCustom.appbarBackNextBtn(textStyle, context, _emailController),
       backgroundColor: fullColor,
       body: BlocListener<EmailBloc, EmailState>(
         listener: (BuildContext context, EmailState state) {
@@ -62,11 +38,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           } else if (state is SendSuccess) {
             ShowScaffoldMessenger.showScaffoldMessengerSuccessfully(
                 context,state.success, textStyle);
-            _toggleButton(false);
+            // _toggleButton(false);
           } else if (state is SendFail) {
             ShowScaffoldMessenger.showScaffoldMessengerUnsuccessfully(
                 context, state.error, textStyle);
-            _toggleButton(true);
+            // _toggleButton(true);
           }
         },
         child: SingleChildScrollView(
@@ -105,7 +81,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 const LabelText(text: LABEL_EMAIL),
                 const BoxHeight(h: 5),
                 InputTextEmailFieldField(
-                    controller: _emailController, hint: 'Enter your email'),
+                    controller: _emailController, hint: 'Enter your email',paddingRate: 15,),
                 const BoxHeight(h: 20),
                 ButtonField(
                     text: 'Continue',

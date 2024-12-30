@@ -20,8 +20,8 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
   }
 
   void _login(LoginOnPressed event, Emitter<AuthState> emit) async {
-    emit(LoginLoading(isLoading: true));
     try {
+      emit(LoginLoading(isLoading: true));
       User? user = await DBHelper.instance.getUserByUsername(event.username);
       if(user != null) {
         if(user.username == event.username && user.password == event.password) {
@@ -40,10 +40,9 @@ class AuthBloc extends Bloc<AuthEvent,AuthState>{
   }
 
   void _register(RegisterOnPressed event, Emitter<AuthState> emit) async {
-    emit(RegisterLoading(isLoading: true));
     try {
+      emit(RegisterLoading(isLoading: true));
       await DBHelper.instance.addNewUser(event.user);
-      emit(RegisterLoading(isLoading: false));
       emit(RegisterSuccess(success: 'Register successfully'));
     } catch (e) {
       emit(RegisterLoading(isLoading: false));

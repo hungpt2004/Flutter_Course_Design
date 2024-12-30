@@ -6,7 +6,7 @@ import '../../theme/color.dart';
 class AppBarCustom {
   final textStyle = TextStyleCustom();
 
-  static AppBar appbarBackNextBtn(TextStyleCustom textStyle, BuildContext context, VoidCallback function, bool isDisabled, TextEditingController controller) {
+  static AppBar appbarBackNextBtn(TextStyleCustom textStyle, BuildContext context, TextEditingController controller) {
     return AppBar(
       backgroundColor: primaryColor,
       leading: Row(
@@ -38,9 +38,7 @@ class AppBarCustom {
                     FontWeight.bold, Colors.white),
               ),
               IconButton(
-                  onPressed: isDisabled
-                      ? function
-                      : () {
+                  onPressed: () {
                     Navigator.pushNamed(context, '/pin',
                         arguments: controller.text);
                   },

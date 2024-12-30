@@ -13,8 +13,7 @@ class EmailBloc extends Bloc<EmailEvent, EmailState> {
 
   void _sendEmail(OnPressSendEmail event, Emitter<EmailState> emit) async {
     try {
-      emit(
-          SendLoading(isLoading: true)); // Emit loading state once at the start
+      emit(SendLoading(isLoading: true)); // Emit loading state once at the start
       bool check =
           await SendEmailService().sendEmailResetPassword(event.toEmail);
       if (check) {
@@ -26,10 +25,6 @@ class EmailBloc extends Bloc<EmailEvent, EmailState> {
       }
     } catch (e) {
       emit(SendFail(error: e.toString()));
-    } finally {
-      emit(SendLoading(
-          isLoading:
-              false)); // Ensure loading state is turned off after operation
     }
   }
 

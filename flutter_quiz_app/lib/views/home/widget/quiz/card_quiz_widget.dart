@@ -1,8 +1,5 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quiz_app/bloc/bloc_cart/cart_bloc.dart';
@@ -12,13 +9,10 @@ import 'package:flutter_quiz_app/bloc/bloc_favorite/favorite_bloc_state.dart';
 import 'package:flutter_quiz_app/bloc/bloc_quiz/quiz_bloc.dart';
 import 'package:flutter_quiz_app/components/box/box_height.dart';
 import 'package:flutter_quiz_app/components/box/box_width.dart';
-import 'package:flutter_quiz_app/components/button/button_field.dart';
 import 'package:flutter_quiz_app/components/snackbar/scaffold_snackbar_msg.dart';
-import 'package:flutter_quiz_app/constant/email_key.dart';
 import 'package:flutter_quiz_app/constant/label_str.dart';
 import 'package:flutter_quiz_app/model/cart.dart';
 import 'package:flutter_quiz_app/model/cart_items.dart';
-import 'package:flutter_quiz_app/model/completed_quiz.dart';
 import 'package:flutter_quiz_app/model/favorite.dart';
 import 'package:flutter_quiz_app/service/payment/payment_service.dart';
 import 'package:flutter_quiz_app/service/shared_preferences/singleton_user_manage.dart';
@@ -30,9 +24,7 @@ import 'package:flutter_quiz_app/theme/text_style.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../components/button/button_icon.dart';
 import '../../../../components/exception/cart_exception.dart';
-import '../../../../model/quiz.dart';
 import '../../../../model/user.dart';
-import '../../../../service/shared_preferences/local_data_save.dart';
 
 class CardQuizWidget extends StatefulWidget {
   CardQuizWidget({super.key, this.subjectId});
@@ -383,13 +375,20 @@ class _CardQuizWidgetState extends State<CardQuizWidget> {
               if (check && completeQuiz!.progress > 0) {
                 //Quiz da ton tai
                 _showModalRestart(context, quizIndex['id'], user.id!);
+
+              } else if ((!check && quizIndex['user_id'] == user.id!) && quizIndex['price'] > 0) {
+                //Quiz cua user lam chu
+                await QuizBloc.enjoyQuiz(context, quizIndex['id'], user.id!);
+                // await DBHelper.instance.updateStatusUnlock(quizIndex['id'],user.id!);
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  Navigator.pushNamed(context, '/doQuiz',
+                      arguments: quizIndex['id']);
+                });
+
               } else if (!check && quizIndex['price'] > 0) {
                 //Quiz can duoc thanh toan
-                print('DANG O DAY');
-                print(quizIndex['price']);
-                print(quizIndex['id']);
-                print(user.id!);
                 await StripeService.instance.makePayment(price: quizIndex['price'], username: user.name, role: 1, userId: user.id!, quizId: quizIndex['id'], context: context);
+
               } else {
                 //Quiz chua duoc lam
                 await QuizBloc.enjoyQuiz(context, quizIndex['id'], user.id!);
@@ -399,6 +398,7 @@ class _CardQuizWidgetState extends State<CardQuizWidget> {
                       arguments: quizIndex['id']);
                 });
               }
+
             },
             elevation: 10,
             shape:

@@ -92,7 +92,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _confirmPassword,textInputAction: TextInputAction.done, hint: 'Enter confirm password',paddingRate: 15,),
                 const BoxHeight(h: 10),
                 const LabelText(text: LABEL_EMAIL),
-                InputTextEmailFieldField(controller: _emailController, hint: 'Enter email'),
+                InputTextEmailFieldField(controller: _emailController, hint: 'Enter email',paddingRate: 30,),
 
                 const BoxHeight(h: 30),
 

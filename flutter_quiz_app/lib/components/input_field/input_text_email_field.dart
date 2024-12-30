@@ -4,11 +4,12 @@ import 'package:flutter_quiz_app/theme/text_style.dart';
 
 class InputTextEmailFieldField extends StatefulWidget {
   InputTextEmailFieldField(
-      {super.key, required this.controller, required this.hint, this.label});
+      {super.key, required this.controller, required this.hint, this.label, required this.paddingRate});
 
   TextEditingController controller;
   final String hint;
   String? label;
+  final double paddingRate;
 
   @override
   State<InputTextEmailFieldField> createState() => _InputTextFieldState();
@@ -20,7 +21,7 @@ class _InputTextFieldState extends State<InputTextEmailFieldField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: TextFormField(
         controller: widget.controller,
         validator: (value) {
